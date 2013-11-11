@@ -7,10 +7,13 @@ use autodie;
 use DBI;
 use Moose;
 use EpiRR::Model;
+use Cwd qw/abs_path/;
+use File::Basename;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Model' );
 has 'url' =>
   ( is => 'rw', isa => 'Str', default => 'dbi:SQLite:dbname=:memory:' );
+
 has 'dbh'          => ( is => 'rw' );
 has 'status_name'  => ( is => 'ro', isa => 'Str', default => 'Test Status' );
 has 'archive_name' => ( is => 'ro', isa => 'Str', default => 'TA' );
@@ -54,8 +57,10 @@ sub _create_dbh {
 
 sub _create_db {
     my ($self) = @_;
-
-    my $schema_file = '/Users/davidr/EpiRR/sql/schema.sqlite.sql';
+    
+    my $module_dir = dirname(__FILE__);
+    my $schema_file = abs_path($module_dir.'/../../../../sql/schema.sqlite.sql');
+    
     my $content     = '';
     open my $fh, '<', $schema_file;
     {
@@ -76,10 +81,6 @@ sub _create_schema {
     my ($self) = @_;
     my $schema = EpiRR::Model->connect( sub { $self->dbh() } );
     $self->schema($schema);
-}
-
-sub tear_down {
-    #
 }
 
 1;
