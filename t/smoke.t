@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 use warnings;
 use strict;
 
@@ -31,8 +32,6 @@ is( $project->id_prefix(), $test_db->project_prefix, 'Project prefix' )
 #Dataset
 my $dataset =
   $schema->dataset()->create( { project_id => $project->project_id() } );
-$dataset->create_accession();
-$dataset->update();
 
 my $expected_accession = 'TPX00000001';
 
@@ -46,21 +45,20 @@ is( $ds_again->project()->name(), $test_db->project_name, 'Project name match' )
   if ($ds_again);
 
 #Dataset version
-my $version_number = $dataset->next_version();
-my $full_accession = $dataset->accession() . '.' . $version_number;
+my $expected_full_accession = 'TPX00000001.1';
 
 my $dataset_version = $schema->dataset_version()->create(
     {
         dataset_id     => $dataset->dataset_id(),
-        version        => $version_number,
-        full_accession => $full_accession,
         is_current     => 1,
         status         => $test_db->status_name(),
     }
 );
 
 my $dsv =
-  $schema->dataset_version()->find( { full_accession => $full_accession } );
+  $schema->dataset_version()->find( { full_accession => $expected_full_accession } );
 ok( defined $dsv, "Dataset version retrieved" );
+is($dsv->full_accession, $expected_full_accession, "Dataset accession") if $dsv;
+
 
 done_testing();

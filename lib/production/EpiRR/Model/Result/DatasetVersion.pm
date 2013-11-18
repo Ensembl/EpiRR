@@ -184,4 +184,25 @@ __PACKAGE__->belongs_to(
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+use Class::Method::Modifiers;
+use Carp;
+
+=head2 before insert
+  Before insertion, the version number and full accession will be determined 
+  and added to the object
+=cut
+before 'insert' => sub {
+  my ($self) = @_;
+  
+  my $dataset = $self->dataset();
+  
+  if (! $self->version){
+    my $version_number = $dataset->next_version();
+    $self->version($version_number);
+  }
+
+  my $full_accession = $dataset->accession() . '.' . $self->version();
+  $self->full_accession($full_accession);
+};
+
 1;

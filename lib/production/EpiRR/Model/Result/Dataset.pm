@@ -112,30 +112,41 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:39
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G5dk0ZrX1+2PIDLZv4M9bQ
 use Carp;
+use Class::Method::Modifiers;
 
 sub current_version {
-  return $_[0]->dataset_versions({is_current => 1})->single();
+    return $_[0]->dataset_versions( { is_current => 1 } )->single();
 }
 
-sub create_accession {
+=head2 after insert
+
+  After the record has been inserted into the database, the accession will 
+  be created based on the project id prefix and the dataset id (primary key).
+  The record will then be updated. 
+
+=cut
+
+after 'insert' => sub {
     my ($self) = @_;
 
-    croak 'Accession is already populated: ' . $self->accession()
-      if $self->accession;
-    croak 'Project is not populated'
-      unless $self->project_id() && $self->project();
-    croak 'Dataset ID is not populated' unless $self->dataset_id();
+    if ( !$self->accession ) {
+        croak 'Project is not populated'
+          unless $self->project_id() && $self->project();
+        croak 'Dataset ID is not populated' unless $self->dataset_id();
+        my $accession =
+          $self->project()->id_prefix()
+          . sprintf( "%08d", $self->dataset_id() );
+        $self->accession($accession);
+        $self->update();
 
-    my $accession =
-      $self->project()->id_prefix() . sprintf( "%08d", $self->dataset_id() );
-    $self->accession($accession);
-}
+    }
+  };
 
-sub next_version {
+  sub next_version {
     my ($self) = @_;
 
     my $version_number = 1;
-    my $dsv = $self->current_version();
+    my $dsv            = $self->current_version();
     if ($dsv) {
         $version_number = $dsv->version() + 1;
         $dsv->is_current(0);
