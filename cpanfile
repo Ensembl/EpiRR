@@ -11,7 +11,3 @@ on 'build' => sub {
   requires 'Module::Build::Pluggable';
   requires 'Module::Build::Pluggable::CPANfile';
 };
-
-on 'develop' => sub {
-  requires 'Devel::Cover::Report::Coveralls';
-};
