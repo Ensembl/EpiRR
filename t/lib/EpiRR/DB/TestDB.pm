@@ -82,6 +82,6 @@ sub _create_schema {
     my $schema = EpiRR::Model->connect( sub { $self->dbh() } );
     $self->schema($schema);
 }
-__PACKAGE__−>meta−>make_immutable;
+__PACKAGE__->meta->make_immutable;
 
 1;

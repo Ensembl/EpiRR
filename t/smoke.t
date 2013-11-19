@@ -2,9 +2,17 @@
 use warnings;
 use strict;
 
+BEGIN {
+use FindBin qw/$Bin/;
+use lib "$Bin/lib";
+}
+
 use Test::More;
 use EpiRR::DB::TestDB;
 use Data::Dumper;
+
+
+print STDERR "$Bin$/";
 
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
@@ -49,16 +57,17 @@ my $expected_full_accession = 'TPX00000001.1';
 
 my $dataset_version = $schema->dataset_version()->create(
     {
-        dataset_id     => $dataset->dataset_id(),
-        is_current     => 1,
-        status         => $test_db->status_name(),
+        dataset_id => $dataset->dataset_id(),
+        is_current => 1,
+        status     => $test_db->status_name(),
     }
 );
 
 my $dsv =
-  $schema->dataset_version()->find( { full_accession => $expected_full_accession } );
+  $schema->dataset_version()
+  ->find( { full_accession => $expected_full_accession } );
 ok( defined $dsv, "Dataset version retrieved" );
-is($dsv->full_accession, $expected_full_accession, "Dataset accession") if $dsv;
-
+is( $dsv->full_accession, $expected_full_accession, "Dataset accession" )
+  if $dsv;
 
 done_testing();
