@@ -22,36 +22,54 @@ use Data::Dumper;
     is( $ds1->description(),    'test data',   'description match' ) if $ds1;
     is( $ds1->accession(),      'TP01',        'accession match' )   if $ds1;
     is( $ds1->raw_data_count(), 1,             'raw data count' )    if $ds1;
-    my $rd1 = $ds1->get_raw_data(0);
-    my $expected_rd = EpiRR::Model::RawData->new(archive => 'ABC', primary_id => 'FOO', secondary_id => 
-    'Bar');
-    
+    my $rd1         = $ds1->get_raw_data(0);
+    my $expected_rd = EpiRR::Model::RawData->new(
+        archive      => 'ABC',
+        primary_id   => 'FOO',
+        secondary_id => 'Bar'
+    );
+
     ok( $rd1, 'have raw data 1' );
-    is_deeply( $rd1,$expected_rd,'raw data as expected' ) if $rd1;
+    is_deeply( $rd1, $expected_rd, 'raw data as expected' ) if $rd1;
 }
 
 #unrecognised line type
 {
-  my $p = parser('file2.txt');
-  $p->parse();
-  is_deeply($p->errors,['Unknown line type - FAIL_ME at line 1'],'Expected error for bad line type');
+    my $p = parser('file2.txt');
+    $p->parse();
+    is_deeply(
+        $p->errors,
+        ['Unknown line type - FAIL_ME at line 1'],
+        'Expected error for bad line type'
+    );
 }
 
 #no project
 {
-  my $p = parser('file3.txt');
-  $p->parse();
-  is_deeply($p->errors,['No PROJECT given'],'No project specified')
+    my $p = parser('file3.txt');
+    $p->parse();
+    is_deeply( $p->errors, ['No PROJECT given'], 'No project specified' )
 }
 
 #no raw data
 {
-  my $p = parser('file4.txt');
-  $p->parse();
-  is_deeply($p->errors,['No RAW_DATA given'],'No raw data specified')
+    my $p = parser('file4.txt');
+    $p->parse();
+    is_deeply( $p->errors, ['No RAW_DATA given'], 'No raw data specified' );
 }
 
-
+#too many tokens
+{
+    my $p = parser('file5.txt');
+    $p->parse();
+    is_deeply( $p->errors, [ 
+      'Too many values for type (2; max is 1) at line 1',
+      'Too many values for type (2; max is 1) at line 2',
+      'Too many values for type (2; max is 1) at line 3',
+      'Too many values for type (2; max is 1) at line 4',
+      'Too many values for type (4; max is 3) at line 5',
+     ], 'Too many tokens given' );
+}
 
 done_testing();
 

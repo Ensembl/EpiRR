@@ -11,9 +11,6 @@ use Test::More;
 use EpiRR::DB::TestDB;
 use Data::Dumper;
 
-
-print STDERR "$Bin$/";
-
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
 $test_db->populate_basics();

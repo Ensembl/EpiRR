@@ -86,9 +86,8 @@ sub handle_project {
     my ( $self, $tokens ) = @_;
     my ($project) = @$tokens;
 
-    if ( scalar(@$tokens) > 1 ) {
-        $self->add_error("Too many tokens for PROJECT");
-    }
+    $self->check_token_count($tokens,1);
+    
     if ( !$project ) {
         $self->add_error("No project name given for PROJECT");
     }
@@ -104,10 +103,9 @@ sub handle_raw_data {
     my ( $self, $tokens ) = @_;
     my ( $archive, $primary_id, $secondary_id ) = @$tokens;
 
-    if ( scalar(@$tokens) > 3 ) {
-        $self->add_error("Too many tokens for RAW_DATA");
-    }
-    elsif ( !$archive ) {
+    $self->check_token_count($tokens,3);
+    
+    if ( !$archive ) {
         $self->add_error("No archive given for RAW_DATA");
     }
     elsif ( !$primary_id ) {
@@ -127,10 +125,9 @@ sub handle_local_name {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    if ( scalar(@$tokens) != 1 ) {
-        $self->add_error("Should be one token for LOCAL_NAME");
-    }
-    elsif ( !$value ) {
+    $self->check_token_count($tokens,1);
+    
+    if ( !$value ) {
         $self->add_error("No value given for LOCAL_NAME");
     }
     elsif ( $self->dataset()->local_name() ) {
@@ -141,14 +138,22 @@ sub handle_local_name {
     }
 }
 
+sub check_token_count {
+  my ($self, $tokens,$max_tokens) = @_;
+  
+  my $token_count = scalar(@$tokens);
+  if ($token_count > $max_tokens){
+    $self->add_error("Too many values for type ($token_count; max is $max_tokens)");
+  }
+}
+
 sub handle_accession {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    if ( scalar(@$tokens) != 1 ) {
-        $self->add_error("Should be one token for ACCESSION");
-    }
-    elsif ( !$value ) {
+    $self->check_token_count($tokens,1);
+    
+    if ( !$value ) {
         $self->add_error("No value given for ACCESSION");
     }
     elsif ( $self->dataset()->accession() ) {
@@ -163,10 +168,9 @@ sub handle_description {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    if ( scalar(@$tokens) != 1 ) {
-        $self->add_error("Should be one token for DESCRIPTION");
-    }
-    elsif ( !$value ) {
+    $self->check_token_count($tokens,1);
+    
+    if ( !$value ) {
         $self->add_error("No value given for DESCRIPTION");
     }
     elsif ( $self->dataset()->description() ) {
