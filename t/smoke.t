@@ -61,6 +61,44 @@ ok( $dsv1, "Old dataset version retrieved" );
 ok( !$dsv1->is_current(), "Old Dataset Version is not current" ) if $dsv1;
 ok( $dsv2->is_current(),  "New Dataset Version is current" )     if $dsv2;
 
+SKIP: {
+    skip "No dataset version to attach objects to", 4 unless $dsv2;
+
+    $schema->meta_data()->create(
+        {
+            dataset_version_id => $dsv2->dataset_version_id(),
+            name               => 'foo',
+            value              => 'bar'
+        }
+    );
+    my $md =
+      $schema->meta_data()
+      ->find( { dataset_version_id => $dsv2->dataset_version_id() } );
+    ok( $md, "Retrieved meta data" );
+    is( $md->name(),  'foo', "Expected meta data name" )  if $md;
+    is( $md->value(), 'bar', "Expected meta data value" ) if $md;
+
+    $schema->raw_data()->create(
+        {
+            dataset_version_id  => $dsv2->dataset_version_id(),
+            archive             => $archive,
+            primary_accession   => 'a',
+            secondary_accession => 'b',
+            archive_url         => 'c'
+        }
+    );
+    my $rd =
+      $schema->raw_data()
+      ->find( { dataset_version_id => $dsv2->dataset_version_id() } );
+    ok( $rd, "Retrived raw data" );
+    is( $rd->archive->name(), $archive->name(), "Expected raw data archive" )
+      if $rd;
+    is( $rd->primary_accession(), 'a', "Expected raw data primary id" ) if $rd;
+    is( $rd->secondary_accession(), 'b', "Expected raw data secondary id" )
+      if $rd;
+    is( $rd->archive_url(), 'c', "Expected raw data archive url" ) if $rd;
+}
+
 done_testing();
 
 sub test_versioning {
@@ -77,8 +115,7 @@ sub test_versioning {
     my $dsv =
       $schema->dataset_version()
       ->find( { full_accession => $expected_full_accession } );
-    
-      
+
     ok( defined $dsv, "Dataset version $expected_full_accession retrieved" );
     is( $dsv->full_accession, $expected_full_accession,
         "Dataset accession $expected_full_accession correct" )
