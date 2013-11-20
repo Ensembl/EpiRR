@@ -51,7 +51,7 @@ key (dataset_id),
 foreign key (dataset_id) references dataset(dataset_id),
 key (status),
 foreign key (status) references status(status),
-key (full_accession),
+unique key (full_accession),
 key (dataset_id,version),
 key (dataset_id,is_current)
 );

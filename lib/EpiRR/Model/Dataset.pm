@@ -5,11 +5,22 @@ use warnings;
 
 use Moose;
 
-has 'project'   => ( is => 'rw', isa => 'Str', predicate => 'has_project' );
-has 'status'    => ( is => 'rw', isa => 'Str', predicate => 'has_status' );
-has 'accession' => ( is => 'rw', isa => 'Str', predicate => 'has_accession' );
-has 'local_name'  => ( is => 'rw', isa => 'Str' );
-has 'description' => ( is => 'rw', isa => 'Str' );
+has 'project' => (
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    default   => '',
+    predicate => 'has_project'
+);
+has 'status' =>
+  ( is => 'rw', isa => 'Maybe[Str]', default => '', predicate => 'has_status' );
+has 'accession' => (
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    default   => '',
+    predicate => 'has_accession'
+);
+has 'local_name'  => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
+has 'description' => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 
 has 'raw_data' => (
     traits  => ['Array'],
@@ -23,7 +34,7 @@ has 'raw_data' => (
         has_raw_data   => 'count',
         get_raw_data   => 'get',
     },
-    default => sub { [] }
+    default => sub { [] },
 );
 
 has 'meta_data' => (
@@ -41,7 +52,8 @@ has 'meta_data' => (
         meta_data_kv       => 'kv',
         all_meta_data      => 'elements',
         meta_data_is_empty => 'is_empty',
-    }
+    },
+    default => sub { {} },
 );
 
 __PACKAGE__->meta->make_immutable;

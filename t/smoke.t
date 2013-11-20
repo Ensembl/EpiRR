@@ -3,12 +3,13 @@ use warnings;
 use strict;
 
 BEGIN {
-use FindBin qw/$Bin/;
-use lib "$Bin/lib";
+    use FindBin qw/$Bin/;
+    use lib "$Bin/lib";
 }
 
 use Test::More;
 use EpiRR::DB::TestDB;
+use EpiRR::Service::ConversionService;
 use Data::Dumper;
 
 my $test_db = EpiRR::DB::TestDB->new();
@@ -50,21 +51,39 @@ is( $ds_again->project()->name(), $test_db->project_name, 'Project name match' )
   if ($ds_again);
 
 #Dataset version
-my $expected_full_accession = 'TPX00000001.1';
 
-my $dataset_version = $schema->dataset_version()->create(
-    {
-        dataset_id => $dataset->dataset_id(),
-        is_current => 1,
-        status     => $test_db->status_name(),
-    }
-);
+test_versioning( 'TPX00000001.1', $schema, $dataset );
+my $dsv2 = test_versioning( 'TPX00000001.2', $schema, $dataset );
+my $dsv1 =
+  $schema->dataset_version()->find( { full_accession => 'TPX00000001.1' } );
 
-my $dsv =
-  $schema->dataset_version()
-  ->find( { full_accession => $expected_full_accession } );
-ok( defined $dsv, "Dataset version retrieved" );
-is( $dsv->full_accession, $expected_full_accession, "Dataset accession" )
-  if $dsv;
+ok( $dsv1, "Old dataset version retrieved" );
+ok( !$dsv1->is_current(), "Old Dataset Version is not current" ) if $dsv1;
+ok( $dsv2->is_current(),  "New Dataset Version is current" )     if $dsv2;
 
 done_testing();
+
+sub test_versioning {
+    my ( $expected_full_accession, $schema, $dataset ) = @_;
+
+    my $dataset_version = $schema->dataset_version()->create(
+        {
+            dataset_id => $dataset->dataset_id(),
+            dataset    => $dataset,
+            status     => $test_db->status_name(),
+        }
+    );
+
+    my $dsv =
+      $schema->dataset_version()
+      ->find( { full_accession => $expected_full_accession } );
+    
+      
+    ok( defined $dsv, "Dataset version $expected_full_accession retrieved" );
+    is( $dsv->full_accession, $expected_full_accession,
+        "Dataset accession $expected_full_accession correct" )
+      if $dsv;
+
+    return $dsv;
+}
+

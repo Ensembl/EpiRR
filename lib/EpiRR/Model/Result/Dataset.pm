@@ -114,10 +114,6 @@ __PACKAGE__->belongs_to(
 use Carp;
 use Class::Method::Modifiers;
 
-sub current_version {
-    return $_[0]->dataset_versions( { is_current => 1 } )->single();
-}
-
 =head2 after insert
 
   After the record has been inserted into the database, the accession will 
@@ -140,20 +136,6 @@ after 'insert' => sub {
         $self->update();
 
     }
-  };
+};
 
-  sub next_version {
-    my ($self) = @_;
-
-    my $version_number = 1;
-    my $dsv            = $self->current_version();
-    if ($dsv) {
-        $version_number = $dsv->version() + 1;
-        $dsv->is_current(0);
-        $dsv->update();
-    }
-    return $version_number;
-}
-
-# You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

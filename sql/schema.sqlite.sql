@@ -43,7 +43,8 @@ description text,
 full_accession text,
 status text,
 constraint dvd foreign key (dataset_id) references dataset(dataset_id),
-constraint dvs foreign key (status) references status(status)
+constraint dvs foreign key (status) references status(status),
+unique (full_accession) 
 );
 
 create index i_dv_ds on dataset_version(dataset_id);

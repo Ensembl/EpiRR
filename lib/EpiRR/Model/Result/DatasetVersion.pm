@@ -195,14 +195,36 @@ before 'insert' => sub {
   my ($self) = @_;
   
   my $dataset = $self->dataset();
-  
-  if (! $self->version){
-    my $version_number = $dataset->next_version();
-    $self->version($version_number);
-  }
+  if (! $self->version()){
 
+    my $new_version = $self->update_version();
+    $self->version($new_version);
+    $self->is_current(1);
+  }
   my $full_accession = $dataset->accession() . '.' . $self->version();
   $self->full_accession($full_accession);
 };
+
+=head2 update_version
+
+ Find the current DatasetVersion. Remove it's is_current flag and return the next version number to use.
+
+=cut
+
+sub update_version {
+    my ($self) = @_;
+    
+    my $schema = $self->result_source()->schema();
+    my $current = $schema->dataset_version()->find({dataset_id => $self->dataset_id(),is_current => 1});
+
+    my $version_number = 0;
+    if ($current) {
+      $version_number = $current->version();
+      $current->is_current(0);
+      $current->update();
+    }
+
+    return $version_number+1;
+}
 
 1;
