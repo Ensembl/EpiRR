@@ -62,13 +62,37 @@ use Data::Dumper;
 {
     my $p = parser('file5.txt');
     $p->parse();
-    is_deeply( $p->errors, [ 
-      'Too many values for type (2; max is 1) at line 1',
-      'Too many values for type (2; max is 1) at line 2',
-      'Too many values for type (2; max is 1) at line 3',
-      'Too many values for type (2; max is 1) at line 4',
-      'Too many values for type (4; max is 3) at line 5',
-     ], 'Too many tokens given' );
+    is_deeply(
+        $p->errors,
+        [
+            'Too many values for type (2; max is 1) at line 1',
+            'Too many values for type (2; max is 1) at line 2',
+            'Too many values for type (2; max is 1) at line 3',
+            'Too many values for type (2; max is 1) at line 4',
+            'Too many values for type (4; max is 3) at line 5',
+        ],
+        'Too many tokens given'
+    );
+}
+
+# lines present but no tokens
+{
+    my $p = parser('file6.txt');
+    $p->parse();
+    is_deeply(
+        $p->errors,
+        [
+            'No project name given for PROJECT at line 1',
+            'No value given for LOCAL_NAME at line 2',
+            'No value given for DESCRIPTION at line 3',
+            'No value given for ACCESSION at line 4',
+            'No archive given for RAW_DATA at line 5',
+            'No primary ID given for RAW_DATA at line 5',
+            'No PROJECT given',
+            'No RAW_DATA given',
+        ],
+        'Too few tokens given'
+    );
 }
 
 done_testing();

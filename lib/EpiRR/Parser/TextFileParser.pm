@@ -108,10 +108,10 @@ sub handle_raw_data {
     if ( !$archive ) {
         $self->add_error("No archive given for RAW_DATA");
     }
-    elsif ( !$primary_id ) {
+    if ( !$primary_id ) {
         $self->add_error("No primary ID given for RAW_DATA");
     }
-    else {
+    if ($archive && $primary_id) {
         my $rd = EpiRR::Model::RawData->new(
             archive      => $archive,
             primary_id   => $primary_id,
@@ -130,7 +130,7 @@ sub handle_local_name {
     if ( !$value ) {
         $self->add_error("No value given for LOCAL_NAME");
     }
-    elsif ( $self->dataset()->local_name() ) {
+    if ( $self->dataset()->local_name() ) {
         $self->add_error("Additional LOCAL_NAME");
     }
     else {
@@ -156,7 +156,7 @@ sub handle_accession {
     if ( !$value ) {
         $self->add_error("No value given for ACCESSION");
     }
-    elsif ( $self->dataset()->accession() ) {
+    if ( $self->dataset()->accession() ) {
         $self->add_error("Additional ACCESSION");
     }
     else {
