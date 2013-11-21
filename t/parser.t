@@ -95,6 +95,32 @@ use Data::Dumper;
     );
 }
 
+# duplicate copies of values
+{
+    my $p = parser('file7.txt');
+    $p->parse();
+    is_deeply(
+        $p->errors,
+        [
+            'Additional PROJECT name at line 6',
+            'Additional LOCAL_NAME at line 7',
+            'Additional DESCRIPTION at line 8',
+        ],
+        'Too many PROJECT LOCAL_NAME and DESCRIPTIONs'
+    );
+}
+
+# duplicate copies of values
+{
+    my $p = parser('file8.txt');
+    $p->parse();
+    is_deeply(
+        $p->errors,
+        [ 'Duplicate RAW_DATA declared at line 6', ],
+        'Duplicate RAW_DATA values detected'
+    );
+}
+
 done_testing();
 
 sub parser {

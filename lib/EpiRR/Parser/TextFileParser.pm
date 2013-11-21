@@ -57,21 +57,35 @@ DESCRIPTION	Chronic Lymphocytic Leukemia
 =cut
 
 has 'errors' => (
-    traits => ['Array'],
-    is     => 'ro',
-    isa    => 'ArrayRef[Str]',
-    handles =>
-      { push_error => 'push', error_count => 'count', get_error => 'get' },
+    traits  => ['Array'],
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
+    handles => {
+        push_error   => 'push',
+        error_count  => 'count',
+        get_error    => 'get',
+        clear_errors => 'clear'
+    },
     default => sub { [] }
 );
-has 'file_path' => ( is => 'ro', isa => 'Str', required => 1 );
-has 'file_handle' => ( is => 'rw', isa => 'FileHandle' );
-has 'dataset' => (
+has 'file_path'   => ( is => 'ro', isa => 'Maybe[Str]' );
+has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );
+has 'dataset'     => (
     is      => 'ro',
     isa     => 'EpiRR::Model::Dataset',
     default => sub { EpiRR::Model::Dataset->new() },
 );
-has '_token_set' => ( is => 'rw', isa => 'ArrayRef' );
+has 'raw_data_tokens' => (
+    traits  => ['Hash'],
+    is      => 'rw',
+    isa     => 'HashRef[Str]',
+    handles => {
+        set_raw_data_tokens    => 'set',
+        raw_data_tokens_exists => 'exists',
+        clear_raw_data_tokens  => 'defined',
+    },
+    default => sub { {} },
+);
 
 sub add_error {
     my ( $self, $text ) = @_;
@@ -86,8 +100,8 @@ sub handle_project {
     my ( $self, $tokens ) = @_;
     my ($project) = @$tokens;
 
-    $self->check_token_count($tokens,1);
-    
+    $self->check_token_count( $tokens, 1 );
+
     if ( !$project ) {
         $self->add_error("No project name given for PROJECT");
     }
@@ -103,21 +117,26 @@ sub handle_raw_data {
     my ( $self, $tokens ) = @_;
     my ( $archive, $primary_id, $secondary_id ) = @$tokens;
 
-    $self->check_token_count($tokens,3);
-    
+    $self->check_token_count( $tokens, 3 );
+
     if ( !$archive ) {
         $self->add_error("No archive given for RAW_DATA");
     }
     if ( !$primary_id ) {
         $self->add_error("No primary ID given for RAW_DATA");
     }
-    if ($archive && $primary_id) {
+    my $rd_token = join( '#', @$tokens );
+    if ( $self->raw_data_tokens_exists($rd_token) ) {
+        $self->add_error("Duplicate RAW_DATA declared");
+    }
+    if ( $archive && $primary_id ) {
         my $rd = EpiRR::Model::RawData->new(
             archive      => $archive,
             primary_id   => $primary_id,
             secondary_id => $secondary_id
         );
         $self->dataset()->add_raw_data($rd);
+        $self->set_raw_data_tokens( $rd_token, 1 );
     }
 }
 
@@ -125,8 +144,8 @@ sub handle_local_name {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    $self->check_token_count($tokens,1);
-    
+    $self->check_token_count( $tokens, 1 );
+
     if ( !$value ) {
         $self->add_error("No value given for LOCAL_NAME");
     }
@@ -139,20 +158,21 @@ sub handle_local_name {
 }
 
 sub check_token_count {
-  my ($self, $tokens,$max_tokens) = @_;
-  
-  my $token_count = scalar(@$tokens);
-  if ($token_count > $max_tokens){
-    $self->add_error("Too many values for type ($token_count; max is $max_tokens)");
-  }
+    my ( $self, $tokens, $max_tokens ) = @_;
+
+    my $token_count = scalar(@$tokens);
+    if ( $token_count > $max_tokens ) {
+        $self->add_error(
+            "Too many values for type ($token_count; max is $max_tokens)");
+    }
 }
 
 sub handle_accession {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    $self->check_token_count($tokens,1);
-    
+    $self->check_token_count( $tokens, 1 );
+
     if ( !$value ) {
         $self->add_error("No value given for ACCESSION");
     }
@@ -168,8 +188,8 @@ sub handle_description {
     my ( $self, $tokens ) = @_;
     my ($value) = @$tokens;
 
-    $self->check_token_count($tokens,1);
-    
+    $self->check_token_count( $tokens, 1 );
+
     if ( !$value ) {
         $self->add_error("No value given for DESCRIPTION");
     }
@@ -211,10 +231,10 @@ sub parse {
         }
     }
     if ( !$self->dataset()->project() ) {
-        $self->push_error( "No PROJECT given");
+        $self->push_error("No PROJECT given");
     }
     if ( $self->dataset()->raw_data_count() == 0 ) {
-        $self->push_error( "No RAW_DATA given");
+        $self->push_error("No RAW_DATA given");
     }
     $self->_close();
 }
