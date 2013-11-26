@@ -105,8 +105,9 @@ use Data::Dumper;
             'Additional PROJECT name at line 6',
             'Additional LOCAL_NAME at line 7',
             'Additional DESCRIPTION at line 8',
+            'Additional ACCESSION at line 9',
         ],
-        'Too many PROJECT LOCAL_NAME and DESCRIPTIONs'
+        'Too many PROJECT, ACCESSION, LOCAL_NAME and DESCRIPTIONs'
     );
 }
 
