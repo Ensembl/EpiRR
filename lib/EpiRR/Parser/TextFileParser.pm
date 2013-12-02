@@ -56,19 +56,9 @@ DESCRIPTION	Chronic Lymphocytic Leukemia
 
 =cut
 
-has 'errors' => (
-    traits  => ['Array'],
-    is      => 'ro',
-    isa     => 'ArrayRef[Str]',
-    handles => {
-        push_error   => 'push',
-        error_count  => 'count',
-        get_error    => 'get',
-        clear_errors => 'clear'
-    },
-    default => sub { [] }
-);
-has 'file_path'   => ( is => 'ro', isa => 'Maybe[Str]' );
+with 'EpiRR::Parser::HasErrors';
+
+has 'file_path' => ( is => 'ro', isa => 'Maybe[Str]' );
 has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );
 has 'dataset'     => (
     is      => 'ro',
