@@ -8,14 +8,12 @@ use URI::Encode qw(uri_encode);
 use EpiRR::Parser::SRAXMLParser;
 use EpiRR;
 
-with 'EpiRR::Service::ArchiveAccessor';
+with 'EpiRR::Roles::ArchiveAccessor';
+with 'EpiRR::Roles::HasUserAgent';
 
-has 'user_agent' => (
-    is       => 'rw',
-    isa      => 'LWP::UserAgent',
-    required => 1,
-    lazy     => 1,
-    default  => sub { LWP::UserAgent->new( my $v = agent => "EpiRR/$EpiRR::VERSION" ); }
+
+has '+supported_archives' => (
+    default  => sub {[ 'ENA', 'SRA', 'DDBJ' ]},
 );
 
 sub lookup_experiment {
