@@ -87,6 +87,17 @@ use EpiRR::Model::Sample;
     is_deeply( $p->errors(), [ "Sample ID not found in XML", ], "No samples" );
 }
 
+{
+    my $p = parser('SRS_duplicate.xml');
+    $p->parse_sample();
+
+    is_deeply(
+        $p->errors(),
+        [ "Cannot handle multiple samples", ],
+        "Multiple experiments"
+    );
+}
+
 done_testing();
 
 sub parser {
@@ -94,7 +105,7 @@ sub parser {
     my $dir       = dirname(__FILE__);
     my $file_path = $dir . '/xml/' . $file;
 
-    open my $fh, '<', $file_path or croak("Could not open $file_path: $!");
+    open my $fh, '<', $file_path or fail("Could not open $file_path: $!");
     my $xml;
     {
         local $/;

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT request="SRS004524&amp;display=xml">
+	<SAMPLE center_name="GEO" alias="27277.0" accession="SRS004524" broker_name="NCBI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	     <IDENTIFIERS>
+	          <PRIMARY_ID>SRS004524</PRIMARY_ID>
+	          <EXTERNAL_ID namespace="BioSample">SAMN00002925</EXTERNAL_ID>
+	          <SUBMITTER_ID namespace="GEO">27277.0</SUBMITTER_ID>
+	     </IDENTIFIERS>
+	     <TITLE>Homo sapiens; Generic sample from Homo sapiens</TITLE>
+	     <SAMPLE_NAME>
+	          <TAXON_ID>9606</TAXON_ID>
+	          <SCIENTIFIC_NAME>Homo sapiens</SCIENTIFIC_NAME>
+	     </SAMPLE_NAME>
+	     <DESCRIPTION>H1 stem cells from Cellular Dynamics</DESCRIPTION>
+	     <SAMPLE_LINKS>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-STUDY</DB>
+	                    <ID>SRP000996</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-EXPERIMENT</DB>
+	                    <ID>SRX007379,SRX007389</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-RUN</DB>
+	                    <ID>SRR020508,SRR020519</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-SUBMISSION</DB>
+	                    <ID>SRA009256</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-FASTQ-FILES</DB>
+	                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/fastq_files/SRS004524</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	          <SAMPLE_LINK>
+	               <XREF_LINK>
+	                    <DB>ENA-SUBMITTED-FILES</DB>
+	                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/submitted_files/SRS004524</ID>
+	               </XREF_LINK>
+	          </SAMPLE_LINK>
+	     </SAMPLE_LINKS>
+	     <SAMPLE_ATTRIBUTES>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>MOLECULE</TAG>
+	               <VALUE>genomic DNA</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>DISEASE</TAG>
+	               <VALUE>none</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>BIOMATERIAL_PROVIDER</TAG>
+	               <VALUE>Cellular Dynamics</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>BIOMATERIAL_TYPE</TAG>
+	               <VALUE>Cell Line</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>LINE</TAG>
+	               <VALUE>H1</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>LINEAGE</TAG>
+	               <VALUE>undifferentiated</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>DIFFERENTIATION_STAGE</TAG>
+	               <VALUE>stage_zero</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>DIFFERENTIATION_METHOD</TAG>
+	               <VALUE>none</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>PASSAGE</TAG>
+	               <VALUE>42</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>MEDIUM</TAG>
+	               <VALUE>TESR</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>SEX</TAG>
+	               <VALUE>Unknown</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>ENA-SPOT-COUNT</TAG>
+	               <VALUE>23922417</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	          <SAMPLE_ATTRIBUTE>
+	               <TAG>ENA-BASE-COUNT</TAG>
+	               <VALUE>1537097042</VALUE>
+	          </SAMPLE_ATTRIBUTE>
+	     </SAMPLE_ATTRIBUTES>
+	</SAMPLE>
+<SAMPLE center_name="GEO" alias="27277.0" accession="SRS004524" broker_name="NCBI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <IDENTIFIERS>
+          <PRIMARY_ID>SRS004524</PRIMARY_ID>
+          <EXTERNAL_ID namespace="BioSample">SAMN00002925</EXTERNAL_ID>
+          <SUBMITTER_ID namespace="GEO">27277.0</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>Homo sapiens; Generic sample from Homo sapiens</TITLE>
+     <SAMPLE_NAME>
+          <TAXON_ID>9606</TAXON_ID>
+          <SCIENTIFIC_NAME>Homo sapiens</SCIENTIFIC_NAME>
+     </SAMPLE_NAME>
+     <DESCRIPTION>H1 stem cells from Cellular Dynamics</DESCRIPTION>
+     <SAMPLE_LINKS>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-STUDY</DB>
+                    <ID>SRP000996</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX007379,SRX007389</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR020508,SRR020519</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>SRA009256</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/fastq_files/SRS004524</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+          <SAMPLE_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/submitted_files/SRS004524</ID>
+               </XREF_LINK>
+          </SAMPLE_LINK>
+     </SAMPLE_LINKS>
+     <SAMPLE_ATTRIBUTES>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>MOLECULE</TAG>
+               <VALUE>genomic DNA</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>DISEASE</TAG>
+               <VALUE>none</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>BIOMATERIAL_PROVIDER</TAG>
+               <VALUE>Cellular Dynamics</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>BIOMATERIAL_TYPE</TAG>
+               <VALUE>Cell Line</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>LINE</TAG>
+               <VALUE>H1</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>LINEAGE</TAG>
+               <VALUE>undifferentiated</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>DIFFERENTIATION_STAGE</TAG>
+               <VALUE>stage_zero</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>DIFFERENTIATION_METHOD</TAG>
+               <VALUE>none</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>PASSAGE</TAG>
+               <VALUE>42</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>MEDIUM</TAG>
+               <VALUE>TESR</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>SEX</TAG>
+               <VALUE>Unknown</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>ENA-SPOT-COUNT</TAG>
+               <VALUE>23922417</VALUE>
+          </SAMPLE_ATTRIBUTE>
+          <SAMPLE_ATTRIBUTE>
+               <TAG>ENA-BASE-COUNT</TAG>
+               <VALUE>1537097042</VALUE>
+          </SAMPLE_ATTRIBUTE>
+     </SAMPLE_ATTRIBUTES>
+</SAMPLE>
+</ROOT>
