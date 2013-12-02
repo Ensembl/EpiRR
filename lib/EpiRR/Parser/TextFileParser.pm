@@ -56,7 +56,7 @@ DESCRIPTION	Chronic Lymphocytic Leukemia
 
 =cut
 
-with 'EpiRR::Parser::HasErrors';
+with 'EpiRR::Roles::HasErrors';
 
 has 'file_path' => ( is => 'ro', isa => 'Maybe[Str]' );
 has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );

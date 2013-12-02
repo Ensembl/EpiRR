@@ -1,4 +1,4 @@
-package EpiRR::Parser::HasErrors;
+package EpiRR::Roles::HasErrors;
 
 use Moose::Role;
 

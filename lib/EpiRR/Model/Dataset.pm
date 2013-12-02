@@ -5,7 +5,7 @@ use warnings;
 
 use Moose;
 
-with 'EpiRR::Model::HasMetaData';
+with 'EpiRR::Roles::HasMetaData';
 
 has 'project' => (
     is        => 'rw',

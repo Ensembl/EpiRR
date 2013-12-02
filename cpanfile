@@ -2,6 +2,7 @@ requires 'DBIx::Class';
 requires 'Moose';
 requires 'Class::Method::Modifiers';
 requires 'XML::Twig';
+requires 'URI::Encode';
 
 on 'test' => sub {
   requires 'Test::More';

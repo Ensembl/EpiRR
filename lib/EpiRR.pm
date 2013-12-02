@@ -1,4 +1,4 @@
-package 'EpiRR';
+package EpiRR;
 
 =head1 NAME
 
@@ -15,7 +15,6 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-TODO
 
 =cut
 

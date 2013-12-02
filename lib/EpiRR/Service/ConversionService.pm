@@ -7,16 +7,19 @@ use Carp;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 
-has 'raw_data_service' => (
-    is  => 'rw',
-    isa => 'EpiRR::Service::RawDataService',
+has 'archive_services' => (
+    traits  => ['Hash'],
+    is      => 'rw',
+    isa     => 'HashRef[EpiRR::Service::ArchiveAccessor]',
+    handles => {
+        get_accessor      => 'get',
+        set_accessor      => 'set',
+        accessor_exists   => 'defined',
+    },
+    default => sub { {} },
 );
-has 'meta_data_service' => (
-    is  => 'rw',
-    isa => 'EpiRR::Service::MetaDataService',
-);
-has 'model' =>  ( is => 'rw', isa => 'EpiRR::Model' )
-;
+
+has 'model' => ( is => 'rw', isa => 'EpiRR::Model' );
 
 sub db_to_simple {
     my ( $self, $dsv ) = @_;
@@ -28,7 +31,7 @@ sub db_to_simple {
     my $d = EpiRR::Model::Dataset->new(
         project     => $dsv->dataset()->project()->name(),
         status      => $dsv->status()->status(),
-        accession => $dsv->full_accession(),
+        accession   => $dsv->full_accession(),
         local_name  => $dsv->local_name(),
         description => $dsv->description()
     );

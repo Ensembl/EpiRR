@@ -6,9 +6,9 @@ requires 'lookup_experiment';
 requires 'lookup_sample';
 
 has 'supported_archives' => (
-    traits => ['Array'],
-    is 'ro',
-    is 'ArrayRef[Str]',
+    traits  => ['Array'],
+    is      => 'ro',
+    isa     => 'ArrayRef[Str]',
     handles => {
         all_supported_archives  => 'elements',
         grep_supported_archives => 'grep',

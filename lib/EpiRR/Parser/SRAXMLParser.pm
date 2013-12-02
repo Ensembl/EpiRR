@@ -8,7 +8,7 @@ use feature qw(switch);
 use Moose;
 use XML::Twig;
 
-with 'EpiRR::Parser::HasErrors';
+with 'EpiRR::Roles::HasErrors';
 has 'xml' => ( is => 'ro', isa => 'Str', required => 1 );
 
 sub parse_experiment {

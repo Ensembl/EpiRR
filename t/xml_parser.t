@@ -3,7 +3,6 @@ use strict;
 use warnings;
 
 use EpiRR::Parser::SRAXMLParser;
-use EpiRR::Model::RawData;
 
 use Test::More;
 use File::Basename;

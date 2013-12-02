@@ -1,4 +1,4 @@
-package EpiRR::Model::HasMetaData;
+package EpiRR::Roles::HasMetaData;
 
 use Moose::Role;
 
