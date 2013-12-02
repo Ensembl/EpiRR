@@ -1,4 +1,4 @@
-package EpiRR::Role::ArchiveAccessor;
+package EpiRR::Roles::ArchiveAccessor;
 
 use Moose::Role;
 

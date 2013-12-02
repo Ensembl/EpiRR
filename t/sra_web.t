@@ -12,6 +12,11 @@ use EpiRR::Service::ENAWeb;
 my $w = EpiRR::Service::ENAWeb->new();
 
 {
+  ok($w->handles_archive('ENA'),'Handles archive');
+  ok(!$w->handles_archive('Dino\'s Barbers'),'Does not handle archive');
+}
+
+{
     my $actual = $w->lookup_experiment('SRX007379');
 
     my $expected = EpiRR::Model::RawData->new(
