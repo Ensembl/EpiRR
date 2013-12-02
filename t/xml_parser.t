@@ -9,6 +9,8 @@ use Test::More;
 use File::Basename;
 
 use EpiRR::Model::RawData;
+use EpiRR::Model::Sample;
+
 {
     my $p      = parser('SRX007379.xml');
     my $actual = $p->parse_experiment();
@@ -43,13 +45,48 @@ use EpiRR::Model::RawData;
     is_deeply(
         $p->errors(),
         [
-           "Experiment ID not found in XML",
-           "Sample ID not found in XML",
-           "Experiment type not found in XML",
+            "Experiment ID not found in XML",
+            "Sample ID not found in XML",
+            "Experiment type not found in XML",
         ],
         "No experiments"
     );
 }
+
+{
+    my $p      = parser('SRS004524.xml');
+    my $actual = $p->parse_sample();
+
+    my $expected = EpiRR::Model::Sample->new(
+        sample_id => 'SRS004524',
+        meta_data => {
+            MOLECULE               => 'genomic DNA',
+            DISEASE                => 'none',
+            BIOMATERIAL_PROVIDER   => 'Cellular Dynamics',
+            BIOMATERIAL_TYPE       => 'Cell Line',
+            LINE                   => 'H1',
+            LINEAGE                => 'undifferentiated',
+            DIFFERENTIATION_STAGE  => 'stage_zero',
+            DIFFERENTIATION_METHOD => 'none',
+            PASSAGE                => '42',
+            MEDIUM                 => 'TESR',
+            SEX                    => 'Unknown',
+            'ENA-SPOT-COUNT'       => '23922417',
+            'ENA-BASE-COUNT'       => '1537097042',
+            'SPECIES'              => 'Homo sapiens',
+        },
+    );
+
+    is_deeply( $actual, $expected, 'Parsed Sample' )
+}
+
+{
+    my $p = parser('empty.xml');
+    $p->parse_sample();
+
+    is_deeply( $p->errors(), [ "Sample ID not found in XML", ], "No samples" );
+}
+
 done_testing();
 
 sub parser {

@@ -1,6 +1,7 @@
 requires 'DBIx::Class';
 requires 'Moose';
 requires 'Class::Method::Modifiers';
+requires 'XML::Twig';
 
 on 'test' => sub {
   requires 'Test::More';
