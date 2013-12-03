@@ -67,5 +67,5 @@ sub get_xml {
 
     return $xml;
 }
-
+__PACKAGE__->meta->make_immutable;
 1;

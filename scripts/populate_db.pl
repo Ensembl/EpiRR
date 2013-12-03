@@ -1,7 +1,7 @@
 use warnings;
 use strict;
 
-use EpiRR::Model;
+use EpiRR::Schema;
 use Getopt::Long;
 use Data::Dumper;
 
@@ -14,7 +14,7 @@ GetOptions(
     "dbparam=s" => \%db_params,
 );
 
-my $schema = EpiRR::Model->connect( $db_url, $db_user, $db_pass );
+my $schema = EpiRR::Schema->connect( $db_url, $db_user, $db_pass );
 
 for my $status_name (qw/COMPLETE IN_PROGRESS RETIRED/) {
     my $existing_status = $schema->status()->find( { status => $status_name } );

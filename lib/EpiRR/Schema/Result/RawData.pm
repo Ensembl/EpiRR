@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::RawData;
+package EpiRR::Schema::Result::RawData;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::RawData
+EpiRR::Schema::Result::RawData
 
 =cut
 
@@ -107,13 +107,13 @@ __PACKAGE__->set_primary_key("raw_data_id");
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::Archive>
+Related object: L<EpiRR::Schema::Result::Archive>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "archive",
-  "EpiRR::Model::Result::Archive",
+  "EpiRR::Schema::Result::Archive",
   { name => "archive" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
@@ -122,13 +122,13 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::DatasetVersion>
+Related object: L<EpiRR::Schema::Result::DatasetVersion>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "dataset_version",
-  "EpiRR::Model::Result::DatasetVersion",
+  "EpiRR::Schema::Result::DatasetVersion",
   { dataset_version_id => "dataset_version_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );

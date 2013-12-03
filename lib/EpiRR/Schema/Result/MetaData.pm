@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::MetaData;
+package EpiRR::Schema::Result::MetaData;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::MetaData
+EpiRR::Schema::Result::MetaData
 
 =cut
 
@@ -90,13 +90,13 @@ __PACKAGE__->set_primary_key("meta_data_id");
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::DatasetVersion>
+Related object: L<EpiRR::Schema::Result::DatasetVersion>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "dataset_version",
-  "EpiRR::Model::Result::DatasetVersion",
+  "EpiRR::Schema::Result::DatasetVersion",
   { dataset_version_id => "dataset_version_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );

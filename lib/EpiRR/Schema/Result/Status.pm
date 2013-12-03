@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::Status;
+package EpiRR::Schema::Result::Status;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::Status
+EpiRR::Schema::Result::Status
 
 =cut
 
@@ -54,13 +54,13 @@ __PACKAGE__->set_primary_key("status");
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::DatasetVersion>
+Related object: L<EpiRR::Schema::Result::DatasetVersion>
 
 =cut
 
 __PACKAGE__->has_many(
   "dataset_versions",
-  "EpiRR::Model::Result::DatasetVersion",
+  "EpiRR::Schema::Result::DatasetVersion",
   { "foreign.status" => "self.status" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

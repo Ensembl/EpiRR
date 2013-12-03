@@ -26,7 +26,7 @@ sub db_to_simple {
 
     confess("No DatasetVersion passed") unless $dsv;
     confess("Argument must be a DatasetVersion")
-      unless $dsv->isa("EpiRR::Model::Result::DatasetVersion");
+      unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
 
     my $d = EpiRR::Model::Dataset->new(
         project     => $dsv->dataset()->project()->name(),

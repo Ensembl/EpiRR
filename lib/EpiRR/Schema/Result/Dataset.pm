@@ -1,13 +1,13 @@
 use utf8;
 
-package EpiRR::Model::Result::Dataset;
+package EpiRR::Schema::Result::Dataset;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::Dataset
+EpiRR::Schema::Result::Dataset
 
 =cut
 
@@ -83,13 +83,13 @@ __PACKAGE__->set_primary_key("dataset_id");
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::DatasetVersion>
+Related object: L<EpiRR::Schema::Result::DatasetVersion>
 
 =cut
 
 __PACKAGE__->has_many(
     "dataset_versions",
-    "EpiRR::Model::Result::DatasetVersion",
+    "EpiRR::Schema::Result::DatasetVersion",
     { "foreign.dataset_id" => "self.dataset_id" },
     { cascade_copy         => 0, cascade_delete => 0 },
 );
@@ -98,13 +98,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::Project>
+Related object: L<EpiRR::Schema::Result::Project>
 
 =cut
 
 __PACKAGE__->belongs_to(
     "project",
-    "EpiRR::Model::Result::Project",
+    "EpiRR::Schema::Result::Project",
     { project_id    => "project_id" },
     { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );

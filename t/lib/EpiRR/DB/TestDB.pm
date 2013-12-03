@@ -6,11 +6,11 @@ use autodie;
 
 use DBI;
 use Moose;
-use EpiRR::Model;
+use EpiRR::Schema;
 use Cwd qw/abs_path/;
 use File::Basename;
 
-has 'schema' => ( is => 'rw', isa => 'EpiRR::Model' );
+has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 has 'url' =>
   ( is => 'rw', isa => 'Str', default => 'dbi:SQLite:dbname=:memory:' );
 
@@ -79,7 +79,7 @@ sub _create_db {
 
 sub _create_schema {
     my ($self) = @_;
-    my $schema = EpiRR::Model->connect( sub { $self->dbh() } );
+    my $schema = EpiRR::Schema->connect( sub { $self->dbh() } );
     $self->schema($schema);
 }
 __PACKAGE__->meta->make_immutable;

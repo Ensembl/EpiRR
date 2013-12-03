@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::Project;
+package EpiRR::Schema::Result::Project;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::Project
+EpiRR::Schema::Result::Project
 
 =cut
 
@@ -76,13 +76,13 @@ __PACKAGE__->set_primary_key("project_id");
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::Dataset>
+Related object: L<EpiRR::Schema::Result::Dataset>
 
 =cut
 
 __PACKAGE__->has_many(
   "datasets",
-  "EpiRR::Model::Result::Dataset",
+  "EpiRR::Schema::Result::Dataset",
   { "foreign.project_id" => "self.project_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );

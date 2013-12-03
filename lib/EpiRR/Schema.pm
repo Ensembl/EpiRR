@@ -1,5 +1,5 @@
 use utf8;
-package EpiRR::Model;
+package EpiRR::Schema;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE

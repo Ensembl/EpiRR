@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::DatasetVersion;
+package EpiRR::Schema::Result::DatasetVersion;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::DatasetVersion
+EpiRR::Schema::Result::DatasetVersion
 
 =cut
 
@@ -122,13 +122,13 @@ __PACKAGE__->set_primary_key("dataset_version_id");
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::Dataset>
+Related object: L<EpiRR::Schema::Result::Dataset>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "dataset",
-  "EpiRR::Model::Result::Dataset",
+  "EpiRR::Schema::Result::Dataset",
   { dataset_id => "dataset_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
@@ -137,13 +137,13 @@ __PACKAGE__->belongs_to(
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::MetaData>
+Related object: L<EpiRR::Schema::Result::MetaData>
 
 =cut
 
 __PACKAGE__->has_many(
   "meta_datas",
-  "EpiRR::Model::Result::MetaData",
+  "EpiRR::Schema::Result::MetaData",
   { "foreign.dataset_version_id" => "self.dataset_version_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -152,13 +152,13 @@ __PACKAGE__->has_many(
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::RawData>
+Related object: L<EpiRR::Schema::Result::RawData>
 
 =cut
 
 __PACKAGE__->has_many(
   "raw_datas",
-  "EpiRR::Model::Result::RawData",
+  "EpiRR::Schema::Result::RawData",
   { "foreign.dataset_version_id" => "self.dataset_version_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -167,13 +167,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<EpiRR::Model::Result::Status>
+Related object: L<EpiRR::Schema::Result::Status>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "status",
-  "EpiRR::Model::Result::Status",
+  "EpiRR::Schema::Result::Status",
   { status => "status" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );

@@ -14,7 +14,7 @@ sub convert_to_simple {
 
     for my $meta_data (@$mds) {
         croak("Argument must be a DatasetVersion")
-          unless $md->isa("EpiRR::Model::Result::MetaData");
+          unless $md->isa("EpiRR::Schema::Result::MetaData");
           
           $
     }

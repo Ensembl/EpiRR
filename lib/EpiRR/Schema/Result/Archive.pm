@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Model::Result::Archive;
+package EpiRR::Schema::Result::Archive;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Model::Result::Archive
+EpiRR::Schema::Result::Archive
 
 =cut
 
@@ -62,13 +62,13 @@ __PACKAGE__->set_primary_key("name");
 
 Type: has_many
 
-Related object: L<EpiRR::Model::Result::RawData>
+Related object: L<EpiRR::Schema::Result::RawData>
 
 =cut
 
 __PACKAGE__->has_many(
   "raw_datas",
-  "EpiRR::Model::Result::RawData",
+  "EpiRR::Schema::Result::RawData",
   { "foreign.archive" => "self.name" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
