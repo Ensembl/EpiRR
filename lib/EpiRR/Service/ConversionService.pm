@@ -4,13 +4,14 @@ use strict;
 use warnings;
 use Moose;
 use Carp;
+use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 
 has 'archive_services' => (
     traits  => ['Hash'],
     is      => 'rw',
-    isa     => 'HashRef[EpiRR::Service::ArchiveAccessor]',
+    isa     => 'HashRef[ArchiveAccessor]',
     handles => {
         get_accessor      => 'get',
         set_accessor      => 'set',
@@ -19,7 +20,7 @@ has 'archive_services' => (
     default => sub { {} },
 );
 
-has 'model' => ( is => 'rw', isa => 'EpiRR::Model' );
+has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 
 sub db_to_simple {
     my ( $self, $dsv ) = @_;

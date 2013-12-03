@@ -6,11 +6,8 @@ use Carp;
 use URI::Encode qw(uri_encode);
 
 use EpiRR::Parser::SRAXMLParser;
-use EpiRR;
 
-with 'EpiRR::Roles::ArchiveAccessor';
-with 'EpiRR::Roles::HasUserAgent';
-
+with 'EpiRR::Roles::ArchiveAccessor','EpiRR::Roles::HasUserAgent';
 
 has '+supported_archives' => (
     default  => sub {[ 'ENA', 'SRA', 'DDBJ' ]},
