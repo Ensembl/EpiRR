@@ -8,7 +8,7 @@ has 'user_agent' => (
     required => 1,
     lazy     => 1,
     default =>
-      sub { LWP::UserAgent->new( agent => "EpiRR/$EpiRR::VERSION" ); }
+      sub { LWP::UserAgent->new( agent => "EpiRR/1.00" ); }
 );
 
 1;

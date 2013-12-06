@@ -1,8 +1,7 @@
 package EpiRR::Service::MetaDataService;
 
-use strict;
-use warnings;
 use Moose;
+use namespace::autoclean;
 use Carp;
 
 sub convert_to_simple {

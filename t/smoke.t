@@ -9,7 +9,6 @@ BEGIN {
 
 use Test::More;
 use EpiRR::DB::TestDB;
-use EpiRR::Service::ConversionService;
 use Data::Dumper;
 
 my $test_db = EpiRR::DB::TestDB->new();

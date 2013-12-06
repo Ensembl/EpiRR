@@ -1,8 +1,7 @@
 package EpiRR::Service::RawDataService;
 
-use strict;
-use warnings;
 use Moose;
+use namespace::autoclean;
 use Carp;
 
 has 'archive_services' => (

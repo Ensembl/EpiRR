@@ -22,8 +22,7 @@ GetOptions(
 
 my $schema = EpiRR::Schema->connect( $db_url, $db_user, $db_pass );
 
-my $project = $schema->project()->find({name => $project_name});
-die "No project found for $project_name" if (! $project_name);
+
 
 $schema->txn_begin();
 

@@ -1,8 +1,7 @@
 package EpiRR::Service::ConversionService;
 
-use strict;
-use warnings;
 use Moose;
+use namespace::autoclean;
 use Carp;
 use EpiRR::Types;
 use EpiRR::Model::Dataset;
@@ -13,9 +12,9 @@ has 'archive_services' => (
     is      => 'rw',
     isa     => 'HashRef[ArchiveAccessor]',
     handles => {
-        get_accessor      => 'get',
-        set_accessor      => 'set',
-        accessor_exists   => 'defined',
+        get_accessor    => 'get',
+        set_accessor    => 'set',
+        accessor_exists => 'defined',
     },
     default => sub { {} },
 );
@@ -55,7 +54,111 @@ sub db_to_simple {
 }
 
 sub simple_to_db {
+    my ( $self, $simple_dataset ) = @_;
 
+    confess("No dataset provided") if ( !$simple_dataset );
+    confess("Dataset must be EpiRR::Model::Dataset")
+      if ( !$simple_dataset->isa('EpiRR::Model::Dataset') );
+
+    my $errors = [];
+
+    $self->schema()->txn_begin();
+
+    my $dataset = $self->_dataset( $simple_dataset, $errors );
+    my $dataset_version = $self->_dataset_version( $simple_dataset, $errors );
+    my
+
+      if (@$errors) {
+        $self->schema()->txn_rollback();
+    }
+    else {
+
+        $self->schema()->txn_commit();
+    }
+
+}
+
+sub _dataset {
+    my ( $self, $user_dataset, $errors ) = @_;
+
+    my $project =
+      $schema->project()->find( { name => $user_dataset->project() } );
+    push @$errors, "No project found for $project_name" if ( !$project );
+
+    my $dataset;
+    if ( $user_dataset->accession() ) {
+        $dataset =
+          $schema->dataset()
+          ->find( { accession => $user_dataset->accession() } );
+
+        push @$errors,
+          "No dataset found for accession " . $user_dataset->accession()
+          if ( !$dataset );
+
+        if ($dataset) {
+            my $declared_project  = $user_dataset->project();
+            my $retrieved_project = $dataset->project()->name();
+
+            push @$errors,
+              "Mismatch between project declared ($declared_project)"
+              . " and that stored previously ($retrieved_project)"
+              if ( $declared_project ne $retrieved_project );
+        }
+    }
+    elsif ($project) {
+        $dataset = $project->create_related( 'datasets', {} );
+    }
+
+    return $dataset;
+}
+
+sub _dataset_version {
+    my ( $self, $user_dataset, $dataset, $errors ) = @_;
+
+    my $dataset_version = $dataset->create_related(
+        'dataset_versions',
+        {
+            local_name  => $user_dataset->local_name(),
+            description => $user_dataset->description(),
+        }
+    );
+
+    return $dataset_version;
+}
+
+sub _raw_data {
+    my ( $self, $user_dataset, $dataset_version, $errors ) = @_;
+
+    my @samples;
+
+    for my $user_rd ( @{ $user_dataset->raw_data() } ) {
+        my $archive   = $user_rd->archive();
+        my $rd_errors = [];
+        push @$rd_errors, "Do not know how to read raw data from archive"
+          if ( !$self->accessor_exists($archive) );
+
+        next if !$self->accessor_exists($archive);
+
+        my $sample =
+          $self->archive_accessor($archive)
+          ->lookup_raw_data( $user_rd, $rd_errors );
+
+        my $rd_txt = $user_rd->as_string();
+        push @$errors, map { "$rd_txt:$_" } @$rd_errors;
+        push @samples, $sample;
+
+        $dataset_version->create_related(
+            'raw_datas',
+            {
+                primary_accession   => $user_rd->primary_id(),
+                secondary_accession => $user_rd->secondary_id(),
+                archive             => $user_rd->archive(),
+                archive_url         => $user_rd->archive_url(),
+            }
+        ) if ( !@$rd_errors );
+    }
+
+    return \@samples;
 }
 
 __PACKAGE__->meta->make_immutable;

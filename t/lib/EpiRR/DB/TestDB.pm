@@ -1,7 +1,5 @@
 package EpiRR::DB::TestDB;
 
-use strict;
-use warnings;
 use autodie;
 
 use DBI;
@@ -9,6 +7,7 @@ use Moose;
 use EpiRR::Schema;
 use Cwd qw/abs_path/;
 use File::Basename;
+use namespace::autoclean;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 has 'url' =>

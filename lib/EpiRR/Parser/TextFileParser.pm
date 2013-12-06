@@ -5,6 +5,7 @@ use warnings;
 use Carp;
 use feature qw(switch);
 use Moose;
+use namespace::autoclean;
 
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;

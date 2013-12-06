@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Moose;
+use namespace::autoclean;
 
 with 'EpiRR::Roles::HasMetaData';
 

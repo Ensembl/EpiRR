@@ -2,8 +2,7 @@ package EpiRR::Roles::ArchiveAccessor;
 
 use Moose::Role;
 
-requires 'lookup_experiment';
-requires 'lookup_sample';
+requires 'lookup_raw_data';
 
 has 'supported_archives' => (
     traits   => ['Array'],

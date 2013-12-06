@@ -10,51 +10,54 @@ use File::Basename;
 use EpiRR::Model::RawData;
 use EpiRR::Model::Sample;
 
+my $p = EpiRR::Parser::SRAXMLParser->new();
 {
-    my $p      = parser('SRX007379.xml');
-    my $actual = $p->parse_experiment();
+    my $xml     = xml('SRX007379.xml');
+    my $e = [];
+    my @actual = $p->parse_experiment($xml,$e);
 
-    my $expected = EpiRR::Model::RawData->new(
-        primary_id      => 'SRX007379',
-        experiment_type => 'Histone H3K27me3',
-        secondary_id    => 'SRS004524',
-    );
-
-    is_deeply( $actual, $expected, "Parse Experiment XML" );
-
+    my $expected = ['SRS004524','Histone H3K27me3','SRX007379',];
+    
+    is_deeply( \@actual, $expected, "Parse Experiment XML" );
+    is_deeply($e,[],'No errors');
 }
 {
-    my $p = parser('SRX_duplicate.xml');
-    $p->parse_experiment();
+    my $xml = xml('SRX_duplicate.xml');
+    my $e = [];
+    $p->parse_experiment($xml,$e);
 
     is_deeply(
-        $p->errors(),
+        $e,
         [
-            "Cannot handle multiple samples",
-            "Cannot handle multiple experiment_types",
-            "Cannot handle multiple experiments"
+            "Found multiple samples in XML (SRS004524 and SRS004524)",
+            "Found multiple experiment types in XML (Histone H3K27me3 and Histone H3K27me3)",
+            "Found multiple experiments in XML (SRX007379 and SRX007379).",
         ],
         "Multiple experiments"
     );
 }
 {
-    my $p = parser('empty.xml');
-    $p->parse_experiment();
+    my $xml = xml('empty.xml');
+    my $e = [];
+    my $experiment = $p->parse_experiment($xml,$e);
+
+    ok(!defined $experiment,"No experiment returned");
 
     is_deeply(
-        $p->errors(),
+        $e,
         [
-            "Experiment ID not found in XML",
-            "Sample ID not found in XML",
-            "Experiment type not found in XML",
+            "No experiment found",
+            "No experiment_type found",
+            "No sample found",
         ],
         "No experiments"
     );
 }
 
 {
-    my $p      = parser('SRS004524.xml');
-    my $actual = $p->parse_sample();
+    my $xml    = xml('SRS004524.xml');
+    my $e = [];
+    my $actual = $p->parse_sample($xml,$e);
 
     my $expected = EpiRR::Model::Sample->new(
         sample_id => 'SRS004524',
@@ -76,22 +79,25 @@ use EpiRR::Model::Sample;
         },
     );
 
-    is_deeply( $actual, $expected, 'Parsed Sample' )
+    is_deeply( $actual, $expected, 'Parsed Sample' );
+    is_deeply($e,[],'No sample errors');
 }
 
 {
-    my $p = parser('empty.xml');
-    $p->parse_sample();
+    my $xml = xml('empty.xml');
+    my $e = [];
+    $p->parse_sample($xml,$e);
 
-    is_deeply( $p->errors(), [ "Sample ID not found in XML", ], "No samples" );
+    is_deeply( $e, [ "Sample ID not found in XML", ], "No samples" );
 }
 
 {
-    my $p = parser('SRS_duplicate.xml');
-    $p->parse_sample();
+    my $xml = xml('SRS_duplicate.xml');
+    my $e = [];
+    $p->parse_sample($xml,$e);
 
     is_deeply(
-        $p->errors(),
+        $e,
         [ "Cannot handle multiple samples", ],
         "Multiple experiments"
     );
@@ -99,7 +105,7 @@ use EpiRR::Model::Sample;
 
 done_testing();
 
-sub parser {
+sub xml {
     my ($file)    = @_;
     my $dir       = dirname(__FILE__);
     my $file_path = $dir . '/xml/' . $file;
@@ -112,5 +118,5 @@ sub parser {
     }
     close $fh;
 
-    return EpiRR::Parser::SRAXMLParser->new( xml => $xml );
+    return $xml; 
 }

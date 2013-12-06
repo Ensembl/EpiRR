@@ -6,58 +6,50 @@ use Carp;
 use feature qw(switch);
 
 use Moose;
+use namespace::autoclean;
 use XML::Twig;
 
-with 'EpiRR::Roles::HasErrors';
-has 'xml' => ( is => 'ro', isa => 'Str', required => 1 );
-
 sub parse_experiment {
-    my ($self) = @_;
+    my ($self, $xml, $errors) = @_;
 
-    my $e = EpiRR::Model::RawData->new();
+    my ( $e_id, $s_id, $et );
 
     my $t = XML::Twig->new(
         twig_handlers => {
             'EXPERIMENT' => sub {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
-                $self->push_error("Cannot handle multiple experiments")
-                  if $e->primary_id();
-                $e->primary_id($id);
-
+                push @$errors, "Found multiple experiments in XML ($e_id and $id)."
+                  if $e_id;
+                $e_id = $id;
             },
             'SAMPLE_DESCRIPTOR' => sub {
                 my ( $t, $element ) = @_;
                 my $sample = $element->{'att'}->{'accession'};
-                $self->push_error("Cannot handle multiple samples")
-                  if $e->secondary_id();
-                $e->secondary_id($sample);
+                push @$errors, "Found multiple samples in XML ($s_id and $sample)" if ($s_id);
+                $s_id = $sample;
             },
             'EXPERIMENT_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
 
                 if ( $element->first_child_text('TAG') eq 'EXPERIMENT_TYPE' ) {
                     my $experiment_type = $element->first_child_text('VALUE');
-                    $self->push_error("Cannot handle multiple experiment_types")
-                      if $e->experiment_type();
+                    push @$errors, "Found multiple experiment types in XML ($et and $experiment_type)" if ($et);
 
-                    $e->experiment_type($experiment_type);
+                    $et = $experiment_type;
                 }
             },
         }
     );
-    $t->parse( $self->xml() );
-
-    $self->push_error("Experiment ID not found in XML") unless $e->primary_id();
-    $self->push_error("Sample ID not found in XML") unless $e->secondary_id();
-    $self->push_error("Experiment type not found in XML")
-      unless $e->experiment_type();
-
-    return $e;
+    $t->parse( $xml );
+    push @$errors, "No experiment found" unless $e_id;
+    push @$errors, "No experiment_type found" unless $et;
+    push @$errors, "No sample found" unless $s_id;
+    return ($s_id,$et,$e_id);
 }
 
 sub parse_sample {
-    my ($self) = @_;
+    my ($self,$xml,$errors) = @_;
 
     my $s = EpiRR::Model::Sample->new();
 
@@ -66,8 +58,7 @@ sub parse_sample {
             'SAMPLE' => sub {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
-                $self->push_error("Cannot handle multiple samples")
-                  if $s->sample_id();
+                push @$errors, "Cannot handle multiple samples"                 if ($s->sample_id());
                 $s->sample_id($id);
             },
             'SAMPLE_ATTRIBUTE' => sub {
@@ -86,9 +77,9 @@ sub parse_sample {
               }
         }
     );
-    $t->parse( $self->xml() );
+    $t->parse( $xml );
 
-    $self->push_error("Sample ID not found in XML") unless $s->sample_id();
+    push @$errors, "Sample ID not found in XML" if (!$s->sample_id());
 
     return $s;
 }
