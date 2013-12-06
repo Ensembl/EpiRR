@@ -6,6 +6,7 @@ requires 'URI::Encode';
 
 on 'test' => sub {
   requires 'Test::More';
+	requires 'Test::MockObject::Extends',
   requires 'DBD::SQLite';
 };
 

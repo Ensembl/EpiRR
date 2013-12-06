@@ -6,6 +6,7 @@ use Carp;
 use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
+use Data::Dumper;
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -65,7 +66,7 @@ sub simple_to_db {
     $self->schema()->txn_begin();
 
     my $dataset = $self->_dataset( $simple_dataset, $errors );
-    my $dataset_version = $self->_dataset_version( $simple_dataset, $errors );
+    my $dataset_version = $self->_dataset_version( $simple_dataset, $dataset, $errors );
     my $samples =
       $self->_raw_data( $simple_dataset, $dataset_version, $errors );
 
@@ -111,7 +112,6 @@ sub _dataset {
     elsif ($project) {
         $dataset = $project->create_related( 'datasets', {} );
     }
-
     return $dataset;
 }
 
@@ -143,7 +143,7 @@ sub _raw_data {
         next if !$self->accessor_exists($archive);
 
         my $sample =
-          $self->archive_accessor($archive)
+          $self->get_accessor($archive)
           ->lookup_raw_data( $user_rd, $rd_errors );
 
         my $rd_txt = $user_rd->as_string();

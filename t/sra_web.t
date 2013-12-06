@@ -13,20 +13,15 @@ my $w = EpiRR::Service::ENAWeb->new();
 
 {
     ok( $w->handles_archive('ENA'),              'Handles archive' );
-    ok( !$w->handles_archive('Dino\'s Barbers'), 'Does not handle archive' );
+    ok( !$w->handles_archive("Dino's Barbers"), 'Does not handle archive' );
 }
 
 {
     my $input =
       EpiRR::Model::RawData->new( archive => 'ENA', primary_id => 'SRX007379' );
-    my $sample = $w->lookup_raw_data($input);
+    my $output = $w->lookup_raw_data($input);
 
-    my $expected = EpiRR::Model::RawData->new(
-        archive         => 'ENA',
-        primary_id      => 'SRX007379',
-        experiment_type => 'Histone H3K27me3',
-        archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
-    );
+   
     my $expected_sample = EpiRR::Model::Sample->new(
         sample_id => 'SRS004524',
         meta_data => {
@@ -46,9 +41,15 @@ my $w = EpiRR::Service::ENAWeb->new();
             'SPECIES'              => 'Homo sapiens',
         },
     );
+    my $expected = EpiRR::Model::RawData->new(
+        archive         => 'ENA',
+        primary_id      => 'SRX007379',
+        experiment_type => 'Histone H3K27me3',
+        archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
+        sample => $expected_sample
+    );
 
-    is_deeply( $input,  $expected,        "Parse Experiment" );
-    is_deeply( $sample, $expected_sample, 'Parsed sample' );
+    is_deeply( $output,  $expected,        "Parse Experiment" );
 }
 
 done_testing();

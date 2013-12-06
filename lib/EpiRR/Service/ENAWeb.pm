@@ -36,16 +36,21 @@ sub lookup_raw_data {
       if ( !$self->handles_archive( $raw_data->archive() ) );
 
     my $xml = $self->get_xml( $raw_data->primary_id() );
+
     my ( $sample_id, $experiment_type, $experiment_id ) =
       $self->xml_parser()->parse_experiment( $xml, $errors );
 
-    $raw_data->experiment_type($experiment_type);
-
     my $sample = $self->lookup_sample( $sample_id, $errors ) if ($sample_id);
 
-    $raw_data->archive_url( $self->base_url() . $raw_data->primary_id() );
+    my $archive_raw_data = EpiRR::Model::RawData->new(
+        archive         => $raw_data->archive,
+        primary_id      => $experiment_id,
+        experiment_type => $experiment_type,
+        sample          => $sample,
+        archive_url     => $self->base_url() . $experiment_id,
+    );
 
-    return $sample;
+    return $archive_raw_data;
 }
 
 sub lookup_sample {
