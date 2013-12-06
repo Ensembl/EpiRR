@@ -14,14 +14,33 @@ BEGIN {
 use EpiRR::DB::TestDB;
 use EpiRR::Service::ArchiveAccessorStub;
 
+use EpiRR::Model::Sample;
+use EpiRR::Model::RawData;
+
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
 $test_db->populate_basics();
 
 my $experiment_id = 'X1';
 
+my $lookup_called = 0;
+
 my $mock_aa =
   new Test::MockObject::Extends( EpiRR::Service::ArchiveAccessorStub->new() );
+$mock_aa->mock(
+    'lookup_raw_data',
+    sub {
+        $lookup_called++;
+        return EpiRR::Model::RawData->new(
+            archive    => $test_db->archive_name(),
+            primary_id => $experiment_id,
+            sample     => EpiRR::Model::Sample->new(
+                sample_id => 'S1',
+                meta_data => { foo => 'bar', strudel => 'apple' },
+            ),
+        );
+    }
+);
 
 my $cs = EpiRR::Service::ConversionService->new(
     schema           => $schema,
@@ -36,13 +55,12 @@ my $test_input = EpiRR::Model::Dataset->new(
     raw_data => [$raw_data_input],
 );
 
-$mock_aa->mock_expect_once( 'lookup_raw_data', 'admin',
-    args => [$raw_data_input] );
+
 my $errors = [];
 
 my $test_output = $cs->simple_to_db( $test_input, $errors );
 
-$mock_aa->mock_tally();
+is($lookup_called,1,"Called lookup method once");
 
 ok( $test_output->dataset(), "Has a project" );
 is(
