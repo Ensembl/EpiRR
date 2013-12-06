@@ -66,14 +66,16 @@ sub simple_to_db {
 
     my $dataset = $self->_dataset( $simple_dataset, $errors );
     my $dataset_version = $self->_dataset_version( $simple_dataset, $errors );
-    my
+    my $samples =
+      $self->_raw_data( $simple_dataset, $dataset_version, $errors );
 
-      if (@$errors) {
+    if (@$errors) {
         $self->schema()->txn_rollback();
+        return $errors;
     }
     else {
-
         $self->schema()->txn_commit();
+        return $dataset_version;
     }
 
 }
@@ -81,14 +83,15 @@ sub simple_to_db {
 sub _dataset {
     my ( $self, $user_dataset, $errors ) = @_;
 
-    my $project =
-      $schema->project()->find( { name => $user_dataset->project() } );
+    my $project_name = $user_dataset->project();
+
+    my $project = $self->schema()->project()->find( { name => $project_name } );
     push @$errors, "No project found for $project_name" if ( !$project );
 
     my $dataset;
     if ( $user_dataset->accession() ) {
         $dataset =
-          $schema->dataset()
+          $self->schema()->dataset()
           ->find( { accession => $user_dataset->accession() } );
 
         push @$errors,
