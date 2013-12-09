@@ -46,11 +46,10 @@ sub lookup_raw_data {
         archive         => $raw_data->archive,
         primary_id      => $experiment_id,
         experiment_type => $experiment_type,
-        sample          => $sample,
         archive_url     => $self->base_url() . $experiment_id,
     );
 
-    return $archive_raw_data;
+    return ($archive_raw_data,$sample);
 }
 
 sub lookup_sample {

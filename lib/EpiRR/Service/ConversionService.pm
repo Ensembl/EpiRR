@@ -66,9 +66,12 @@ sub simple_to_db {
     $self->schema()->txn_begin();
 
     my $dataset = $self->_dataset( $simple_dataset, $errors );
-    my $dataset_version = $self->_dataset_version( $simple_dataset, $dataset, $errors );
+    my $dataset_version =
+      $self->_dataset_version( $simple_dataset, $dataset, $errors );
     my $samples =
       $self->_raw_data( $simple_dataset, $dataset_version, $errors );
+
+    $self->_create_meta_data( $dataset_version, $samples, $errors );
 
     if (@$errors) {
         $self->schema()->txn_rollback();
@@ -77,6 +80,39 @@ sub simple_to_db {
     else {
         $self->schema()->txn_commit();
         return $dataset_version;
+    }
+
+}
+
+sub _create_meta_data {
+    my ( $self, $dataset_version, $sample_records, $errors ) = @_;
+    my @samples = @$sample_records;
+    confess 'Samples required' if ( !@samples );
+
+    my $first_sample = pop @samples;
+    my %meta_data    = $first_sample->all_meta_data();
+
+    for my $s (@samples) {
+        for my $k ( keys %meta_data ) {
+            delete $meta_data{$k}
+              if (!$s->meta_data_defined($k)
+                || $s->get_meta_data($k) ne $meta_data{$k} );
+        }
+    }
+
+    if ( !%meta_data ) {
+        push @$errors,
+"No common meta data for this dataset, cannot determine what it represents";
+    }
+
+    while ( my ( $k, $v ) = each %meta_data ) {
+        $dataset_version->create_related(
+            'meta_datas',
+            {
+                name  => $k,
+                value => $v,
+            }
+        );
     }
 
 }
@@ -142,21 +178,21 @@ sub _raw_data {
 
         next if !$self->accessor_exists($archive);
 
-        my $sample =
+        my ( $rd, $s ) =
           $self->get_accessor($archive)
           ->lookup_raw_data( $user_rd, $rd_errors );
 
         my $rd_txt = $user_rd->as_string();
         push @$errors, map { "$rd_txt:$_" } @$rd_errors;
-        push @samples, $sample;
+        push @samples, $s;
 
         $dataset_version->create_related(
             'raw_datas',
             {
-                primary_accession   => $user_rd->primary_id(),
-                secondary_accession => $user_rd->secondary_id(),
-                archive             => $user_rd->archive(),
-                archive_url         => $user_rd->archive_url(),
+                primary_accession   => $rd->primary_id(),
+                secondary_accession => $rd->secondary_id(),
+                archive             => $rd->archive(),
+                archive_url         => $rd->archive_url(),
             }
         ) if ( !@$rd_errors );
     }
