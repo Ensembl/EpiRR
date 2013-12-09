@@ -60,8 +60,10 @@ $mock_aa->mock(
 
 my $cs = EpiRR::Service::ConversionService->new(
     schema           => $schema,
-    archive_services => { $test_db->archive_name() => $mock_aa, }
+    archive_services => { $test_db->archive_name() => $mock_aa, },
+    meta_data_builder =>  EpiRR::Service::CommonMetaDataBuilder->new(),
 );
+
 my $test_input = EpiRR::Model::Dataset->new(
     project  => $test_db->project_name(),
     raw_data => [

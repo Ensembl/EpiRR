@@ -6,7 +6,7 @@ use Carp;
 use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
-use Data::Dumper;
+use EpiRR::Service::CommonMetaDataBuilder;
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -18,6 +18,12 @@ has 'archive_services' => (
         accessor_exists => 'defined',
     },
     default => sub { {} },
+);
+
+has 'meta_data_builder' => (
+    is       => 'rw',
+    isa      => 'MetaDataBuilder',
+    required => 1,
 );
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
@@ -86,19 +92,8 @@ sub simple_to_db {
 
 sub _create_meta_data {
     my ( $self, $dataset_version, $sample_records, $errors ) = @_;
-    my @samples = @$sample_records;
-    confess 'Samples required' if ( !@samples );
 
-    my $first_sample = pop @samples;
-    my %meta_data    = $first_sample->all_meta_data();
-
-    for my $s (@samples) {
-        for my $k ( keys %meta_data ) {
-            delete $meta_data{$k}
-              if (!$s->meta_data_defined($k)
-                || $s->get_meta_data($k) ne $meta_data{$k} );
-        }
-    }
+    my %meta_data = $self->meta_data_builder( $sample_records, $errors );
 
     if ( !%meta_data ) {
         push @$errors,
