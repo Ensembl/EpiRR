@@ -12,16 +12,15 @@ use EpiRR::Service::ENAWeb;
 my $w = EpiRR::Service::ENAWeb->new();
 
 {
-    ok( $w->handles_archive('ENA'),              'Handles archive' );
+    ok( $w->handles_archive('ENA'),             'Handles archive' );
     ok( !$w->handles_archive("Dino's Barbers"), 'Does not handle archive' );
 }
 
 {
     my $input =
       EpiRR::Model::RawData->new( archive => 'ENA', primary_id => 'SRX007379' );
-    my $output = $w->lookup_raw_data($input);
+    my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);
 
-   
     my $expected_sample = EpiRR::Model::Sample->new(
         sample_id => 'SRS004524',
         meta_data => {
@@ -41,15 +40,16 @@ my $w = EpiRR::Service::ENAWeb->new();
             'SPECIES'              => 'Homo sapiens',
         },
     );
-    my $expected = EpiRR::Model::RawData->new(
+    my $expected_experiment = EpiRR::Model::RawData->new(
         archive         => 'ENA',
         primary_id      => 'SRX007379',
         experiment_type => 'Histone H3K27me3',
         archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
-        sample => $expected_sample
     );
 
-    is_deeply( $output,  $expected,        "Parse Experiment" );
+    is_deeply( $output_experiment, $expected_experiment,
+        "Found experiment information" );
+    is_deeply( $output_sample, $expected_sample, "Found sample information" );
 }
 
 done_testing();
