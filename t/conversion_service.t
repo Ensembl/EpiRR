@@ -19,7 +19,7 @@ use EpiRR::Model::RawData;
 
 use Data::Dumper;
 
-use EpiRR::Service::IhecBinaryDataSetClassifier;
+use EpiRR::Service::IhecBinaryDatasetClassifier;
 use EpiRR::Service::CommonMetaDataBuilder;
 
 my $test_db = EpiRR::DB::TestDB->new();
@@ -49,7 +49,8 @@ my @aa_return_vals = (
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
-            meta_data => { foo => 'bar', noodles => 'canoodles', DONOR_ID => 'b' },
+            meta_data =>
+              { foo => 'bar', noodles => 'canoodles', DONOR_ID => 'b' },
         )
     ]
 );
@@ -62,12 +63,13 @@ $mock_aa->mock(
         return @{ $aa_return_vals[ $lookup_called++ ] };
     }
 );
+$mock_aa->mock( 'handles_archive', sub { return 1 } );
 
 #TODO convert to mock objects
 my $cs = EpiRR::Service::ConversionService->new(
-    schema           => $schema,
-    archive_services => { $test_db->archive_name() => $mock_aa, },
-    meta_data_builder => EpiRR::Service::CommonMetaDataBuilder->new(), 
+    schema             => $schema,
+    archive_services   => { $test_db->archive_name() => $mock_aa, },
+    meta_data_builder  => EpiRR::Service::CommonMetaDataBuilder->new(),
     dataset_classifier => EpiRR::Service::IhecBinaryDatasetClassifier->new(),
 );
 
@@ -91,7 +93,7 @@ my $test_output = $cs->user_to_db( $test_input, $errors );
 
 is( $lookup_called, 2, "Called lookup method twice" );
 
-is_deeply( $errors, [], "No errors");
+is_deeply( $errors, [], "No errors" );
 
 ok( $test_output->dataset(), "Has a project" );
 is(

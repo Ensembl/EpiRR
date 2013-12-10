@@ -81,26 +81,33 @@ sub user_to_db {
 
     my $dataset_version =
       $self->_dataset_version( $simple_dataset, $dataset, $errors );
+
     my $samples =
       $self->_raw_data( $simple_dataset, $dataset_version, $errors );
 
-    $self->_create_meta_data( $dataset_version, $samples, $errors );
+    $self->_create_meta_data( $dataset_version, $samples, $errors )
+      if ( !@$errors );
 
-    my ( $status_name, $type_name ) =
-      $self->dataset_classifier()
-      ->determine_classification( $dataset_version, $samples, $errors );
+    if ( !@$errors ) {
+        my ( $status_name, $type_name ) =
+          $self->dataset_classifier()
+          ->determine_classification( $dataset_version, $samples, $errors )
+          unless @$errors;
 
-    my $status = $self->schema()->status()->find( { name => $status_name } );
-    my $type = $self->schema()->type()->find( { name => $type_name } );
+        my $status =
+          $self->schema()->status()->find( { name => $status_name } );
+        my $type = $self->schema()->type()->find( { name => $type_name } );
 
-    $dataset_version->status($status);
-    $dataset_version->type($type);
+        $dataset_version->status($status);
+        $dataset_version->type($type);
+    }
 
     if (@$errors) {
         $self->schema()->txn_rollback();
         return undef;
     }
     else {
+        $dataset_version->update();
         $self->schema()->txn_commit();
         return $dataset_version;
     }
@@ -109,6 +116,11 @@ sub user_to_db {
 
 sub _create_meta_data {
     my ( $self, $dataset_version, $sample_records, $errors ) = @_;
+
+    confess("Dataset version required") unless ($dataset_version);
+    confess("Dataset version must be EpiRR::Schema::Result::DatasetVersion")
+      unless ( $dataset_version->isa('EpiRR::Schema::Result::DatasetVersion') );
+    confess("Samples required") unless ( $sample_records && @$sample_records );
 
     my %meta_data =
       $self->meta_data_builder()->build_meta_data( $sample_records, $errors );
@@ -182,34 +194,50 @@ sub _raw_data {
     my ( $self, $user_dataset, $dataset_version, $errors ) = @_;
 
     my @samples;
+    push @$errors, "No raw data listed"
+      if ( !@{ $user_dataset->raw_data() } );
 
     for my $user_rd ( @{ $user_dataset->raw_data() } ) {
-        my $archive   = $user_rd->archive();
+        my $archive_name = $user_rd->archive();
+
         my $rd_errors = [];
-        push @$rd_errors, "Do not know how to read raw data from archive"
-          if ( !$self->accessor_exists($archive) );
+        my $rd_txt    = $user_rd->as_string();
+        my $archive =
+          $self->schema()->archive()->find( { name => $archive_name } );
 
-        next if !$self->accessor_exists($archive);
+        if ( $self->accessor_exists($archive_name) ) {
+            my $archive_accessor = $self->get_accessor($archive_name);
 
-        my ( $rd, $s ) =
-          $self->get_accessor($archive)
-          ->lookup_raw_data( $user_rd, $rd_errors );
+            my ( $rd, $s ) =
+              $self->get_accessor($archive_name)
+              ->lookup_raw_data( $user_rd, $rd_errors );
 
-        my $rd_txt = $user_rd->as_string();
-        push @$errors, map { "$rd_txt:$_" } @$rd_errors;
-        push @samples, $s;
-
-        $dataset_version->create_related(
-            'raw_datas',
-            {
-                primary_accession   => $rd->primary_id(),
-                secondary_accession => $rd->secondary_id(),
-                archive             => $rd->archive(),
-                archive_url         => $rd->archive_url(),
-                experiment_type     => $rd->experiment_type(),
+            if ( !@$rd_errors ) {
+                confess("No raw data returned for $rd_txt") unless $rd;
+                confess("No sample returned for $rd_txt")   unless $s;
             }
-        ) if ( !@$rd_errors );
+
+            push @samples, $s;
+
+            $dataset_version->create_related(
+                'raw_datas',
+                {
+                    primary_accession   => $rd->primary_id(),
+                    secondary_accession => $rd->secondary_id(),
+                    archive             => $archive,
+                    archive_url         => $rd->archive_url(),
+                    experiment_type     => $rd->experiment_type(),
+                }
+            ) if ( !@$rd_errors );
+        }
+        else {
+            push @$rd_errors, "Do not know how to read raw data from archive";
+        }
+
+        push @$errors, map { "$rd_txt: $_" } @$rd_errors;
     }
+
+    push @$errors, "No samples found" unless @samples;
 
     return \@samples;
 }
