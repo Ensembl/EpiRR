@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+use utf8;
 use warnings;
 use strict;
 
@@ -7,49 +9,49 @@ use Croak;
 
 use Data::Dumper;
 
-
-my ( $db_url, $db_user, $db_pass, %db_params, );
-my ( $project_name, $dataset_accession );
+my $config_module = 'EpiRR::Config';
+my $file;
 
 GetOptions(
-    "dburl=s"     => \$db_url,
-    "dbuser=s"    => \$db_user,
-    "dbpass=s"    => \$db_pass,
-    "dbparam=s"   => \%db_params,
-    "project=s"   => \$project_name,
-    "accession=s" => \$dataset_accession,
+    "config=s" => \$config,
+    "file=s"   => \$file,
 );
 
-my $schema = EpiRR::Schema->connect( $db_url, $db_user, $db_pass );
+eval "require $config_module" or throw "cannot load module $config_module $@";
 
+my $container = $config_module->get_container();
 
+my $text_file_parser = $container->resolve('textFileParser');
+croak ("Cannot find textFileParser") unless $text_file_parser;
 
-$schema->txn_begin();
+my $conversion_service = $container->resolve('conversionService');
+croak ("Cannot find conversionService") unless $conversion_service;
 
-my ($dataset,$accession);
+$text_file_parser->file_path($file);
+my $data$text_file_parser->parse();
 
-if (defined $dataset_accession) {
-  $dataset = $schema->dataset()->find({accession => $dataset_accession});
-  die "No accession found for $dataset_accession" if (! $dataset);
-  
-  if (! $dataset->project_id == $project->project_id) {
-    my $ds_project_name = $dataset->project()->name();
-    my $project_name = $project->name();
-    die "Project mismatch between dataset $dataset_accession ($ds_project_name) vs. parameter ($project_name)";
-  }
-}
-else {
-  $dataset = $schema->dataset()->create({ project_id => $project->project_id() });
-  $dataset->create_accession();
-  $dataset->update();
-  print 'New dataset accessioned:'.$dataset->accession();
+if ($text_file_parser->error_count()) {
+  print STDERR "Error(s) when parsing text file, will not proceed.".$/;
+  print STDERR $_.$/ for ($text_file_parser->all_errors());
+  exit 1;
 }
 
+my $user_dataset = $text_file_parser->dataset();
+my $errors = []
+my $db_dataset = $conversion_service->user_to_db($user_dataset,$errors);
+
+if (@$errors){
+  print STDERR "Error(s) when checking and storing data set, will not proceed.".$/;
+  print STDERR $_.$/ for (@$errors);
+  exit 2;
+}
+
+my $full_dataset = $conversion_service->db_to_user($db_dataset);
+
+print STDOUT $full_dataset->full_accession;
+exit 0;
 
 
-
-
-$schema->txn_commit();
 
 
 

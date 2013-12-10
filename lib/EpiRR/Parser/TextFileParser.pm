@@ -1,3 +1,4 @@
+use utf8;
 package EpiRR::Parser::TextFileParser;
 
 use strict;
@@ -59,12 +60,13 @@ DESCRIPTION	Chronic Lymphocytic Leukemia
 
 with 'EpiRR::Roles::HasErrors';
 
-has 'file_path' => ( is => 'ro', isa => 'Maybe[Str]' );
+has 'file_path'   => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );
 has 'dataset'     => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'EpiRR::Model::Dataset',
     default => sub { EpiRR::Model::Dataset->new() },
+    lazy    => 1,
 );
 has 'raw_data_tokens' => (
     traits  => ['Hash'],

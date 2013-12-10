@@ -11,7 +11,7 @@ has 'errors' => (
         push_error   => 'push',
         error_count  => 'count',
         get_error    => 'get',
-        clear_errors => 'clear'
+        all_errors => 'elements',
     },
     default => sub { [] }
 );

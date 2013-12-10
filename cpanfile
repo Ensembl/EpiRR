@@ -3,6 +3,7 @@ requires 'Moose';
 requires 'Class::Method::Modifiers';
 requires 'XML::Twig';
 requires 'URI::Encode';
+requires 'Bread::Board';
 
 on 'test' => sub {
   requires 'Test::More';
