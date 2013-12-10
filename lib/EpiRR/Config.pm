@@ -3,7 +3,7 @@ package EpiRR::Config;
 use Bread::Board;
 
 sub get_container {
-  return $__PACKAGE__::container;
+  return $EpiRR::Config::container;
 }
 
 
@@ -47,7 +47,7 @@ our $container = container 'EpiRR' => as {
         class        => 'EpiRR::Service::ENAWeb',
         lifecycle    => 'Singleton',
         dependencies => {
-            xml_parser => depends_on('sraXmlParser');
+            xml_parser => depends_on('sraXmlParser'),
         }
     );
 
