@@ -17,14 +17,19 @@ use EpiRR::Service::ArchiveAccessorStub;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
+use Data::Dumper;
+
+use EpiRR::Service::IhecBinaryDataSetClassifier;
+use EpiRR::Service::CommonMetaDataBuilder;
+
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
 $test_db->populate_basics();
 
 my @experiment_ids = ( 'X1', 'X2' );
 
-my $lookup_called = 0;
-my @aa_return_vals      = (
+my $lookup_called  = 0;
+my @aa_return_vals = (
     [
         EpiRR::Model::RawData->new(
             archive         => $test_db->archive_name(),
@@ -54,14 +59,16 @@ my $mock_aa =
 $mock_aa->mock(
     'lookup_raw_data',
     sub {
-        return @{$aa_return_vals[ $lookup_called++ ]};
+        return @{ $aa_return_vals[ $lookup_called++ ] };
     }
 );
 
+#TODO convert to mock objects
 my $cs = EpiRR::Service::ConversionService->new(
     schema           => $schema,
     archive_services => { $test_db->archive_name() => $mock_aa, },
-    meta_data_builder =>  EpiRR::Service::CommonMetaDataBuilder->new(),
+    meta_data_builder => EpiRR::Service::CommonMetaDataBuilder->new(), 
+    dataset_classifier => EpiRR::Service::IhecBinaryDatasetClassifier->new(),
 );
 
 my $test_input = EpiRR::Model::Dataset->new(
@@ -80,7 +87,7 @@ my $test_input = EpiRR::Model::Dataset->new(
 
 my $errors = [];
 
-my $test_output = $cs->simple_to_db( $test_input, $errors );
+my $test_output = $cs->user_to_db( $test_input, $errors );
 
 is( $lookup_called, 2, "Called lookup method twice" );
 
@@ -96,7 +103,7 @@ is( scalar(@output_raw_data), 2, "Two raw data" );
 my $raw_data = pop @output_raw_data;
 
 my @output_meta_data = $test_output->meta_datas();
-is( scalar(@output_meta_data),   1,     "One piece of meta data expected" );
+is( scalar(@output_meta_data),    1,     "One piece of meta data expected" );
 is( $output_meta_data[0]->name(), 'foo', 'Correct meta data attribute' )
   if (@output_meta_data);
 is( $output_meta_data[0]->value(), 'bar', 'Correct meta data value' )

@@ -5,7 +5,7 @@ use Moose;
 with 'EpiRR::Roles::MetaDataBuilder';
 
 sub build_meta_data {
-    my ( $sample_records, $errors ) = @_;
+    my ( $self, $sample_records, $errors ) = @_;
     my @samples = @$sample_records;
     confess 'Samples required' if ( !@samples );
 
@@ -19,8 +19,7 @@ sub build_meta_data {
                 || $s->get_meta_data($k) ne $meta_data{$k} );
         }
     }
-
-    return \%meta_data;
+    return %meta_data;
 }
 
 __PACKAGE__->meta->make_immutable;

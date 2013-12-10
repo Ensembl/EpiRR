@@ -25,10 +25,15 @@ has 'meta_data_builder' => (
     isa      => 'MetaDataBuilder',
     required => 1,
 );
+has 'dataset_classifier' => (
+    is       => 'rw',
+    isa      => 'DatasetClassifier',
+    required => 1,
+);
 
-has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
+has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
-sub db_to_simple {
+sub db_to_user {
     my ( $self, $dsv ) = @_;
 
     confess("No DatasetVersion passed") unless $dsv;
@@ -60,7 +65,7 @@ sub db_to_simple {
     return $d;
 }
 
-sub simple_to_db {
+sub user_to_db {
     my ( $self, $simple_dataset ) = @_;
 
     confess("No dataset provided") if ( !$simple_dataset );
@@ -72,12 +77,16 @@ sub simple_to_db {
     $self->schema()->txn_begin();
 
     my $dataset = $self->_dataset( $simple_dataset, $errors );
+
     my $dataset_version =
       $self->_dataset_version( $simple_dataset, $dataset, $errors );
     my $samples =
       $self->_raw_data( $simple_dataset, $dataset_version, $errors );
 
     $self->_create_meta_data( $dataset_version, $samples, $errors );
+
+    $self->dataset_classifier()
+      ->determine_classification( $dataset_version, $samples, $errors );
 
     if (@$errors) {
         $self->schema()->txn_rollback();
@@ -93,7 +102,8 @@ sub simple_to_db {
 sub _create_meta_data {
     my ( $self, $dataset_version, $sample_records, $errors ) = @_;
 
-    my %meta_data = $self->meta_data_builder( $sample_records, $errors );
+    my %meta_data =
+      $self->meta_data_builder()->build_meta_data( $sample_records, $errors );
 
     if ( !%meta_data ) {
         push @$errors,
