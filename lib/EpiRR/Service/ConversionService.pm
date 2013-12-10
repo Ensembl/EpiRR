@@ -54,10 +54,11 @@ sub db_to_user {
 
     for my $r ( $dsv->raw_datas ) {
         my $x = EpiRR::Model::RawData->new(
-            archive      => $r->archive()->name(),
-            primary_id   => $r->primary_id(),
-            secondary_id => $r->secondary_id(),
-            archive_url  => $r->archive_url,
+            archive         => $r->archive()->name(),
+            primary_id      => $r->primary_id(),
+            secondary_id    => $r->secondary_id(),
+            archive_url     => $r->archive_url(),
+            experiment_type => $r->experiment_type(),
         );
         $d->add_raw_data($x);
     }
@@ -66,13 +67,13 @@ sub db_to_user {
 }
 
 sub user_to_db {
-    my ( $self, $simple_dataset ) = @_;
+    my ( $self, $simple_dataset, $errors ) = @_;
 
     confess("No dataset provided") if ( !$simple_dataset );
     confess("Dataset must be EpiRR::Model::Dataset")
       if ( !$simple_dataset->isa('EpiRR::Model::Dataset') );
-
-    my $errors = [];
+    confess("Must provide errors array ref")
+      unless ( $errors && ref($errors) eq 'ARRAY' );
 
     $self->schema()->txn_begin();
 
@@ -85,12 +86,19 @@ sub user_to_db {
 
     $self->_create_meta_data( $dataset_version, $samples, $errors );
 
-    $self->dataset_classifier()
+    my ( $status_name, $type_name ) =
+      $self->dataset_classifier()
       ->determine_classification( $dataset_version, $samples, $errors );
+
+    my $status = $self->schema()->status()->find( { name => $status_name } );
+    my $type = $self->schema()->type()->find( { name => $type_name } );
+
+    $dataset_version->status($status);
+    $dataset_version->type($type);
 
     if (@$errors) {
         $self->schema()->txn_rollback();
-        return $errors;
+        return undef;
     }
     else {
         $self->schema()->txn_commit();
@@ -198,6 +206,7 @@ sub _raw_data {
                 secondary_accession => $rd->secondary_id(),
                 archive             => $rd->archive(),
                 archive_url         => $rd->archive_url(),
+                experiment_type     => $rd->experiment_type(),
             }
         ) if ( !@$rd_errors );
     }

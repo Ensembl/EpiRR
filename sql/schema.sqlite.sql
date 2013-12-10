@@ -5,15 +5,23 @@ drop table if exists dataset;
 drop table if exists archive;
 drop table if exists status;
 drop table if exists project;
+drop table if exists type;
 
 
 create table archive (
-name text primary key,
+archive_id integer primary key,
+name text,
 full_name text
 );
 
 create table status (
-status text primary key
+status_id integer primary key,
+name text
+);
+
+create table type (
+type_id integer primary key,
+name text
 );
 
 create table project (
@@ -26,6 +34,7 @@ create table dataset (
 dataset_id integer primary key,
 project_id integer,
 accession text,
+created datetime,
 constraint dpi foreign key (project_id) references project(project_id)
 );
 
@@ -41,14 +50,17 @@ is_current boolean,
 local_name text,
 description text,
 full_accession text,
-status text,
+status_id integer,
+type_id integer,
+created datetime,
 constraint dvd foreign key (dataset_id) references dataset(dataset_id),
-constraint dvs foreign key (status) references status(status),
+constraint dvs foreign key (status_id) references status(status_id),
+constraint dvt foreign key (type_id) references type(type_id),
 unique (full_accession) 
 );
 
 create index i_dv_ds on dataset_version(dataset_id);
-create index i_dv_s on dataset_version(status);
+create index i_dv_s on dataset_version(status_id);
 
 create table meta_data (
 meta_data_id integer primary key,
@@ -65,11 +77,12 @@ raw_data_id integer primary key,
 dataset_version_id integer,
 primary_accession text, 
 secondary_accession text,
-archive text,
+archive_id integer,
 archive_url text,
+experiment_type text,
 foreign key (dataset_version_id) references dataset_version(dataset_version_id),
-foreign key (archive) references archive(name)
+foreign key (archive_id) references archive(archive_id)
 );
 
 create index i_rd_ds on raw_data(dataset_version_id);
-create index i_rd_a on raw_data(archive);
+create index i_rd_a on raw_data(archive_id);

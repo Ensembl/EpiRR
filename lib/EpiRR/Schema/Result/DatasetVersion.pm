@@ -66,12 +66,26 @@ __PACKAGE__->table("dataset_version");
   is_nullable: 0
   size: 20
 
-=head2 status
+=head2 status_id
 
-  data_type: 'varchar'
+  data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
-  size: 10
+
+=head2 type_id
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
+  is_foreign_key: 1
+  is_nullable: 0
+
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
 
 =cut
 
@@ -100,8 +114,27 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 512 },
   "full_accession",
   { data_type => "varchar", is_nullable => 0, size => 20 },
-  "status",
-  { data_type => "varchar", is_foreign_key => 1, is_nullable => 0, size => 10 },
+  "status_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
+  "type_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -115,6 +148,20 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("dataset_version_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<full_accession>
+
+=over 4
+
+=item * L</full_accession>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("full_accession", ["full_accession"]);
 
 =head1 RELATIONS
 
@@ -174,13 +221,28 @@ Related object: L<EpiRR::Schema::Result::Status>
 __PACKAGE__->belongs_to(
   "status",
   "EpiRR::Schema::Result::Status",
-  { status => "status" },
+  { status_id => "status_id" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+);
+
+=head2 type
+
+Type: belongs_to
+
+Related object: L<EpiRR::Schema::Result::Type>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "type",
+  "EpiRR::Schema::Result::Type",
+  { type_id => "type_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cUl88SK/7rAuFwP5GmO41g
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 13:14:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ukaEZrIFofzROyFnBMeVRw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

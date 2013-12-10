@@ -38,7 +38,7 @@ my @aa_return_vals = (
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S1',
-            meta_data => { foo => 'bar', strudel => 'apple' },
+            meta_data => { foo => 'bar', strudel => 'apple', DONOR_ID => 'a' },
         )
     ],
     [
@@ -49,7 +49,7 @@ my @aa_return_vals = (
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
-            meta_data => { foo => 'bar', noodles => 'canoodles' },
+            meta_data => { foo => 'bar', noodles => 'canoodles', DONOR_ID => 'b' },
         )
     ]
 );
@@ -90,6 +90,8 @@ my $errors = [];
 my $test_output = $cs->user_to_db( $test_input, $errors );
 
 is( $lookup_called, 2, "Called lookup method twice" );
+
+is_deeply( $errors, [], "No errors");
 
 ok( $test_output->dataset(), "Has a project" );
 is(

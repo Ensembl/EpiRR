@@ -49,12 +49,18 @@ __PACKAGE__->table("raw_data");
   is_nullable: 0
   size: 64
 
-=head2 archive
+=head2 experiment_type
 
   data_type: 'varchar'
+  is_nullable: 0
+  size: 128
+
+=head2 archive_id
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
-  size: 10
 
 =head2 archive_url
 
@@ -83,8 +89,15 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 64 },
   "secondary_accession",
   { data_type => "varchar", is_nullable => 0, size => 64 },
-  "archive",
-  { data_type => "varchar", is_foreign_key => 1, is_nullable => 0, size => 10 },
+  "experiment_type",
+  { data_type => "varchar", is_nullable => 0, size => 128 },
+  "archive_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
   "archive_url",
   { data_type => "varchar", is_nullable => 1, size => 512 },
 );
@@ -114,7 +127,7 @@ Related object: L<EpiRR::Schema::Result::Archive>
 __PACKAGE__->belongs_to(
   "archive",
   "EpiRR::Schema::Result::Archive",
-  { name => "archive" },
+  { archive_id => "archive_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
@@ -134,8 +147,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Q2c05g1Ma6ym0+0JBEPckw
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 14:25:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AmX3/gc92j7wZYxqneqbNQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

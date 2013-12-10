@@ -1,5 +1,4 @@
 use utf8;
-
 package EpiRR::Schema::Result::Dataset;
 
 # Created by DBIx::Class::Schema::Loader
@@ -44,25 +43,39 @@ __PACKAGE__->table("dataset");
   is_nullable: 1
   size: 18
 
+=head2 created
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: current_timestamp
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
-    "dataset_id",
-    {
-        data_type         => "integer",
-        extra             => { unsigned => 1 },
-        is_auto_increment => 1,
-        is_nullable       => 0,
-    },
-    "project_id",
-    {
-        data_type      => "integer",
-        extra          => { unsigned => 1 },
-        is_foreign_key => 1,
-        is_nullable    => 0,
-    },
-    "accession",
-    { data_type => "varchar", is_nullable => 1, size => 18 },
+  "dataset_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
+  "project_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_foreign_key => 1,
+    is_nullable => 0,
+  },
+  "accession",
+  { data_type => "varchar", is_nullable => 1, size => 18 },
+  "created",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => \"current_timestamp",
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -88,10 +101,10 @@ Related object: L<EpiRR::Schema::Result::DatasetVersion>
 =cut
 
 __PACKAGE__->has_many(
-    "dataset_versions",
-    "EpiRR::Schema::Result::DatasetVersion",
-    { "foreign.dataset_id" => "self.dataset_id" },
-    { cascade_copy         => 0, cascade_delete => 0 },
+  "dataset_versions",
+  "EpiRR::Schema::Result::DatasetVersion",
+  { "foreign.dataset_id" => "self.dataset_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 project
@@ -103,14 +116,15 @@ Related object: L<EpiRR::Schema::Result::Project>
 =cut
 
 __PACKAGE__->belongs_to(
-    "project",
-    "EpiRR::Schema::Result::Project",
-    { project_id    => "project_id" },
-    { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  "project",
+  "EpiRR::Schema::Result::Project",
+  { project_id => "project_id" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G5dk0ZrX1+2PIDLZv4M9bQ
+
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 13:14:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I10IXPiXOVLGa4dn0X4nSA
 use Carp;
 use Class::Method::Modifiers;
 

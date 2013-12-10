@@ -35,6 +35,9 @@ sub raw_data {
 sub status {
   return $_[0]->resultset('Status');
 }
+sub type {
+  return $_[0]->resultset('Type');
+}
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

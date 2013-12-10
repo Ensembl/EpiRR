@@ -23,9 +23,9 @@ is( $archive->full_name, $test_db->archive_full_name, "Archive full name" )
   if $archive;
 
 #Status
-my $status = $schema->status()->find( $test_db->status_name );
+my $status = $schema->status()->find( { name => $test_db->status_name } );
 ok( defined $status, 'Status retrived' );
-is( $status->status, $test_db->status_name, 'Status name' ) if ($status);
+is( $status->name, $test_db->status_name, 'Status name' ) if ($status);
 
 #Project
 my $project = $schema->project()->find( { name => $test_db->project_name } );
@@ -33,6 +33,11 @@ ok( defined $project, 'Project retrieved' );
 is( $project->name(), $test_db->project_name, 'Project name' ) if ($project);
 is( $project->id_prefix(), $test_db->project_prefix, 'Project prefix' )
   if ($project);
+
+#Type
+my $type = $schema->type()->find( { name => $test_db->type_name } );
+ok( defined $type, 'Type retrieved' );
+is( $type->name(), $test_db->type_name(), 'Type name' ) if ($type);
 
 #Dataset
 my $dataset =
@@ -77,10 +82,10 @@ SKIP: {
     is( $md->name(),  'foo', "Expected meta data name" )  if $md;
     is( $md->value(), 'bar', "Expected meta data value" ) if $md;
 
-    $schema->raw_data()->create(
+    $dsv2->create_related(
+        'raw_datas',
         {
-            dataset_version_id  => $dsv2->dataset_version_id(),
-            archive             => $archive,
+            archive_id          => $archive->archive_id(),
             primary_accession   => 'a',
             secondary_accession => 'b',
             archive_url         => 'c'
@@ -103,11 +108,13 @@ done_testing();
 sub test_versioning {
     my ( $expected_full_accession, $schema, $dataset ) = @_;
 
+    my $status = $schema->status()->find( { name => $test_db->status_name } );
+    my $type = $schema->type()->find( { name => $test_db->type_name } );
     my $dataset_version = $schema->dataset_version()->create(
         {
-            dataset_id => $dataset->dataset_id(),
-            dataset    => $dataset,
-            status     => $test_db->status_name(),
+            dataset => $dataset,
+            status  => $status,
+            type    => $type
         }
     );
 

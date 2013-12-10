@@ -13,13 +13,14 @@ has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 has 'url' =>
   ( is => 'rw', isa => 'Str', default => 'dbi:SQLite:dbname=:memory:' );
 
-has 'dbh'          => ( is => 'rw' );
-has 'status_name'  => ( is => 'ro', isa => 'Str', default => 'Test Status' );
+has 'dbh' => ( is => 'rw' );
 has 'archive_name' => ( is => 'ro', isa => 'Str', default => 'TA' );
 has 'archive_full_name' =>
   ( is => 'ro', isa => 'Str', default => 'test archive' );
 has 'project_name'   => ( is => 'ro', isa => 'Str', default => 'Test Project' );
 has 'project_prefix' => ( is => 'ro', isa => 'Str', default => 'TPX' );
+has 'status_name'    => ( is => 'ro', isa => 'Str', default => 'Complete' );
+has 'type_name'      => ( is => 'ro', isa => 'Str', default => 'Single donor' );
 
 sub build_up {
     my ($self) = @_;
@@ -39,7 +40,14 @@ sub populate_basics {
             full_name => $self->archive_full_name()
         }
     );
-    $self->schema()->status()->create( { status => $self->status_name() } );
+    for (qw(Complete Incomplete)) {
+        $self->schema()->status()->create( { name => $_ } );
+    }
+    for ( 'Single donor', 'Pooled samples', 'Composite' ) {
+
+        $self->schema()->type()->create( { name => $_ } );
+    }
+
     $self->schema()->project()
       ->create(
         { name => $self->project_name(), id_prefix => $self->project_prefix() }
@@ -56,11 +64,12 @@ sub _create_dbh {
 
 sub _create_db {
     my ($self) = @_;
-    
+
     my $module_dir = dirname(__FILE__);
-    my $schema_file = abs_path($module_dir.'/../../../../sql/schema.sqlite.sql');
-    
-    my $content     = '';
+    my $schema_file =
+      abs_path( $module_dir . '/../../../../sql/schema.sqlite.sql' );
+
+    my $content = '';
     open my $fh, '<', $schema_file;
     {
         local $/;

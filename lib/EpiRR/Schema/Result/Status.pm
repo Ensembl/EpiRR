@@ -23,7 +23,14 @@ __PACKAGE__->table("status");
 
 =head1 ACCESSORS
 
-=head2 status
+=head2 status_id
+
+  data_type: 'integer'
+  extra: {unsigned => 1}
+  is_auto_increment: 1
+  is_nullable: 0
+
+=head2 name
 
   data_type: 'varchar'
   is_nullable: 0
@@ -32,7 +39,14 @@ __PACKAGE__->table("status");
 =cut
 
 __PACKAGE__->add_columns(
-  "status",
+  "status_id",
+  {
+    data_type => "integer",
+    extra => { unsigned => 1 },
+    is_auto_increment => 1,
+    is_nullable => 0,
+  },
+  "name",
   { data_type => "varchar", is_nullable => 0, size => 10 },
 );
 
@@ -40,13 +54,13 @@ __PACKAGE__->add_columns(
 
 =over 4
 
-=item * L</status>
+=item * L</status_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("status");
+__PACKAGE__->set_primary_key("status_id");
 
 =head1 RELATIONS
 
@@ -61,13 +75,13 @@ Related object: L<EpiRR::Schema::Result::DatasetVersion>
 __PACKAGE__->has_many(
   "dataset_versions",
   "EpiRR::Schema::Result::DatasetVersion",
-  { "foreign.status" => "self.status" },
+  { "foreign.status_id" => "self.status_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PWFiLnpf7tcdmWYIMl/4zA
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 13:14:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hU93D1Z0t8eh0ojxs99AEg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
