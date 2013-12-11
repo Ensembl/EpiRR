@@ -32,6 +32,11 @@ sub build_meta_data {
                 || $s->get_meta_data($k) ne $meta_data{$k} );
         }
     }
+    
+    if (!%meta_data){
+      push @$errors, "No common meta data found between samples";
+    }
+    
     return %meta_data;
 }
 

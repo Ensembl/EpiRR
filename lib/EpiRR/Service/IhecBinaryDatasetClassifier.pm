@@ -17,16 +17,25 @@ use Moose;
 
 with 'EpiRR::Roles::DatasetClassifier';
 
+has '+status_names' => ( default => sub { [ 'Complete', 'Incomplete' ] }, );
+has '+type_names' =>
+  ( default => sub { [ 'Composite', 'Pooled samples', 'Single donor' ] }, );
+
 has 'required_experiment_types' => (
     is      => 'rw',
     isa     => 'ArrayRef[Str]',
     traits  => ['Array'],
     default => sub {
         [
-            'DNA Methylation', 'ChIP-Seq Input',
-            'Histone H3K4me1', 'Histone H3K4me3', 'Histone H3K9me3',
-            'Histone H3K9ac', 'Histone H3K27me3', 'Histone H3K36me3', 'mRNA-Seq'
-            ,
+            'DNA Methylation',
+            'ChIP-Seq Input',
+            'Histone H3K4me1',
+            'Histone H3K4me3',
+            'Histone H3K9me3',
+            'Histone H3K9ac',
+            'Histone H3K27me3',
+            'Histone H3K36me3',
+            'mRNA-Seq',
         ];
     },
     handles => { 'all_required_experiment_types' => 'elements' }

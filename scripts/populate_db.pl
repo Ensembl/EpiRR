@@ -14,38 +14,55 @@
 #   limitations under the License.
 use warnings;
 use strict;
-
-use EpiRR::Schema;
+use Carp;
 use Getopt::Long;
-use Data::Dumper;
 
-my ( $db_url, $db_user, $db_pass, %db_params );
+my $config_module = 'EpiRR::Config';
+my $file;
 
 GetOptions(
-    "dburl=s"   => \$db_url,
-    "dbuser=s"  => \$db_user,
-    "dbpass=s"  => \$db_pass,
-    "dbparam=s" => \%db_params,
+    "config=s" => \$config_module,
+    "file=s"   => \$file,
 );
 
-my $schema = EpiRR::Schema->connect( $db_url, $db_user, $db_pass );
+eval("require $config_module") or croak "cannot load module $config_module $@";
 
-for my $status_name (qw/COMPLETE IN_PROGRESS RETIRED/) {
-    my $existing_status = $schema->status()->find( { status => $status_name } );
+my $container = $config_module->c();
+my $schema = $container->resolve( service => 'database/dbic_schema' );
+croak("Cannot find schema") unless ($schema);
+
+# load type and status names from those supported by this app config
+my $classifier = $container->resolve( service => 'dataset_classifier' );
+croak("Cannot find classifier") unless ($classifier);
+
+for my $status_name ( $classifier->all_status_names() ) {
+    my $existing_status = $schema->status()->find( { name => $status_name } );
     if ( !$existing_status ) {
-        $schema->status()->create( { status => $status_name, } );
+        $schema->status()->create( { name => $status_name, } );
     }
 }
 
-my @archives = (
-    [ 'EGA', 'European Genome-phenome archive' ],
-    [ 'ENA', 'European Nucelotide Archive' ],
-    [ 'SRA', 'NIH Short Read Archive' ]
+for my $type_name ( $classifier->all_type_names() ) {
+    my $existing_type = $schema->type()->find( { name => $type_name } );
+    if ( !$existing_type ) {
+        $schema->type()->create( { name => $type_name, } );
+    }
+}
+
+# raw data archives
+my %archives = (
+    'EGA'   => 'European Genome-phenome archive',
+    'ENA'   => 'European Nucelotide Archive',
+    'SRA'   => 'NCBI Sequence Read Archive',
+    'DDBJ'  => 'DNA Data Bank of Japan',
+    'AE'    => 'ArrayExpress',
+    'GEO'   => 'Gene Expression Omnibus',
+    'DBGAP' => 'NCBI dbGaP',
 );
 
-for my $archive (@archives) {
-    my ( $name, $full_name ) = @$archive;
+while ( my ( $name, $full_name ) = each %archives ) {
     my $existing_archive = $schema->archive()->find( { name => $name } );
+
     if ($existing_archive) {
         $existing_archive->full_name($full_name);
         $existing_archive->update();
@@ -60,12 +77,28 @@ for my $archive (@archives) {
     }
 }
 
-my @projects = ( [ 'BLUEPRINT', 'BP' ], [ 'DEEP', 'DE' ], [ 'CEMT', 'CEMT' ], );
+# ensure we can support all archives in current config
+my $conversion_service = $container->resolve( service => 'conversion_service' );
+for my $name ( $conversion_service->all_archives() ) {
+    my $archive = $schema->archive()->find( { name => $name } );
+    if ( !$archive ) {
+        croak(
+"Conversion service supports archive $name, but this is not in the DB"
+        );
+    }
+}
 
-for my $project (@projects) {
-    my ( $name, $id_prefix ) = @$project;
-    my $existing_project = $schema->project()->find( { name => $name }
- );
+#create project names
+my %projects = (
+    'BLUEPRINT'   => 'BP',
+    'DEEP'        => 'DEEP',
+    'EPP'         => 'EPP',
+    'NIH Roadmap' => 'RM',
+    'CREST'       => 'CREST'
+);
+
+while (my ($name,$id_prefix) = each %projects) {
+    my $existing_project = $schema->project()->find( { name => $name } );
     if ($existing_project) {
         $existing_project->id_prefix($id_prefix);
         $existing_project->update();

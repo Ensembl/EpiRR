@@ -29,6 +29,7 @@ has 'archive_services' => (
         get_accessor    => 'get',
         set_accessor    => 'set',
         accessor_exists => 'defined',
+        all_archives    => 'keys',
     },
     default => sub { {} },
 );

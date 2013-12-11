@@ -17,4 +17,19 @@ use Moose::Role;
 
 requires 'determine_classification';
 
+has 'status_names' => (
+    traits   => ['Array'],
+    is       => 'rw',
+    isa      => 'ArrayRef[Str]',
+    required => 1,
+    handles  => { all_status_names => 'elements' }
+);
+has 'type_names' => (
+    traits   => ['Array'],
+    is       => 'rw',
+    isa      => 'ArrayRef[Str]',
+    required => 1,
+    handles  => { all_type_names => 'elements' }
+);
+
 1;

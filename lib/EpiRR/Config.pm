@@ -16,23 +16,18 @@ package EpiRR::Config;
 use Bread::Board;
 
 sub c {
-  return $EpiRR::Config::container;
+    return $EpiRR::Config::container;
 }
 
 our $container = container 'EpiRR' => as {
-    service 'metaDataBuilder' => (
-        class    => 'EpiRR::Service::CommonMetaDataBuilder',
-        lifecyle => 'Singleton',
-    );
 
-    service 'conversionService' => (
+    service 'conversion_service' => (
         class        => 'EpiRR::Service::ConversionService',
-        lifecyle     => 'Singleton',
         dependencies => {
-            meta_data_builder  => depends_on('metaDataBuilder'),
-            dataset_classifier => depends_on('datasetClassifier'),
-            schema             => depends_on('Database/dbic_schema'),
-            ena_accessor       => depends_on('enaWebAccessor'),
+            meta_data_builder  => depends_on('meta_data_builder'),
+            dataset_classifier => depends_on('dataset_classifier'),
+            schema             => depends_on('database/dbic_schema'),
+            ena_accessor       => depends_on('ena_web_accessor'),
         },
         block => sub {
             my ($s) = @_;
@@ -46,32 +41,35 @@ our $container = container 'EpiRR' => as {
                     DDBJ => $s->param('ena_accessor'),
                 }
             );
-            $c;
+            return $c;
         }
     );
 
-    service 'datasetClassifier' => (
+    service 'dataset_classifier' => (
         class     => 'EpiRR::Service::IhecBinaryDatasetClassifier',
         lifecycle => 'Singleton',
     );
 
-    service 'enaWebAccessor' => (
-        class        => 'EpiRR::Service::ENAWeb',
-        lifecycle    => 'Singleton',
-        dependencies => {
-            xml_parser => depends_on('sraXmlParser'),
-        }
+    service 'meta_data_builder' => (
+        class    => 'EpiRR::Service::CommonMetaDataBuilder',
+        lifecyle => 'Singleton',
     );
 
-    service 'sraXmlParser' => (
+    service 'ena_web_accessor' => (
+        class        => 'EpiRR::Service::ENAWeb',
+        lifecycle    => 'Singleton',
+        dependencies => { xml_parser => depends_on('sra_xml_parser'), }
+    );
+
+    service 'sra_xml_parser' => (
         class     => 'EpiRR::Parser::SRAXMLParser',
         lifecycle => 'Singleton',
     );
 
-    service 'textFileParser' => ( class => 'EpiRR::Parser::TextFileParser', );
+    service 'text_file_parser' => ( class => 'EpiRR::Parser::TextFileParser' );
 
-    container 'Database' => as {
-        service 'dsn'      => "dbi:SQLite:dbname=my-app.db";
+    container 'database' => as {
+        service 'dsn'      => "dbi:SQLite:dbname=epirr.db";
         service 'username' => "";
         service 'password' => "";
 
