@@ -32,8 +32,8 @@ use EpiRR::Model::RawData;
 
 use Data::Dumper;
 
-use EpiRR::Service::IhecBinaryDatasetClassifier;
-use EpiRR::Service::CommonMetaDataBuilder;
+use EpiRR::Service::MetaDataBuilderStub;
+use EpiRR::Service::DatasetClassifierStub;
 
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
@@ -69,7 +69,7 @@ my @aa_return_vals = (
 );
 
 my $mock_aa =
-  new Test::MockObject::Extends( EpiRR::Service::ArchiveAccessorStub->new() );
+  Test::MockObject::Extends->new( EpiRR::Service::ArchiveAccessorStub->new() );
 $mock_aa->mock(
     'lookup_raw_data',
     sub {
@@ -78,12 +78,30 @@ $mock_aa->mock(
 );
 $mock_aa->mock( 'handles_archive', sub { return 1 } );
 
-#TODO convert to mock objects
+my $mock_mdb =
+  Test::MockObject::Extends->new( EpiRR::Service::MetaDataBuilderStub->new() );
+$mock_mdb->mock(
+    'build_meta_data',
+    sub {
+        return ( foo => 'bar' );
+    }
+);
+
+my $mock_ds =
+  Test::MockObject::Extends->new(
+    EpiRR::Service::DatasetClassifierStub->new() );
+$mock_ds->mock(
+    'determine_classification',
+    sub {
+        return ( $test_db->status_name(), $test_db->type_name() );
+    }
+);
+
 my $cs = EpiRR::Service::ConversionService->new(
     schema             => $schema,
     archive_services   => { $test_db->archive_name() => $mock_aa, },
-    meta_data_builder  => EpiRR::Service::CommonMetaDataBuilder->new(),
-    dataset_classifier => EpiRR::Service::IhecBinaryDatasetClassifier->new(),
+    meta_data_builder  => $mock_mdb,
+    dataset_classifier => $mock_ds,
 );
 
 my $test_input = EpiRR::Model::Dataset->new(

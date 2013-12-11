@@ -83,12 +83,22 @@ sub composition {
     else {
         push @$errors, 'No donor/line/pool information for dataset';
     }
+    
+    return $dataset_type;
 }
 
 sub experimental_completeness {
-    my ( $self, $dataset_version ) = @_;
+    my ( $self, $dataset_version, $errors ) = @_;
     my %et;
-    $et{ $_->experiment_type() }++ for ( $dataset_version->raw_datas() );
+
+    for my $rd ( $dataset_version->raw_datas() ) {
+        if ( $rd->experiment_type() ) {
+            $et{ $rd->experiment_type() }++;
+        }
+        else {
+            push @$errors, 'No experiment type for ' . $rd->primary_accession();
+        }
+    }
 
     my $classification = 'Complete';
 

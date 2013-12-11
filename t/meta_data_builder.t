@@ -62,3 +62,5 @@ my $b = EpiRR::Service::CommonMetaDataBuilder->new();
     );
 }
 
+done_testing();
+

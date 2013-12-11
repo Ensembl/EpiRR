@@ -15,10 +15,13 @@ package EpiRR::Service::DatasetClassifierStub;
 
 use Moose;
 
-with 'EpiRR::Roles::DatasetClassofier';
+with 'EpiRR::Roles::DatasetClassifier';
 
 sub determine_classification {
   return (1,2);
 }
+has '+status_names' => ( default => sub { [ 1 ] }, );
+has '+type_names' =>
+  ( default => sub { [ 2 ] }, );
 __PACKAGE__->meta->make_immutable;
 1;

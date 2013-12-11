@@ -15,6 +15,8 @@ package EpiRR::Service::MetaDataBuilderStub;
 
 use Moose;
 
+with 'EpiRR::Roles::MetaDataBuilder';
+
 sub build_meta_data {
   return ();
 }
