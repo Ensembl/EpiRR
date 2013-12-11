@@ -20,8 +20,6 @@ use EpiRR::Schema;
 use Getopt::Long;
 use Carp;
 
-use Data::Dumper;
-
 my $config_module = 'EpiRR::Config';
 my $file;
 
@@ -34,11 +32,11 @@ eval("require $config_module") or croak "cannot load module $config_module $@";
 
 my $container = $config_module->c();
 
-my $text_file_parser = $container->resolve( service => 'textFileParser');
-croak ("Cannot find textFileParser") unless ($text_file_parser);
+my $text_file_parser = $container->resolve( service => 'text_file_parser');
+croak ("Cannot find text_file_parser") unless ($text_file_parser);
 
-my $conversion_service = $container->resolve( service => 'conversionService');
-croak ("Cannot find conversionService") unless ($conversion_service);
+my $conversion_service = $container->resolve( service => 'conversion_service');
+croak ("Cannot find conversion_service") unless ($conversion_service);
 
 $text_file_parser->file_path($file);
 $text_file_parser->parse();
