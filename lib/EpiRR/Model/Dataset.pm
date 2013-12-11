@@ -27,8 +27,9 @@ has 'project' => (
     default   => '',
     predicate => 'has_project'
 );
-has 'status' =>
-  ( is => 'rw', isa => 'Maybe[Str]', default => '', predicate => 'has_status' );
+has 'status' => ( is => 'rw', isa => 'Str', default => '', );
+has 'type'   => ( is => 'rw', isa => 'Str', default => '', );
+
 has 'accession' => (
     is        => 'rw',
     isa       => 'Maybe[Str]',

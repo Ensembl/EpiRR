@@ -42,10 +42,10 @@ has 'required_experiment_types' => (
 );
 
 sub determine_classification {
-    my ( $self, $dataset_version, $samples, $errors ) = @_;
+    my ( $self, $dataset, $samples, $errors ) = @_;
 
     my $completeness =
-      $self->experimental_completeness( $dataset_version, $errors );
+      $self->experimental_completeness( $dataset, $errors );
     my $composition = $self->composition( $samples, $errors );
 
     return ( $completeness, $composition );
@@ -88,15 +88,15 @@ sub composition {
 }
 
 sub experimental_completeness {
-    my ( $self, $dataset_version, $errors ) = @_;
+    my ( $self, $dataset, $errors ) = @_;
     my %et;
 
-    for my $rd ( $dataset_version->raw_datas() ) {
+    for my $rd ( $dataset->all_raw_data() ) {
         if ( $rd->experiment_type() ) {
             $et{ $rd->experiment_type() }++;
         }
         else {
-            push @$errors, 'No experiment type for ' . $rd->primary_accession();
+            push @$errors, 'No experiment type for ' . $rd->primary_id();
         }
     }
 

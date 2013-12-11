@@ -105,7 +105,7 @@ sub user_to_db {
     if ( !@$errors ) {
         my ( $status_name, $type_name ) =
           $self->dataset_classifier()
-          ->determine_classification( $dataset_version, $samples, $errors )
+          ->determine_classification( $simple_dataset, $samples, $errors )
           unless @$errors;
 
         my $status =
@@ -243,6 +243,7 @@ sub _raw_data {
                     experiment_type     => $rd->experiment_type(),
                 }
             ) if ( !@$rd_errors );
+            $user_rd->experiment_type( $rd->experiment_type() );
         }
         else {
             push @$rd_errors, "Do not know how to read raw data from archive";
