@@ -11,12 +11,12 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-package EpiRR::Config;
+package EpiRR::IntegrationTestConfig;
 
 use Bread::Board;
 
 sub c {
-  return $EpiRR::Config::container;
+    return $EpiRR::Config::container;
 }
 
 our $container = container 'EpiRR' => as {
@@ -58,9 +58,7 @@ our $container = container 'EpiRR' => as {
     service 'enaWebAccessor' => (
         class        => 'EpiRR::Service::ENAWeb',
         lifecycle    => 'Singleton',
-        dependencies => {
-            xml_parser => depends_on('sraXmlParser'),
-        }
+        dependencies => { xml_parser => depends_on('sraXmlParser'), }
     );
 
     service 'sraXmlParser' => (
@@ -71,7 +69,7 @@ our $container = container 'EpiRR' => as {
     service 'textFileParser' => ( class => 'EpiRR::Parser::TextFileParser', );
 
     container 'Database' => as {
-        service 'dsn'      => "dbi:SQLite:dbname=my-app.db";
+        service 'dsn'      => "dbi:SQLite:dbname=:memory:";
         service 'username' => "";
         service 'password' => "";
 
