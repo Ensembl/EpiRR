@@ -3,7 +3,9 @@ perl:
   - "5.14"
 before_install:
     - "cpanm -n Devel::Cover::Report::Coveralls"
-after_install:
-    - "cpanm git://github.com/istreeter/BioSD.git"  
+    - "cpanm Module::Build::Pluggable Module::Build::Pluggable::CPANfile"
+    - "cpanm git://github.com/istreeter/BioSD.git"
+before_script:
+      
 script:
   perl Build.PL && ./Build build && cover -test -report coveralls
