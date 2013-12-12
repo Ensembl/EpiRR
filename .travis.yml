@@ -2,6 +2,7 @@ language: perl
 perl:
   - "5.14"
 before_install:
-    cpanm -n Devel::Cover::Report::Coveralls
+    - "cpanm -n Devel::Cover::Report::Coveralls"
+    - "cpanm git://github.com/davidrichardson/BioSD.git"
 script:
   perl Build.PL && ./Build build && cover -test -report coveralls
