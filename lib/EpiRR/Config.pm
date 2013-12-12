@@ -24,10 +24,11 @@ our $container = container 'EpiRR' => as {
     service 'conversion_service' => (
         class        => 'EpiRR::Service::ConversionService',
         dependencies => {
-            meta_data_builder  => depends_on('meta_data_builder'),
-            dataset_classifier => depends_on('dataset_classifier'),
-            schema             => depends_on('database/dbic_schema'),
-            ena_accessor       => depends_on('ena_web_accessor'),
+            meta_data_builder      => depends_on('meta_data_builder'),
+            dataset_classifier     => depends_on('dataset_classifier'),
+            schema                 => depends_on('database/dbic_schema'),
+            ena_accessor           => depends_on('ena_web_accessor'),
+            array_express_accessor => depends_on('array_express_accessor'),
         },
         block => sub {
             my ($s) = @_;
@@ -39,6 +40,7 @@ our $container = container 'EpiRR' => as {
                     ENA  => $s->param('ena_accessor'),
                     SRA  => $s->param('ena_accessor'),
                     DDBJ => $s->param('ena_accessor'),
+                    AE   => $s->param('array_express_accessor'),
                 }
             );
             return $c;
@@ -59,6 +61,11 @@ our $container = container 'EpiRR' => as {
         class        => 'EpiRR::Service::ENAWeb',
         lifecycle    => 'Singleton',
         dependencies => { xml_parser => depends_on('sra_xml_parser'), }
+    );
+
+    service 'array_express_accessor' => (
+        class     => 'EpiRR::Service::ArrayExpress',
+        lifecycle => 'Singleton',
     );
 
     service 'sra_xml_parser' => (
