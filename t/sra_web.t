@@ -16,7 +16,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use File::Basename;
 
 use EpiRR::Model::RawData;
 use EpiRR::Model::Sample;
