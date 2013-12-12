@@ -15,7 +15,7 @@ package EpiRR;
 
 =head1 NAME
 
-EpiRR - The Reference dataset registry
+EpiRR - An Epigeomics reference dataset registry
 
 =head1 VERSION
 
