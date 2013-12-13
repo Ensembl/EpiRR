@@ -4,6 +4,8 @@ requires 'Class::Method::Modifiers';
 requires 'XML::Twig';
 requires 'URI::Encode';
 requires 'Bread::Board';
+requires 'LWP';
+requires 'LWP::Protocol::https';
 
 on 'test' => sub {
   requires 'Test::More';

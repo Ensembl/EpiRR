@@ -20,14 +20,14 @@ use URI::Encode qw(uri_encode);
 
 use EpiRR::Parser::SRAXMLParser;
 
-with 'EpiRR::Roles::ArchiveAccessor', 'EpiRR::Roles::HasUserAgent';
+with 'EpiRR::Roles::ArchiveAccessor';
 
 has '+supported_archives' => ( default => sub { [ 'ENA', 'SRA', 'DDBJ' ] }, );
 has 'experiment_sql' => (
     is  => 'rw',
     isa => 'Str',
     default =>
-'select experiment_id, xmltype.getclobval(experiment_xml) from experiment where experiment_id = ? and ega_id is null'
+'select experiment_id, status_id, xmltype.getclobval(experiment_xml) from experiment where experiment_id = ? and ega_id is null'
 );
 has 'sample_sql' => (
     is  => 'rw',
@@ -35,7 +35,7 @@ has 'sample_sql' => (
     default =>
 'select sample_id, xmltype.getclobval(sample_xml) from sample where sample_id = ? and ega_id is null'
 );
-
+has 'valid_status_id' => ( is => 'rw', isa => 'Int', default => 4 );
 
 has 'xml_parser' => (
     is       => 'rw',
@@ -63,17 +63,24 @@ sub lookup_raw_data {
 
     my ( $experiment_id, $experiment_type, $sample_id ) =
       $self->experiment_xml( $raw_data->primary_id(), $errors );
-
+      
     my $sample = $self->lookup_sample( $sample_id, $errors ) if ($sample_id);
 
     my $archive_raw_data = EpiRR::Model::RawData->new(
         primary_id      => $experiment_id,
         experiment_type => $experiment_type,
         archive         => $raw_data->archive(),
-        archive_url     => $self->base_url() . $experiment_id,
+        archive_url =>
+          $self->get_url( $experiment_id, $raw_data->secondary_id(), $errors ),
     );
-
+    use Data::Dumper;print Dumper([$experiment_id, $experiment_type, $sample_id,$archive_raw_data,$sample] );
     return ( $archive_raw_data, $sample );
+}
+
+sub get_url {
+    my ( $self, $experiment_id, $secondary_id, $errors ) = @_;
+
+    return $self->base_url() . $experiment_id;
 }
 
 sub experiment_xml {
@@ -82,20 +89,23 @@ sub experiment_xml {
     my $stmt = $self->database_handle()->prepare( $self->experiment_sql() );
     $stmt->bind_param( 1, $experiment_id );
     $stmt->execute();
-    
+
     my $row_array_ref = $stmt->fetchall_arrayref;
     my $nrows         = scalar(@$row_array_ref);
-    
+
     if ( $nrows != 1 ) {
         push @$errors, "Found $nrows experiments for $experiment_id";
         return undef;
     }
 
     my $row = pop @$row_array_ref;
-    my ($id,$xml) = @$row;
-    
-    my ($s_id,$et,$e_id) = $self->xml_parser()->parse_experiment($xml);
-    
+    my ( $id, $status_id, $xml ) = @$row;
+
+    push @$errors, "Experiment does not have a valid status"
+      if ( $status_id != $self->valid_status_id() );
+
+    my ( $s_id, $et, $e_id ) = $self->xml_parser()->parse_experiment($xml);
+
     return ( $id, $et, $s_id );
 }
 
@@ -109,15 +119,15 @@ sub lookup_sample {
 
     my $row_array_ref = $stmt->fetchall_arrayref;
     my $nrows         = scalar(@$row_array_ref);
-    
+
     if ( $nrows != 1 ) {
         push @$errors, "Found $nrows samples for $sample_id";
         return undef;
     }
-    
+
     my $row = pop @$row_array_ref;
-    my ($id,$xml) = @$row;
-    
+    my ( $id, $xml ) = @$row;
+
     my $sample = $self->xml_parser()->parse_sample( $xml, $errors );
 
     return $sample;
