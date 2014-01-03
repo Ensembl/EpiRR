@@ -129,7 +129,7 @@ sub lookup_sample {
     );
     
     for my $p (@{$s->properties}) {
-      $sample->set_meta_data($p->class(), $p->value());
+      $sample->set_meta_data($p->class(), join(', ',@{$p->values()}));
     }
     
     return $sample;

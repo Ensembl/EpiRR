@@ -52,7 +52,6 @@ my $ae = EpiRR::Service::ArrayExpress->new();
             'Sample_source_name' =>
               'caput of epididymides from 50 years old man',
             'Sample_title'     => 'caput of epididymides from 50 years old man',
-            'Sample Accession' => 'SAMEA1438605',
         },
     );
 
