@@ -15,6 +15,7 @@ package EpiRR::Service::RateThrottler;
 
 use Moose;
 use Time::HiRes qw(gettimeofday sleep);
+
 with 'EpiRR::Roles::Throttler';
 
 has 'sampling_period_seconds' =>

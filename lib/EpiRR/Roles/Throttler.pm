@@ -14,6 +14,6 @@
 package EpiRR::Roles::Throttler;
 
 use Moose::Role;
-
+#call this before doing an action, it should sleep until the actiion can be done without exceeding a permitted rate
 requires 'do_action';
 1;

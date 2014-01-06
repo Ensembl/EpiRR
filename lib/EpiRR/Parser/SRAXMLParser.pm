@@ -22,6 +22,9 @@ use Moose;
 use namespace::autoclean;
 use XML::Twig;
 
+use EpiRR::Model::Sample;
+use EpiRR::Model::RawData;
+
 sub parse_experiment {
     my ($self, $xml, $errors) = @_;
 

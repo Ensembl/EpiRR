@@ -18,7 +18,6 @@ use namespace::autoclean;
 use Carp;
 use URI::Encode qw(uri_encode);
 
-use EpiRR::Parser::SRAXMLParser;
 use XML::Twig;
 use LWP;
 extends 'EpiRR::Service::ENAInternal';
