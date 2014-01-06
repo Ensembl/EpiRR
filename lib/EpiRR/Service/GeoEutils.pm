@@ -60,6 +60,8 @@ has 'archive_link_url' => (
 sub lookup_raw_data {
     my ( $self, $raw_data, $errors ) = @_;
 
+    $errors = [] unless $errors;
+
     confess("Must have raw data") if ( !$raw_data );
     confess("Raw data must be EpiRR::Model::RawData")
       if ( !$raw_data->isa('EpiRR::Model::RawData') );
@@ -68,15 +70,29 @@ sub lookup_raw_data {
 
     my $accession = $raw_data->primary_id();
 
-    my $uids        = $self->_accession_to_uids($accession);
+    my $uids = $self->_accession_to_uids($accession);
+
+    push @$errors, "No UIDs found for accession $accession" unless @$uids;
+
     my $sample_uids = $self->_find_sample_uid($uids);
-    my $sra_uids    = $self->_find_sra_uids($sample_uids);
+
+    push @$errors, "No sample UIDs found for accession $accession"
+      unless @$sample_uids;
+    push @$errors, "Found multiple sample UIDs for accession $accession"
+      if ( $sample_uids && scalar(@$sample_uids) > 1 );
+
+    my $sra_uids = $self->_find_sra_uids($sample_uids);
+
+    push @$errors, "No SRA UIDs found for accession $accession"
+      unless @$sra_uids;
+    push @$errors, "Found multiple SRA UIDs for accession $accession"
+      if ( $sra_uids && scalar(@$sra_uids) > 1 );
+
     my ( $experiment_type, $sample ) =
-      $self->_get_sra_sample_and_experiment(@$sra_uids);
+      $self->_get_sra_sample_and_experiment( @$sra_uids, $errors );
 
     my $archive_url = $self->archive_link_url() . uri_encode($accession);
 
-    #TODO error handling??
     my $raw_data_out = EpiRR::Model::RawData->new(
         archive         => 'GEO',
         primary_id      => $accession,
@@ -124,17 +140,15 @@ sub _find_sample_uid {
 
     my $t = XML::Twig->new(
         twig_handlers => {
-            "Item[\@Name='entryType']" => sub {
+            "Item[\@Name='entryType' and string() = 'GSM']" => sub {
                 my ( $t, $element ) = @_;
 
-                if ( $element->text() eq 'GSM' ) {
-                    my $id_element = $element->prev_sibling('Id')
-                      || $element->next_sibling('Id');
-                    confess("No id element found in XML for $url")
-                      unless $id_element;
-                    my $id = $id_element->text();
-                    push @sample_uids, $id;
-                }
+                my $id_element = $element->prev_sibling('Id')
+                  || $element->next_sibling('Id');
+                confess("No id element found in XML for $url")
+                  unless $id_element;
+                my $id = $id_element->text();
+                push @sample_uids, $id;
               }
         }
     );
