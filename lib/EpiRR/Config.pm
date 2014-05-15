@@ -21,6 +21,14 @@ sub c {
 
 our $container = container 'EpiRR' => as {
 
+    service 'controller' => (
+        class        => 'EpiRR::App::Controller',
+        dependencies => {
+            conversion_service => depends_on('conversion_service'),
+            schema             => depends_on( 'database/dbic_schema', )
+        }
+    );
+
     service 'conversion_service' => (
         class        => 'EpiRR::Service::ConversionService',
         dependencies => {
@@ -29,6 +37,8 @@ our $container = container 'EpiRR' => as {
             schema                 => depends_on('database/dbic_schema'),
             ena_accessor           => depends_on('ena_web_accessor'),
             array_express_accessor => depends_on('array_express_accessor'),
+            geo_accessor           => depends_on('geo_accessor'),
+            sra_accessor           => depends_on('sra_accessor'),
         },
         block => sub {
             my ($s) = @_;
@@ -38,9 +48,10 @@ our $container = container 'EpiRR' => as {
                 schema             => $s->param('schema'),
                 archive_services   => {
                     ENA  => $s->param('ena_accessor'),
-                    SRA  => $s->param('ena_accessor'),
+                    SRA  => $s->param('sra_accessor'),
                     DDBJ => $s->param('ena_accessor'),
                     AE   => $s->param('array_express_accessor'),
+                    GEO  => $s->param('geo_accessor'),
                 }
             );
             return $c;
@@ -71,6 +82,33 @@ our $container = container 'EpiRR' => as {
     service 'sra_xml_parser' => (
         class     => 'EpiRR::Parser::SRAXMLParser',
         lifecycle => 'Singleton',
+    );
+
+    service 'geo_accessor' => (
+        class        => 'EpiRR::Service::GeoEutils',
+        lifecycle    => 'Singleton',
+        dependencies => {
+            eutils       => depends_on('ncbi_eutils'),
+            sra_accessor => depends_on('sra_accessor'),
+        }
+    );
+
+    service 'sra_accessor' => (
+        class        => 'EpiRR::Service::SRAEUtils',
+        lifecycle    => 'Singleton',
+        dependencies => {
+            sra_xml_parser => depends_on('sra_xml_parser'),
+            eutils         => depends_on('ncbi_eutils'),
+        }
+    );
+
+    service 'contact_email' => 'VALID_EMAIL';
+
+    service 'ncbi_eutils' => (
+        class        => 'EpiRR::Service::NcbiEutils',
+        lifecycle    => 'Singleton',
+        dependencies => { email => depends_on('contact_email'), }
+
     );
 
     service 'text_file_parser' => ( class => 'EpiRR::Parser::TextFileParser' );

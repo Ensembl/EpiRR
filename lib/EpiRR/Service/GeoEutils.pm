@@ -21,29 +21,21 @@ use URI::Encode qw(uri_encode);
 use EpiRR::Service::RateThrottler;
 use EpiRR::Parser::SRAXMLParser;
 use EpiRR::Types;
-use XML::Twig;
 
 with 'EpiRR::Roles::ArchiveAccessor', 'EpiRR::Roles::HasUserAgent';
 
 has '+supported_archives' => ( default => sub { ['GEO'] }, );
-has 'throttler' => (
-    is       => 'ro',
-    isa      => 'Throttler',
-    required => 1,
-    default  => sub {
-        EpiRR::Service::RateThrottler->new(
-            actions_permitted_per_period => 3,
-            sampling_period_seconds      => 1,
-        );
-    }
-);
-has 'sra_xml_parser' => (
+has 'eutils' => (
     is       => 'rw',
-    isa      => 'EpiRR::Parser::SRAXMLParser',
+    isa      => 'EpiRR::Service::NcbiEutils',
     required => 1,
-    default  => sub { EpiRR::Parser::SRAXMLParser->new() },
-    lazy     => 1
 );
+has 'sra_accessor' => (
+    is       => 'rw',
+    isa      => 'ArchiveAccessor',
+    required => 1,
+);
+
 has 'base_url' => (
     is       => 'rw',
     isa      => 'Str',
@@ -69,150 +61,87 @@ sub lookup_raw_data {
       if ( !$self->handles_archive( $raw_data->archive() ) );
 
     my $accession = $raw_data->primary_id();
+    
+    my $gsm_uids = $self->_esearch_geo($accession);
+    
+    push @$errors, "No UIDs found for accession $accession" unless @$gsm_uids;
 
-    my $uids = $self->_accession_to_uids($accession);
+    my ($sra_accessions) = $self->_esummary_geo($gsm_uids);
 
-    push @$errors, "No UIDs found for accession $accession" unless @$uids;
+    push @$errors, "No GEO sample UIDs found for accession $accession"
+      unless @$gsm_uids;
+    push @$errors, "Found multiple GEO sample UIDs for accession $accession"
+      if ( $gsm_uids && scalar(@$gsm_uids) > 1 );
+    push @$errors, "Found multiple SRA accessions for $accession"
+      if ( $sra_accessions && scalar(@$sra_accessions) > 1 );
 
-    my $sample_uids = $self->_find_sample_uid($uids);
+    return if @$errors;
+    my ( $raw_data_out, $sample );
+    
+    if (@$sra_accessions) {
+        my $sra_raw_data = EpiRR::Model::RawData->new(
+            archive    => 'SRA',
+            primary_id => $sra_accessions->[0],
+        );
+        
+        
+        ( $raw_data_out, $sample ) =
+          $self->sra_accessor->lookup_raw_data( $sra_raw_data, $errors );
+          $raw_data_out->archive('GEO');
+          $raw_data_out->primary_id($accession)
 
-    push @$errors, "No sample UIDs found for accession $accession"
-      unless @$sample_uids;
-    push @$errors, "Found multiple sample UIDs for accession $accession"
-      if ( $sample_uids && scalar(@$sample_uids) > 1 );
-
-    my $sra_uids = $self->_find_sra_uids($sample_uids);
-
-    push @$errors, "No SRA UIDs found for accession $accession"
-      unless @$sra_uids;
-    push @$errors, "Found multiple SRA UIDs for accession $accession"
-      if ( $sra_uids && scalar(@$sra_uids) > 1 );
-
-    my ( $experiment_type, $sample ) =
-      $self->_get_sra_sample_and_experiment( @$sra_uids, $errors );
+    }
+    else {
+        $raw_data_out = EpiRR::Model::RawData->new();
+    }
 
     my $archive_url = $self->archive_link_url() . uri_encode($accession);
-
-    my $raw_data_out = EpiRR::Model::RawData->new(
-        archive         => 'GEO',
-        primary_id      => $accession,
-        experiment_type => $experiment_type,
-        archive_url     => $archive_url,
-    );
+    $raw_data_out->archive_url($archive_url);
 
     return ( $raw_data_out, $sample );
+
 }
 
-sub _accession_to_uids {
+sub _esearch_geo {
     my ( $self, $accession ) = @_;
-
-    my $url =
-        $self->base_url()
-      . 'esearch.fcgi?db=gds&field=ACCN&term='
-      . uri_encode($accession);
-    my $xml = $self->_make_eutils_request($url);
-
-#example http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gds&term=GSM409307&field=ACCN
-    my @uids;
-    my $t = XML::Twig->new(
-        twig_handlers => {
-            'IdList/Id' => sub {
-                my ( $t, $element ) = @_;
-                push @uids, $element->text();
-              }
-        }
-    );
-    $t->parse($xml);
+    my @uids =
+      $self->eutils->esearch( "${accession}[ACCN] AND GSM[ETYP]", 'gds' );
     return \@uids;
 }
 
-sub _find_sample_uid {
-    my ( $self, $uids ) = @_;
+sub _docSum_external_relations_hash {
+    my ( $self, $docSum ) = @_;
 
-#example http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gds&id=200016256,100009115,300409307
-    my $url =
-        $self->base_url()
-      . 'esummary.fcgi?db=gds&id='
-      . uri_encode( join( ',', @$uids ) );
-    my $xml = $self->_make_eutils_request($url);
+    my ($list) = $docSum->get_Items_by_name('ExtRelations');
+    my %ext_relations;
+    for my $relation ( $list->get_Items_by_name('ExtRelation') ) {
+        my ($type)   = $relation->get_contents_by_name('RelationType');
+        my ($target) = $relation->get_contents_by_name('TargetObject');
+
+        $ext_relations{$type} = $target;
+    }
+    
+    return %ext_relations;
+}
+
+sub _esummary_geo {
+    my ( $self, $uids ) = @_;
 
     my @sample_uids;
+    my @sra_accessions;
+    my @docSums = $self->eutils->esummary( $uids, 'gds' );
 
-    my $t = XML::Twig->new(
-        twig_handlers => {
-            "Item[\@Name='entryType' and string() = 'GSM']" => sub {
-                my ( $t, $element ) = @_;
+    for my $docSum (@docSums) {
+        my ($entryType) = $docSum->get_contents_by_name('entryType');
+        next if ( $entryType ne 'GSM' );
 
-                my $id_element = $element->prev_sibling('Id')
-                  || $element->next_sibling('Id');
-                confess("No id element found in XML for $url")
-                  unless $id_element;
-                my $id = $id_element->text();
-                push @sample_uids, $id;
-              }
+        my %ext_relations = $self->_docSum_external_relations_hash($docSum);
+        my $sra_accession = $ext_relations{SRA} || $ext_relations{sra};
+        if ( $sra_accession  ) {
+            push @sra_accessions, $sra_accession;
         }
-    );
-    $t->parse($xml);
-    return \@sample_uids;
-}
-
-sub _find_sra_uids {
-    my ( $self, $uids ) = @_;
-
-#example http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?db=sra&dbfrom=gds&id=300409307
-    my $url =
-        $self->base_url()
-      . 'elink.fcgi?db=sra&dbfrom=gds&id='
-      . uri_encode( join( ',', @$uids ) );
-    my $xml = $self->_make_eutils_request($url);
-
-    my @sra_uids;
-
-    my $t = XML::Twig->new(
-        twig_handlers => {
-            'Link/Id' => sub {
-                my ( $t, $element ) = @_;
-                push @sra_uids, $element->text();
-              }
-        }
-    );
-    $t->parse($xml);
-    return \@sra_uids;
-}
-
-sub _get_sra_sample_and_experiment {
-    my ( $self, $uid, $errors ) = @_;
-
-#example http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=sra&id=6495
-
-    my $url = $self->base_url() . 'efetch.fcgi?db=sra&id=' . uri_encode($uid);
-    my $xml = $self->_make_eutils_request($url);
-
-    my ( $sample_id, $experiment_type, $experiment_id ) =
-      $self->sra_xml_parser()->parse_experiment( $xml, $errors );
-    my $sample = $self->sra_xml_parser()->parse_sample( $xml, $errors );
-
-    return ( $experiment_type, $sample );
-}
-
-sub _make_eutils_request {
-    my ( $self, $url ) = @_;
-
-    my $req = HTTP::Request->new( GET => $url );
-
-    $self->throttler()->do_action();
-    my $res = $self->user_agent->request($req);
-    my $resp;
-
-    # Check the outcome of the response
-    if ( $res->is_success ) {
-        $resp = $res->content;
     }
-    else {
-        confess( "Error requesting $url:" . $res->status_line );
-    }
-
-    return $resp;
+    return \@sra_accessions;
 }
 
 __PACKAGE__->meta->make_immutable;

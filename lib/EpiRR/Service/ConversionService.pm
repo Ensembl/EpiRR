@@ -91,16 +91,16 @@ sub user_to_db {
 
     $self->schema()->txn_begin();
 
-    my $dataset = $self->_dataset( $simple_dataset, $errors );
-
+    my $dataset = $self->_dataset( $simple_dataset, $errors ) if !@$errors;
+    
+    
     my $dataset_version =
-      $self->_dataset_version( $simple_dataset, $dataset, $errors );
-
+      $self->_dataset_version( $simple_dataset, $dataset, $errors ) if !@$errors;
+      
     my $samples =
-      $self->_raw_data( $simple_dataset, $dataset_version, $errors );
+      $self->_raw_data( $simple_dataset, $dataset_version, $errors ) if !@$errors;
 
-    $self->_create_meta_data( $dataset_version, $samples, $errors )
-      if ( !@$errors );
+    $self->_create_meta_data( $dataset_version, $samples, $errors ) if !@$errors;
 
     if ( !@$errors ) {
         my ( $status_name, $type_name ) =
@@ -164,6 +164,8 @@ sub _dataset {
     my $project = $self->schema()->project()->find( { name => $project_name } );
     push @$errors, "No project found for $project_name" if ( !$project );
 
+    return if @$errors;
+
     my $dataset;
     if ( $user_dataset->accession() ) {
         $dataset =
@@ -210,6 +212,7 @@ sub _raw_data {
     my @samples;
     push @$errors, "No raw data listed"
       if ( !@{ $user_dataset->raw_data() } );
+    return if @$errors;
 
     for my $user_rd ( @{ $user_dataset->raw_data() } ) {
         my $archive_name = $user_rd->archive();
