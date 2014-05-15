@@ -104,28 +104,28 @@ my $ge = EpiRR::Service::GeoEutils->new( eutils => $eu, sra_accessor => $sra, );
     my $accession = 'GSM706504';
 
     my $expected_sample = EpiRR::Model::Sample->new(
-        sample_id => '???',
+        sample_id => 'GSM706504',
         meta_data => {
-            'disease '              => 'None',
-            'biomaterial_provider ' => 'FHCRC HEIMFELD',
-            'biomaterial_type '     => 'Primary Cell',
-            'cell_type '            => 'CD14 Primary Cells',
-            'markers '              => 'CD14+',
-            'donor_id '             => 'RO 01679',
-            'donor_age '            => 'year 21',
-            'donor_health_status '  => 'NA',
-            'donor_sex '            => 'Male',
-            'donor_ethnicity '      => 'Caucasian',
-            'passage_if_expanded '  => 'NA',
+            'disease'              => 'None',
+            'biomaterial_provider' => 'FHCRC HEIMFELD',
+            'biomaterial_type'     => 'Primary Cell',
+            'cell_type'            => 'CD14 Primary Cells',
+            'markers'              => 'CD14+',
+            'donor_id'             => 'RO 01679',
+            'donor_age'            => 'year 21',
+            'donor_health_status'  => 'NA',
+            'donor_sex'            => 'Male',
+            'donor_ethnicity'      => 'Caucasian',
+            'passage_if_expanded'  => 'NA',
         }
     );
 
     my $expected_raw_data = EpiRR::Model::RawData->new(
         archive         => 'GEO',
         primary_id      => $accession,
-        experiment_type => 'Affymetrix Human Exon 1.0 ST Array',
+        experiment_type => '[HuEx-1_0-st] Affymetrix Human Exon 1.0 ST Array [probe set (exon) version]',
         archive_url =>
-          'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM409307',
+          'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM706504',
     );
 
     my ( $raw_data, $sample ) = $ge->lookup_raw_data(

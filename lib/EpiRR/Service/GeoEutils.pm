@@ -19,7 +19,7 @@ use LWP;
 use Carp;
 use URI::Encode qw(uri_encode);
 use EpiRR::Service::RateThrottler;
-use EpiRR::Parser::SRAXMLParser;
+use EpiRR::Parser::GeoMinimlParser;
 use EpiRR::Types;
 
 with 'EpiRR::Roles::ArchiveAccessor', 'EpiRR::Roles::HasUserAgent';
@@ -36,17 +36,37 @@ has 'sra_accessor' => (
     required => 1,
 );
 
-has 'base_url' => (
+has 'geo_xml_parser' => (
+    is       => 'rw',
+    isa      => 'EpiRR::Parser::GeoMinimlParser',
+    required => 1,
+    default  => sub {
+        EpiRR::Parser::GeoMinimlParser->new();
+    }
+);
+has 'base_xml_url' => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
-    default  => 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
+    default =>
+'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?targ=self&form=xml&view=quick&acc='
 );
 has 'archive_link_url' => (
     is       => 'rw',
     isa      => 'Str',
     required => 1,
     default  => 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc='
+);
+has 'throttler' => (
+    is       => 'ro',
+    isa      => 'Throttler',
+    required => 1,
+    default  => sub {
+        EpiRR::Service::RateThrottler->new(
+            actions_permitted_per_period => 3,
+            sampling_period_seconds      => 1,
+        );
+    }
 );
 
 sub lookup_raw_data {
@@ -61,9 +81,9 @@ sub lookup_raw_data {
       if ( !$self->handles_archive( $raw_data->archive() ) );
 
     my $accession = $raw_data->primary_id();
-    
+
     my $gsm_uids = $self->_esearch_geo($accession);
-    
+
     push @$errors, "No UIDs found for accession $accession" unless @$gsm_uids;
 
     my ($sra_accessions) = $self->_esummary_geo($gsm_uids);
@@ -77,29 +97,70 @@ sub lookup_raw_data {
 
     return if @$errors;
     my ( $raw_data_out, $sample );
-    
+
     if (@$sra_accessions) {
         my $sra_raw_data = EpiRR::Model::RawData->new(
             archive    => 'SRA',
             primary_id => $sra_accessions->[0],
         );
-        
-        
+
         ( $raw_data_out, $sample ) =
           $self->sra_accessor->lookup_raw_data( $sra_raw_data, $errors );
-          $raw_data_out->archive('GEO');
-          $raw_data_out->primary_id($accession)
 
     }
     else {
-        $raw_data_out = EpiRR::Model::RawData->new();
+        my $experiment_type;
+        ( $experiment_type, $sample ) = $self->_geo_miniml($accession);
+        $raw_data_out =
+          EpiRR::Model::RawData->new( experiment_type => $experiment_type );
     }
 
     my $archive_url = $self->archive_link_url() . uri_encode($accession);
     $raw_data_out->archive_url($archive_url);
+    $raw_data_out->archive('GEO');
+    $raw_data_out->primary_id($accession);
 
     return ( $raw_data_out, $sample );
 
+}
+
+sub _geo_miniml {
+    my ( $self, $accession, $errors ) = @_;
+
+    my $main_xml = $self->_get_xml($accession);
+
+    my ( $platform_id, $sample, $experiment_type ) =
+      $self->geo_xml_parser()->parse_main( $main_xml, $errors );
+
+    if ( !$experiment_type ) {
+        my $platform_xml = $self->_get_xml($platform_id);
+        $experiment_type =
+          $self->geo_xml_parser()->parse_platform( $platform_xml, $errors );
+    }
+
+    return ( $experiment_type, $sample );
+}
+
+sub _get_xml {
+    my ( $self, $accession ) = @_;
+
+    confess("accession is required") unless $accession;
+
+    my $url = $self->base_xml_url() . uri_encode($accession);
+
+    my $req = HTTP::Request->new( GET => $url );
+    $self->throttler()->do_action();
+    my $res = $self->user_agent->request($req);
+    my $xml;
+
+    # Check the outcome of the response
+    if ( $res->is_success ) {
+        $xml = $res->content;
+    }
+    else {
+        confess( "Error requesting $url:" . $res->status_line );
+    }
+    return $xml;
 }
 
 sub _esearch_geo {
@@ -113,17 +174,17 @@ sub _docSum_external_relations_hash {
     my ( $self, $docSum ) = @_;
 
     my ($list) = $docSum->get_Items_by_name('ExtRelations');
+
     my %ext_relations;
-    if ($list){
-    for my $relation ( $list->get_Items_by_name('ExtRelation') ) {
-        my ($type)   = $relation->get_contents_by_name('RelationType');
-        my ($target) = $relation->get_contents_by_name('TargetObject');
+    if ($list) {
+        while ( my $relation = $list->next_Item() ) {
+            my ($type)   = $relation->get_contents_by_name('RelationType');
+            my ($target) = $relation->get_contents_by_name('TargetObject');
 
-        $ext_relations{$type} = $target;
+            $ext_relations{$type} = $target;
+        }
     }
-}
 
-    
     return %ext_relations;
 }
 
@@ -140,7 +201,7 @@ sub _esummary_geo {
 
         my %ext_relations = $self->_docSum_external_relations_hash($docSum);
         my $sra_accession = $ext_relations{SRA} || $ext_relations{sra};
-        if ( $sra_accession  ) {
+        if ($sra_accession) {
             push @sra_accessions, $sra_accession;
         }
     }
