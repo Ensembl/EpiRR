@@ -5,6 +5,8 @@ before_install:
     - "cpanm -n Devel::Cover::Report::Coveralls"
     - "cpanm Module::Build::Pluggable Module::Build::Pluggable::CPANfile"
     - "cpanm git://github.com/istreeter/BioSD.git"
+    #This should solve problem installing Perl's DB_File & GraphViz for BioPerl dependencies
+    - "sudo apt-get install libdb-dev graphviz libgd2-xpm-dev libxml2-dev 2>&1 | tail -n 4"
 before_script:
       
 script:
