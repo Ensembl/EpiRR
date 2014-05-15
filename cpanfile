@@ -7,6 +7,7 @@ requires 'Bread::Board';
 requires 'LWP';
 requires 'LWP::Protocol::https';
 requires 'Mojolicious';
+requires 'Bundle::CPAN';
 requires 'Bio::DB::EUtilities';
 
 on 'test' => sub {

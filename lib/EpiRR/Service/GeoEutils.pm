@@ -114,12 +114,15 @@ sub _docSum_external_relations_hash {
 
     my ($list) = $docSum->get_Items_by_name('ExtRelations');
     my %ext_relations;
+    if ($list){
     for my $relation ( $list->get_Items_by_name('ExtRelation') ) {
         my ($type)   = $relation->get_contents_by_name('RelationType');
         my ($target) = $relation->get_contents_by_name('TargetObject');
 
         $ext_relations{$type} = $target;
     }
+}
+
     
     return %ext_relations;
 }
