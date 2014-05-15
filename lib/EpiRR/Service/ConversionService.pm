@@ -56,7 +56,7 @@ sub db_to_user {
 
     my $d = EpiRR::Model::Dataset->new(
         project     => $dsv->dataset()->project()->name(),
-        status      => $dsv->status()->status(),
+        status      => $dsv->status()->name(),
         accession   => $dsv->full_accession(),
         local_name  => $dsv->local_name(),
         description => $dsv->description()
@@ -69,8 +69,8 @@ sub db_to_user {
     for my $r ( $dsv->raw_datas ) {
         my $x = EpiRR::Model::RawData->new(
             archive         => $r->archive()->name(),
-            primary_id      => $r->primary_id(),
-            secondary_id    => $r->secondary_id(),
+            primary_id      => $r->primary_accession(),
+            secondary_id    => $r->secondary_accession(),
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
         );

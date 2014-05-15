@@ -58,16 +58,16 @@ sub composition {
     my %pools;
 
     for my $s (@$samples) {
-        if ( $s->get_meta_data('POOL_ID') ) {
-            $pools{ $s->get_meta_data('POOL_ID') }++;
+        if ( $s->get_meta_data('pool_id') ) {
+            $pools{ $s->get_meta_data('pool_id') }++;
         }
-        elsif ( $s->get_meta_data('DONOR_ID') || $s->get_meta_data('LINE') ) {
-            $donors{ $s->get_meta_data('DONOR_ID')
-                  || $s->get_meta_data('LINE') }++;
+        elsif ( $s->get_meta_data('donor_id') || $s->get_meta_data('line') ) {
+            $donors{ $s->get_meta_data('donor_id')
+                  || $s->get_meta_data('line') }++;
         }
         else {
             push @$errors,
-              'No DONOR_ID/POOL_ID/LINE found for sample ' . $s->sample_id();
+              'No donor_id/pool_id/line found for sample ' . $s->sample_id();
         }
     }
 

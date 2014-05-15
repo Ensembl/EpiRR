@@ -58,5 +58,5 @@ if (@$errors){
 
 my $full_dataset = $conversion_service->db_to_user($db_dataset);
 
-print STDOUT $full_dataset->full_accession;
+print STDOUT $full_dataset->accession.$/;
 exit 0;
