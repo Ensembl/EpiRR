@@ -73,6 +73,7 @@ sub esummary {
         -db    => $db,
         -email => $self->email
     );
+    
     return $eutil->get_DocSums();
 }
 
