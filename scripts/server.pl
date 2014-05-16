@@ -58,6 +58,7 @@ get '/view/:id' => sub {
     else {
         $self->res->code(404);
         $self->res->message('Not Found');
+        $self->render();
     }
 };
 

@@ -27,7 +27,6 @@ sub build_meta_data {
 
     for my $s (@samples) {
         for my $k ( keys %meta_data ) {
-            $k = uc($k);
             delete $meta_data{$k}
               if (!$s->meta_data_defined($k)
                 || $s->get_meta_data($k) ne $meta_data{$k} );

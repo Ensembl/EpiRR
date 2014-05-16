@@ -35,7 +35,7 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
     my $input_s = [
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { DONOR_ID => 'd1' }
+            meta_data => { donor_id=> 'd1' }
         )
     ];
     my $errors = [];
@@ -106,11 +106,11 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
     my $input_s = [
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { DONOR_ID => 'd1' }
+            meta_data => { donor_id=> 'd1' }
         ),
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { DONOR_ID => 'd2' }
+            meta_data => { donor_id=> 'd2' }
         )
     ];
 
@@ -125,11 +125,11 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
     my $input_s = [
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { POOL_ID => 'p1' }
+            meta_data => { pool_id => 'p1' }
         ),
         EpiRR::Model::Sample->new(
             sample_id => 's2',
-            meta_data => { POOL_ID => 'p1' }
+            meta_data => { pool_id => 'p1' }
         )
     ];
 
@@ -153,7 +153,7 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
     is_deeply(
         $errors,
         [
-            'No DONOR_ID/POOL_ID/LINE found for sample s1',
+            'No donor_id/pool_id/line found for sample s1',
             'No donor/line/pool information for dataset'
         ],
         "No donor id generates error"

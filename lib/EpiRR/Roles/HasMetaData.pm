@@ -32,6 +32,15 @@ has 'meta_data' => (
         meta_data_is_empty => 'is_empty',
     },
     default => sub { {} },
-);
+    trigger => sub {
+        my ( $self, $meta_data, $old_meta_data ) = @_;
 
+        for my $k ( keys %$meta_data ) {
+            if ( $k ne lc($k) ) {
+                my $v = delete $meta_data->{$k};
+                $meta_data->{ lc($k) } = $v;
+            }
+        }
+    }
+);
 1;

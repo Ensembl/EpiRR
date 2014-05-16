@@ -44,8 +44,7 @@ has 'required_experiment_types' => (
 sub determine_classification {
     my ( $self, $dataset, $samples, $errors ) = @_;
 
-    my $completeness =
-      $self->experimental_completeness( $dataset, $errors );
+    my $completeness = $self->experimental_completeness( $dataset, $errors );
     my $composition = $self->composition( $samples, $errors );
 
     return ( $completeness, $composition );
@@ -83,7 +82,7 @@ sub composition {
     else {
         push @$errors, 'No donor/line/pool information for dataset';
     }
-    
+
     return $dataset_type;
 }
 

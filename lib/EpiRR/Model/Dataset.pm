@@ -17,6 +17,7 @@ use strict;
 use warnings;
 
 use Moose;
+use JSON;
 use namespace::autoclean;
 
 with 'EpiRR::Roles::HasMetaData';
@@ -54,5 +55,28 @@ has 'raw_data' => (
     default => sub { [] },
 );
 
+sub to_hash {
+    my ($self) = @_;
+
+    my @raw_data = map { $_->to_hash() } $self->all_raw_data();
+    my %meta_data = $self->all_meta_data();
+
+    return {
+        project     => $self->project,
+        status      => $self->status,
+        type        => $self->type,
+        accession   => $self->accession,
+        local_name  => $self->local_name,
+        description => $self->description,
+        raw_data    => \@raw_data,
+        meta_data   => \%meta_data,
+    };
+}
+
+sub TO_JSON {
+    my ($self) = @_;
+    return  $self->to_hash();
+
+}
 __PACKAGE__->meta->make_immutable;
 1;

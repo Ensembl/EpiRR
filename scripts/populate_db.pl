@@ -90,14 +90,15 @@ for my $name ( $conversion_service->all_archives() ) {
 
 #create project names
 my %projects = (
-    'BLUEPRINT'   => 'BP',
-    'DEEP'        => 'DEEP',
-    'EPP'         => 'EPP',
-    'NIH Roadmap' => 'RM',
-    'CREST'       => 'CREST'
+    'BLUEPRINT'   => 'IHECRE',
+    'DEEP'        => 'IHECRE',
+    'EPP'         => 'IHECRE',
+    'NIH Roadmap' => 'IHECRE',
+    'CREST'       => 'IHECRE',
+    'CEMT'        => 'IHECRE'
 );
 
-while (my ($name,$id_prefix) = each %projects) {
+while ( my ( $name, $id_prefix ) = each %projects ) {
     my $existing_project = $schema->project()->find( { name => $name } );
     if ($existing_project) {
         $existing_project->id_prefix($id_prefix);

@@ -85,12 +85,8 @@ our $container = container 'EpiRR' => as {
     );
 
     service 'geo_accessor' => (
-        class        => 'EpiRR::Service::GeoEutils',
-        lifecycle    => 'Singleton',
-        dependencies => {
-            eutils       => depends_on('ncbi_eutils'),
-            sra_accessor => depends_on('sra_accessor'),
-        }
+        class     => 'EpiRR::Service::GeoEutils',
+        lifecycle => 'Singleton',
     );
 
     service 'sra_accessor' => (

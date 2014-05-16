@@ -80,7 +80,7 @@ sub parse_sample {
             'SAMPLE_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
 
-                my $tag   = lc($element->first_child_text('TAG'));
+                my $tag   = ($element->first_child_text('TAG'));
                 my $value = $element->first_child_text('VALUE');
 
                 $s->set_meta_data( $tag, $value );
@@ -89,7 +89,7 @@ sub parse_sample {
                 my ( $t, $element ) = @_;
 
                 my $value = $element->text();
-                $s->set_meta_data( 'SPECIES', $value );
+                $s->set_meta_data( 'species', $value );
               }
         }
     );

@@ -23,12 +23,33 @@ has 'conversion_service' => (
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
 sub fetch_current {
-  my ($self) = @_;
-  
-  my $cs = $self->conversion_service();
-  my @current_data_sets = $self->schema()->dataset_version()->search({is_current => 1});
-  my @dsv = map {$cs->db_to_user($_)} @current_data_sets;
-  return \@dsv;  
+    my ($self) = @_;
+
+    my $cs = $self->conversion_service();
+    my @current_data_sets =
+      $self->schema()->dataset_version()->search( { is_current => 1 } );
+    my @dsv = map { $cs->db_to_user($_) } @current_data_sets;
+    return \@dsv;
+}
+
+sub fetch {
+    my ( $self, $id ) = @_;
+
+    my $data_set_version =
+      $self->schema->dataset()->find( { accession => $id, } )
+      ->search_related( 'dataset_versions', { is_current => 1 } )->first();
+
+    if ( !$data_set_version ) {
+        $data_set_version =
+          $self->schema->dataset_version()->find( { full_accession => $id } );
+    }
+
+    if ($data_set_version) {
+        return $self->conversion_service()->db_to_user($data_set_version);
+    }
+    else {
+        return;
+    }
 }
 
 1;

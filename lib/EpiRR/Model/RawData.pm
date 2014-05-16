@@ -34,5 +34,16 @@ sub as_string {
         $self->secondary_id() || $na );
 }
 
+sub to_hash {
+    my ($self) = @_;
+    return {
+        'archive'         => $self->archive,
+        'primary_id'      => $self->primary_id,
+        'secondary_id'    => $self->secondary_id,
+        'archive_url'     => $self->archive_url,
+        'experiment_type' => $self->experiment_type,
+    };
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
