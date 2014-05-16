@@ -20,11 +20,8 @@ use Data::Dumper;
 use EpiRR::Service::GeoWeb;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
-use EpiRR::Service::NcbiEutils;
-use EpiRR::Service::SRAEUtils;
 
-
-my $ge = EpiRR::Service::GeoWeb->new();
+my $geo = EpiRR::Service::GeoWeb->new();
 
 {
     my $accession = 'GSM409307';
@@ -66,7 +63,7 @@ my $ge = EpiRR::Service::GeoWeb->new();
           'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM409307',
     );
 
-    my ( $raw_data, $sample ) = $ge->lookup_raw_data(
+    my ( $raw_data, $sample ) = $geo->lookup_raw_data(
         EpiRR::Model::RawData->new(
             archive    => 'GEO',
             primary_id => $accession,
@@ -107,7 +104,7 @@ my $ge = EpiRR::Service::GeoWeb->new();
           'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM706504',
     );
 
-    my ( $raw_data, $sample ) = $ge->lookup_raw_data(
+    my ( $raw_data, $sample ) = $geo->lookup_raw_data(
         EpiRR::Model::RawData->new(
             archive    => 'GEO',
             primary_id => $accession,
