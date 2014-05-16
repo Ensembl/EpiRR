@@ -12,14 +12,23 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 package EpiRR::App::Controller;
-use Moose;
 
+use Moose;
+use Carp;
+use EpiRR::Parser::JsonParser;
 has 'conversion_service' => (
     is       => 'rw',
     isa      => 'EpiRR::Service::ConversionService',
     required => 1,
 );
-
+has 'json_parser' => (
+    is       => 'rw',
+    isa      => 'EpiRR::Parser::JsonParser',
+    required => 1,
+    default  => sub {
+        EpiRR::Parser::JsonParser->new();
+    },
+);
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
 sub fetch_current {
@@ -52,5 +61,29 @@ sub fetch {
     }
 }
 
+sub submit {
+    my ( $self, $project, $json ) = @_;
+
+    my $errors = [];
+
+    my $user_datasets = $self->json_parser()->parse( $json, $errors );
+
+    if ( !$user_datasets ) {
+        push @$errors, 'No dataset decoded';
+    }
+    if ( scalar(@$user_datasets) ) {
+        push @$errors, 'Multiple datasets submitted';
+    }
+
+    if ( !@$errors ) {
+        my $dataset = $self->conversion_service()->user_to_db( $user_datasets->[0], $errors );
+        if (@$errors){
+          return ('',$errors);
+        }
+        else {
+          return ($dataset->accession,$errors);
+        }
+    }
+}
 
 1;

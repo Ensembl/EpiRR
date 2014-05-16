@@ -85,7 +85,7 @@ our $container = container 'EpiRR' => as {
     );
 
     service 'geo_accessor' => (
-        class     => 'EpiRR::Service::GeoEutils',
+        class     => 'EpiRR::Service::GeoWeb',
         lifecycle => 'Singleton',
     );
 

@@ -17,7 +17,6 @@ use strict;
 use warnings;
 
 use Moose;
-use JSON;
 use namespace::autoclean;
 
 with 'EpiRR::Roles::HasMetaData';
@@ -75,7 +74,7 @@ sub to_hash {
 
 sub TO_JSON {
     my ($self) = @_;
-    return  $self->to_hash();
+    return $self->to_hash();
 
 }
 __PACKAGE__->meta->make_immutable;
