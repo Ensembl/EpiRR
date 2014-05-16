@@ -40,7 +40,7 @@ has 'base_url' => (
 );
 has 'eutils' => (
     is       => 'rw',
-    isa      => 'EpiRR::Service::NcbiEutils',
+    isa      => 'EpiRR::Service::NcbiEUtils',
     required => 1,
 );
 

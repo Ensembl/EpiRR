@@ -101,7 +101,7 @@ our $container = container 'EpiRR' => as {
     service 'contact_email' => 'VALID_EMAIL';
 
     service 'ncbi_eutils' => (
-        class        => 'EpiRR::Service::NcbiEutils',
+        class        => 'EpiRR::Service::NcbiEUtils',
         lifecycle    => 'Singleton',
         dependencies => { email => depends_on('contact_email'), }
 
