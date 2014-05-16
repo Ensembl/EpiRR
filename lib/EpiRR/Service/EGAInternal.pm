@@ -60,45 +60,24 @@ END
     my $req = HTTP::Request->new( GET => $url );
 
     my $res = $self->user_agent->request($req);
-    my $html;
 
     # Check the outcome of the response
     if ( $res->is_success ) {
         my $html = $res->content;
         my $title;
-        my $t = XML::Twig->new(
-            twig_handlers => {
-                'title' => sub {
-                    my ( $t, $element ) = @_;
-                    $title = $element->text() if ( !$title );
-                },
-            }
-        );
-        $t->parse($html);
 
-        if ( !$title ) {
-            confess(
-"Could not find title in EGA html, cannot confirm that dataset $secondary_id is available"
-            );
-        }
-        elsif ( $title =~ m/^DATASET\:/ ) {
+        if ( $html =~ /This dataset is featured in/ ) {
             return $url;
         }
-        elsif ( $title eq 'The European Genome-phenome Archive ' ) {
-            push @$errors,
-              "EGA Dataset $secondary_id does not appear to be available";
-        }
         else {
-            confess(
-"Could not expected text in EGA html, cannot confirm that dataset $secondary_id is available"
-            );
+            push @$errors,
+              "Could not confirm that EGA dataset $secondary_id is available";
+            return;
         }
-
     }
     else {
         confess( "Error requesting $url:" . $res->status_line );
     }
-    return $url;
 }
 
 __PACKAGE__->meta->make_immutable;
