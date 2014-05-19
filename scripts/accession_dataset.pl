@@ -18,45 +18,60 @@ use strict;
 use EpiRR::Schema;
 use Getopt::Long;
 use Carp;
+use JSON;
 
 my $config_module = 'EpiRR::Config';
 my $file;
+my $outfile;
 
 GetOptions(
-    "config=s" => \$config_module,
-    "file=s"   => \$file,
-) or die ($!);
+    "config=s"  => \$config_module,
+    "file=s"    => \$file,
+    "outfile=s" => \$outfile,
+) or croak("Error with options: $!");
 
 eval("require $config_module") or croak "cannot load module $config_module $@";
 
 my $container = $config_module->c();
 
-my $text_file_parser = $container->resolve( service => 'text_file_parser');
-croak ("Cannot find text_file_parser") unless ($text_file_parser);
+my $text_file_parser = $container->resolve( service => 'text_file_parser' );
+croak("Cannot find text_file_parser") unless ($text_file_parser);
 
-my $conversion_service = $container->resolve( service => 'conversion_service');
-croak ("Cannot find conversion_service") unless ($conversion_service);
+my $conversion_service = $container->resolve( service => 'conversion_service' );
+croak("Cannot find conversion_service") unless ($conversion_service);
+
+if ( !$outfile ) {
+    $outfile = $file . '.out';
+}
+
+croak("Output would overwrite existing file $outfile") if (-e $outfile);
+open my $fh, '>', $outfile or croak("Could not open $outfile: $!");
 
 $text_file_parser->file_path($file);
 $text_file_parser->parse();
 
-if ($text_file_parser->error_count()) {
-  print STDERR "Error(s) when parsing text file, will not proceed.".$/;
-  print STDERR $_.$/ for ($text_file_parser->all_errors());
-  exit 1;
+if ( $text_file_parser->error_count() ) {
+    print STDERR "Error(s) when parsing text file, will not proceed." . $/;
+    print $fh $_.$/ for ( $text_file_parser->all_errors() );
+    exit 1;
 }
 
 my $user_dataset = $text_file_parser->dataset();
-my $errors = [];
-my $db_dataset = $conversion_service->user_to_db($user_dataset,$errors);
+my $errors       = [];
+my $db_dataset   = $conversion_service->user_to_db( $user_dataset, $errors );
 
-if (@$errors){
-  print STDERR "Error(s) when checking and storing data set, will not proceed.".$/;
-  print STDERR $_.$/ for (@$errors);
-  exit 2;
+if (@$errors) {
+    print STDERR
+      "Error(s) when checking and storing data set, will not proceed." . $/;
+    print $fh $_.$/ for ( @$errors );
+    exit 2;
 }
+
+my $json = JSON->new();
 
 my $full_dataset = $conversion_service->db_to_user($db_dataset);
 
-print STDOUT $full_dataset->accession.$/;
+print $fh $json->pretty()->encode($full_dataset->to_hash());
+
+close $fh;
 exit 0;
