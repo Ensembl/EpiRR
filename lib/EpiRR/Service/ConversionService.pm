@@ -59,7 +59,8 @@ sub db_to_user {
         status      => $dsv->status()->name(),
         accession   => $dsv->full_accession(),
         local_name  => $dsv->local_name(),
-        description => $dsv->description()
+        description => $dsv->description(),
+        type        => $dsv->type()->name(),
     );
 
     for my $m ( $dsv->meta_datas ) {
@@ -92,22 +93,23 @@ sub user_to_db {
     $self->schema()->txn_begin();
 
     my $dataset = $self->_dataset( $simple_dataset, $errors ) if !@$errors;
-    
-    
-    my $dataset_version =
-      $self->_dataset_version( $simple_dataset, $dataset, $errors ) if !@$errors;
-      
-    my $samples =
-      $self->_raw_data( $simple_dataset, $dataset_version, $errors ) if !@$errors;
 
-    $self->_create_meta_data( $dataset_version, $samples, $errors ) if !@$errors;
+    my $dataset_version =
+      $self->_dataset_version( $simple_dataset, $dataset, $errors )
+      if !@$errors;
+
+    my $samples = $self->_raw_data( $simple_dataset, $dataset_version, $errors )
+      if !@$errors;
+
+    $self->_create_meta_data( $dataset_version, $samples, $errors )
+      if !@$errors;
 
     if ( !@$errors ) {
         my ( $status_name, $type_name ) =
           $self->dataset_classifier()
           ->determine_classification( $simple_dataset, $samples, $errors )
           unless @$errors;
-
+          
         my $status =
           $self->schema()->status()->find( { name => $status_name } );
         my $type = $self->schema()->type()->find( { name => $type_name } );

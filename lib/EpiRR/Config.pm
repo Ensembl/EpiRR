@@ -97,6 +97,8 @@ our $container = container 'EpiRR' => as {
             eutils         => depends_on('ncbi_eutils'),
         }
     );
+    
+    service 'json_file_parser' => (class => 'EpiRR::Parser::JsonFileParser');
 
     service 'contact_email' => 'VALID_EMAIL';
 

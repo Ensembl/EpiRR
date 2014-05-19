@@ -24,9 +24,11 @@ use namespace::autoclean;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 
-use Data::Dumper;
+use Moose;
 use JSON;
 use Carp;
+
+with 'EpiRR::Roles::InputParser';
 
 =head1 NAME
 
@@ -39,38 +41,41 @@ Parses JSON to produce EpiRR::Model::Dataset objects.
 =cut
 
 sub parse {
-    my ( $self, $json ) = @_;
+    my ($self) = @_;
 
+    my $json      = $self->slurp_file();
     my $perl_data = decode_json($json);
+    $self->convert_dataset($perl_data);
+}
 
-    if ( ref($perl_data) eq 'HASH' ) {
-        $perl_data = [$perl_data];
+sub _slurp_file {
+    my ($self) = @_;
+    my $string;
+
+    {
+        local $/ = undef;
+        $self->_open();
+        my $fh = $self->file_handle();
+        $string = <$fh>;
+        $self->_close();
     }
 
-    if ( ref($perl_data) eq 'ARRAY' ) {
-        return [ map { $self->convert_dataset($_) } @$perl_data ];
-    }
-    else {
-        confess("Cannot use decoded data type");
-    }
-
-    die Dumper($perl_data);
+    return $string;
 
 }
 
 sub convert_dataset {
     my ( $self, $dataset_hashref ) = @_;
-    
-    my %dataset = %$dataset_hashref;  
+
+    my %dataset = %$dataset_hashref;
+
     my $rawdata_ref = delete $dataset{raw_data};
-    print Dumper($rawdata_ref);
-    my $raw_data = [map {EpiRR::Model::RawData->new(%$_)} @$rawdata_ref];
+    my $raw_data = [ map { EpiRR::Model::RawData->new(%$_) } @$rawdata_ref ];
+
     $dataset{raw_data} = $raw_data;
-    
-    return EpiRR::Model::Dataset->new(%dataset);
+
+    $self->dataset( EpiRR::Model::Dataset->new(%dataset) );
 }
-
-
 
 __PACKAGE__->meta->make_immutable;
 

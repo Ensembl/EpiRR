@@ -1,0 +1,34 @@
+{
+   "raw_data" : [
+      {
+         "archive_url" : "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM665840",
+         "secondary_id" : null,
+         "primary_id" : "GSM665840",
+         "archive" : "GEO",
+         "experiment_type" : "Chromatin Accessibility"
+      },
+      {
+         "archive_url" : "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1220575",
+         "secondary_id" : null,
+         "primary_id" : "GSM1220575",
+         "archive" : "GEO",
+         "experiment_type" : "mRNA-Seq"
+      }
+   ],
+   "local_name" : "CD14 primary cells small test",
+   "status" : "Incomplete",
+   "project" : "NIH Roadmap",
+   "meta_data" : {
+      "biomaterial_type" : "Primary Cell",
+      "disease" : "None",
+      "passage_if_expanded" : "NA",
+      "donor_sex" : "Male",
+      "cell_type" : "CD14 Primary Cells",
+      "markers" : "CD14+",
+      "donor_health_status" : "NA",
+      "biomaterial_provider" : "FHCRC HEIMFELD"
+   },
+   "type" : "Composite",
+   "description" : "CD14 primary cells",
+   "accession" : "IHECRE00000008.1"
+}

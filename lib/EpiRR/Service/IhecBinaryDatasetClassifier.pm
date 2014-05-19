@@ -23,19 +23,19 @@ has '+type_names' =>
 
 has 'required_experiment_types' => (
     is      => 'rw',
-    isa     => 'ArrayRef[Str]',
+    isa     => 'ArrayRef[ArrayRef[Str]]',
     traits  => ['Array'],
     default => sub {
         [
-            'DNA Methylation',
-            'ChIP-Seq Input',
-            'Histone H3K4me1',
-            'Histone H3K4me3',
-            'Histone H3K9me3',
-            'Histone H3K9ac',
-            'Histone H3K27me3',
-            'Histone H3K36me3',
-            'mRNA-Seq',
+            ['DNA Methylation'],
+            ['ChIP-Seq Input'],
+            ['Histone H3K4me1'],
+            ['Histone H3K4me3'],
+            ['Histone H3K9me3'],
+            ['Histone H3K9ac'],
+            ['Histone H3K27me3'],
+            ['Histone H3K36me3'],
+            ['mRNA-Seq'],
         ];
     },
     handles => { 'all_required_experiment_types' => 'elements' }
@@ -55,7 +55,7 @@ sub composition {
     my $dataset_type;
     my %donors;
     my %pools;
-
+    confess("No samples") unless @$samples;
     for my $s (@$samples) {
         if ( $s->get_meta_data('pool_id') ) {
             $pools{ $s->get_meta_data('pool_id') }++;

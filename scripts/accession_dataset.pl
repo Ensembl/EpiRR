@@ -23,12 +23,16 @@ use JSON;
 my $config_module = 'EpiRR::Config';
 my $file;
 my $outfile;
+my $overwrite = 0;
 
 GetOptions(
     "config=s"  => \$config_module,
     "file=s"    => \$file,
     "outfile=s" => \$outfile,
+    "overwrite!" => \$overwrite,
 ) or croak("Error with options: $!");
+
+croak("Missing option: -file") unless $file; 
 
 eval("require $config_module") or croak "cannot load module $config_module $@";
 
@@ -37,6 +41,9 @@ my $container = $config_module->c();
 my $text_file_parser = $container->resolve( service => 'text_file_parser' );
 croak("Cannot find text_file_parser") unless ($text_file_parser);
 
+my $json_file_parser = $container->resolve( service => 'json_file_parser' );
+croak("Cannot find json_file_parser") unless ($json_file_parser);
+
 my $conversion_service = $container->resolve( service => 'conversion_service' );
 croak("Cannot find conversion_service") unless ($conversion_service);
 
@@ -44,7 +51,17 @@ if ( !$outfile ) {
     $outfile = $file . '.out';
 }
 
-croak("Output would overwrite existing file $outfile") if (-e $outfile);
+
+my $parser;
+
+if ($file =~ m/\.json$/){
+  $parser = $json_file_parser;
+}
+else {
+  $parser = $text_file_parser;
+}
+
+croak("Output would overwrite existing file $outfile") if (!$overwrite && -e $outfile);
 open my $fh, '>', $outfile or croak("Could not open $outfile: $!");
 
 $text_file_parser->file_path($file);

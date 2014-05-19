@@ -22,5 +22,5 @@ role_type 'Throttler',         { role => 'EpiRR::Roles::Throttler' };
 role_type 'HasErrors',         { role => 'EpiRR::Roles::HasErrors' };
 role_type 'HasMetaData',       { role => 'EpiRR::Roles::HasMetaData' };
 role_type 'HasUserAgent',      { role => 'EpiRR::Roles::HasUserAgent' };
-
+role_type 'InputParser',       { role => 'EpiRR::Roles::InputParser' };
 1;

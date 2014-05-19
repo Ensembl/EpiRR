@@ -71,16 +71,8 @@ DESCRIPTION	Chronic Lymphocytic Leukemia
 
 =cut
 
-with 'EpiRR::Roles::HasErrors';
+with 'EpiRR::Roles::InputParser';
 
-has 'file_path'   => ( is => 'rw', isa => 'Maybe[Str]' );
-has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );
-has 'dataset'     => (
-    is      => 'rw',
-    isa     => 'EpiRR::Model::Dataset',
-    default => sub { EpiRR::Model::Dataset->new() },
-    lazy    => 1,
-);
 has 'raw_data_tokens' => (
     traits  => ['Hash'],
     is      => 'rw',
@@ -92,15 +84,6 @@ has 'raw_data_tokens' => (
     },
     default => sub { {} },
 );
-
-sub add_error {
-    my ( $self, $text ) = @_;
-
-    $text .= ' at line ';
-    $text .= $self->file_handle()->input_line_number();
-
-    $self->push_error($text);
-}
 
 sub handle_project {
     my ( $self, $tokens ) = @_;
@@ -245,17 +228,7 @@ sub parse {
     $self->_close();
 }
 
-sub _close {
-    my ($self) = @_;
-    close $self->file_handle();
-}
 
-sub _open {
-    my ($self) = @_;
-    my $file_path = $self->file_path();
-    open my $fh, '<', $file_path or croak("Could not open $file_path: $!");
-    $self->file_handle($fh);
-}
 
 sub next_token_set {
     my ($self) = @_;
