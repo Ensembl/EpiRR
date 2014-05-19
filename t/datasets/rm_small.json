@@ -1,0 +1,15 @@
+{
+    "description": "CD14 primary cells", 
+    "local_name": "CD14 primary cells small test", 
+    "project": "NIH Roadmap", 
+    "raw_data": [
+        {
+            "archive": "GEO", 
+            "primary_id": "GSM665840"
+        }, 
+        {
+            "archive": "GEO", 
+            "primary_id": "GSM1220575"
+        }
+    ]
+}

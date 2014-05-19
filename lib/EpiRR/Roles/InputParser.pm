@@ -14,11 +14,12 @@
 package EpiRR::Roles::InputParser;
 
 use Moose::Role;
-
+use Carp;
 with 'EpiRR::Roles::HasErrors';
 
 requires 'parse';
 
+has 'string'      => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'file_path'   => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'file_handle' => ( is => 'rw', isa => 'Maybe[FileHandle]' );
 has 'dataset'     => (
@@ -27,7 +28,6 @@ has 'dataset'     => (
     default => sub { EpiRR::Model::Dataset->new() },
     lazy    => 1,
 );
-
 
 sub _close {
     my ($self) = @_;
@@ -44,8 +44,12 @@ sub _open {
 sub add_error {
     my ( $self, $text ) = @_;
 
-    $text .= ' at line ';
-    $text .= $self->file_handle()->input_line_number();
+    if ( $self->file_path() ) {
+        $text .= ' at line ';
+        $text .= $self->file_handle()->input_line_number();
+    }
 
     $self->push_error($text);
 }
+
+1;

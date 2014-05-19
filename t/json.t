@@ -21,68 +21,100 @@ use EpiRR::Model::Dataset;
 use Test::More;
 use EpiRR::Parser::JsonParser;
 use JSON;
+use File::Basename;
+{
+    my $parser   = parser('rm_small.json');
+    my $expected = EpiRR::Model::Dataset->new(
+        project     => 'NIH Roadmap',
+        description => 'CD14 primary cells',
+        local_name  => 'CD14 primary cells small test',
+        raw_data    => [
+            EpiRR::Model::RawData->new(
+                archive    => 'GEO',
+                primary_id => 'GSM665840'
+            ),
+            EpiRR::Model::RawData->new(
+                archive    => 'GEO',
+                primary_id => 'GSM1220575'
+            ),
+        ]
+    );
+    $parser->parse();
+    is_deeply( $parser->dataset(), $expected, 'Parse JSON file' );
+}
 
-my $dataset = EpiRR::Model::Dataset->new(
-    project     => 'project',
-    status      => 'ok',
-    type        => 'finished',
-    accession   => 'foo1',
-    local_name  => 'foo1_local',
-    description => 'some data',
-    raw_data    => [
-        EpiRR::Model::RawData->new(
-            archive         => 'myarchive',
-            primary_id      => 'p1',
-            secondary_id    => 's1',
-            archive_url     => 'www.foo.bar',
-            experiment_type => 'rna-seq',
-        ),
-        EpiRR::Model::RawData->new(
-            archive         => 'myarchive',
-            primary_id      => 'p2',
-            secondary_id    => 's2',
-            archive_url     => 'www.foo.bar',
-            experiment_type => 'chip-seq',
-        )
-    ],
-    meta_data => { tag => 'value' },
-);
+{
+    my $dataset = EpiRR::Model::Dataset->new(
+        project     => ' project ',
+        status      => ' ok ',
+        type        => ' finished ',
+        accession   => ' foo1 ',
+        local_name  => ' foo1_local ',
+        description => ' some data ',
+        raw_data    => [
+            EpiRR::Model::RawData->new(
+                archive         => ' myarchive ',
+                primary_id      => ' p1 ',
+                secondary_id    => ' s1 ',
+                archive_url     => ' www . foo . bar ',
+                experiment_type => ' rna-seq ',
+            ),
+            EpiRR::Model::RawData->new(
+                archive         => ' myarchive ',
+                primary_id      => ' p2 ',
+                secondary_id    => ' s2 ',
+                archive_url     => ' www . foo . bar ',
+                experiment_type => ' chip-seq ',
+            )
+        ],
+        meta_data => { tag => ' value ' },
+    );
 
-my $actual        = $dataset->to_hash();
-my $expected_hash = {
-    project     => 'project',
-    status      => 'ok',
-    type        => 'finished',
-    accession   => 'foo1',
-    local_name  => 'foo1_local',
-    description => 'some data',
-    raw_data    => [
-        {
-            archive         => 'myarchive',
-            primary_id      => 'p1',
-            secondary_id    => 's1',
-            archive_url     => 'www.foo.bar',
-            experiment_type => 'rna-seq',
-        },
-        {
-            archive         => 'myarchive',
-            primary_id      => 'p2',
-            secondary_id    => 's2',
-            archive_url     => 'www.foo.bar',
-            experiment_type => 'chip-seq',
-        }
-    ],
-    meta_data => { tag => 'value' },
-};
-is_deeply( $actual, $expected_hash, "Convert dataset to hash" );
+    my $actual        = $dataset->to_hash();
+    my $expected_hash = {
+        project     => ' project ',
+        status      => ' ok ',
+        type        => ' finished ',
+        accession   => ' foo1 ',
+        local_name  => ' foo1_local ',
+        description => ' some data ',
+        raw_data    => [
+            {
+                archive         => ' myarchive ',
+                primary_id      => ' p1 ',
+                secondary_id    => ' s1 ',
+                archive_url     => ' www . foo . bar ',
+                experiment_type => ' rna-seq ',
+            },
+            {
+                archive         => ' myarchive ',
+                primary_id      => ' p2 ',
+                secondary_id    => ' s2 ',
+                archive_url     => ' www . foo . bar ',
+                experiment_type => ' chip-seq ',
+            }
+        ],
+        meta_data => { tag => ' value ' },
+    };
+    is_deeply( $actual, $expected_hash, "Convert dataset to hash" );
 
-my $json = encode_json $dataset->TO_JSON();
+    my $json = encode_json $dataset->TO_JSON();
 
-my $parser = EpiRR::Parser::JsonParser->new();
+    my $parser = EpiRR::Parser::JsonParser->new(string => $json);
 
-my $deserialized_datasets = $parser->parse($json);
+    my $deserialized_datasets = $parser->parse();
 
-is_deeply($deserialized_datasets, [$dataset], "Deserialize JSON to object" );
+    is_deeply( $deserialized_datasets, $dataset,
+        "Deserialize JSON to object" );
 
+}
 
 done_testing();
+
+sub parser {
+    my ($file)    = @_;
+    my $dir       = dirname(__FILE__);
+    my $test_file = $dir . '/datasets/' . $file;
+
+    return EpiRR::Parser::JsonParser->new( file_path => $test_file );
+}

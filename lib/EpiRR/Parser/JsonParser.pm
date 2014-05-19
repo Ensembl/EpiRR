@@ -43,16 +43,17 @@ Parses JSON to produce EpiRR::Model::Dataset objects.
 sub parse {
     my ($self) = @_;
 
-    my $json      = $self->slurp_file();
+    my $json      = $self->_get_string();
     my $perl_data = decode_json($json);
     $self->convert_dataset($perl_data);
 }
 
-sub _slurp_file {
+sub _get_string {
     my ($self) = @_;
-    my $string;
-
-    {
+    
+    my $string = $self->string();
+    
+    if (!$string) {
         local $/ = undef;
         $self->_open();
         my $fh = $self->file_handle();

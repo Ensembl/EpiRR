@@ -12,6 +12,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 use utf8;
+
 package EpiRR::Parser::TextFileParser;
 
 use strict;
@@ -83,6 +84,13 @@ has 'raw_data_tokens' => (
         clear_raw_data_tokens  => 'defined',
     },
     default => sub { {} },
+);
+
+has 'lines' => (
+    traits  => ['Array'],
+    is      => 'rw',
+    isa     => 'ArrayRef[Str]',
+    handles => { _pop_line => 'pop', },
 );
 
 sub handle_project {
@@ -192,8 +200,7 @@ sub handle_description {
 
 sub parse {
     my ($self) = @_;
-
-    $self->_open();
+    $self->_start();
     my ( $type, $tokens, $tokenset );
     while ( $tokenset = $self->next_token_set() ) {
 
@@ -225,21 +232,49 @@ sub parse {
     if ( $self->dataset()->raw_data_count() == 0 ) {
         $self->push_error("No RAW_DATA given");
     }
-    $self->_close();
+    $self->_finish();
 }
 
+sub _start {
+    my ($self) = @_;
+
+    if ( $self->file_path ) {
+        $self->_open();
+    }
+    else {
+        my @lines = split $/, $self->string();
+        $self->lines(\@lines);
+    }
+
+}
+
+sub _finish {
+    my ($self) = @_;
+    $self->_close() if ( $self->file_path );
+}
+
+
+sub _next_line {
+  my ($self) = @_;
+  
+  if ($self->file_handle){
+    my $fh = $self->file_handle();
+    return <$fh>;
+  }
+  else {
+    return $self->_pop_line(); 
+  }
+}
 
 
 sub next_token_set {
     my ($self) = @_;
     my ( $type, @tokens );
-    my $fh = $self->file_handle();
-    croak "No file handle!" if !$fh;
-
-    while (<$fh>) {
-        chomp;
-        next if /^#/;
-        @tokens = split /\t/;
+    
+    while (my $line = $self->_next_line()) {
+        chomp $line;
+        next if $line =~ /^#/;
+        @tokens = split /\t/, $line;
         $type   = shift @tokens;
         return [ $type, \@tokens ];
     }
