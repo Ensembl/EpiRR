@@ -27,14 +27,10 @@ has 'required_experiment_types' => (
     traits  => ['Array'],
     default => sub {
         [
-            ['DNA Methylation'],
-            ['ChIP-Seq Input'],
-            ['Histone H3K4me1'],
-            ['Histone H3K4me3'],
-            ['Histone H3K9me3'],
-            ['Histone H3K9ac'],
-            ['Histone H3K27me3'],
-            ['Histone H3K36me3'],
+            ['DNA Methylation'],  ['ChIP-Seq Input'],
+            ['Histone H3K4me1'],  ['Histone H3K4me3'],
+            ['Histone H3K9me3'],  ['Histone H3K9ac'],
+            ['Histone H3K27me3'], ['Histone H3K36me3'],
             ['mRNA-Seq'],
         ];
     },
@@ -101,8 +97,12 @@ sub experimental_completeness {
 
     my $classification = 'Complete';
 
-    for my $ret ( $self->all_required_experiment_types() ) {
-        if ( !exists $et{$ret} ) {
+    for my $rets ( $self->all_required_experiment_types() ) {
+        my $found = 0;
+        for my $ret (@$rets) {
+            $found++ if ( exists $et{$ret} );
+        }
+        if ( !$found ) {
             $classification = 'Incomplete';
         }
     }
