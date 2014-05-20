@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROOT request="SRX007379&amp;display=xml">
+<EXPERIMENT alias="30CMAAAXX081006-2-S" center_name="GEO" accession="SRX007379" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>SRX007379</PRIMARY_ID>
+          <SUBMITTER_ID namespace="GEO">30CMAAAXX081006-2-S</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>Illumina Genome Analyzer II sequencing; ChIP-Seq Analysis of H3K27me3 in hESC H1 Cells</TITLE>
+     <STUDY_REF accession="SRP000996" refname="G1828" refcenter="GEO">
+          <IDENTIFIERS>
+               <PRIMARY_ID>SRP000996</PRIMARY_ID>
+               <SUBMITTER_ID namespace="GEO">G1828</SUBMITTER_ID>
+          </IDENTIFIERS>
+     </STUDY_REF>
+     <DESIGN>
+          <DESIGN_DESCRIPTION>Single read - Illumina</DESIGN_DESCRIPTION>
+          <SAMPLE_DESCRIPTOR refname="27277.0" refcenter="GEO">
+               <IDENTIFIERS>
+                    
+                    <SUBMITTER_ID namespace="GEO">27277.0</SUBMITTER_ID>
+               </IDENTIFIERS>
+          </SAMPLE_DESCRIPTOR>
+          <LIBRARY_DESCRIPTOR>
+               <LIBRARY_NAME>Solexa-8039</LIBRARY_NAME>
+               <LIBRARY_STRATEGY>ChIP-Seq</LIBRARY_STRATEGY>
+               <LIBRARY_SOURCE>GENOMIC</LIBRARY_SOURCE>
+               <LIBRARY_SELECTION>ChIP</LIBRARY_SELECTION>
+               <LIBRARY_LAYOUT>
+                    <SINGLE/>
+               </LIBRARY_LAYOUT>
+          </LIBRARY_DESCRIPTOR>
+          <SPOT_DESCRIPTOR>
+               <SPOT_DECODE_SPEC>
+                    <READ_SPEC>
+                         <READ_INDEX>0</READ_INDEX>
+                         <READ_CLASS>Application Read</READ_CLASS>
+                         <READ_TYPE>Forward</READ_TYPE>
+                         <BASE_COORD>1</BASE_COORD>
+                    </READ_SPEC>
+               </SPOT_DECODE_SPEC>
+          </SPOT_DESCRIPTOR>
+     </DESIGN>
+     <PLATFORM>
+          <ILLUMINA>
+               <INSTRUMENT_MODEL>Illumina Genome Analyzer II</INSTRUMENT_MODEL>
+          </ILLUMINA>
+     </PLATFORM>
+     <PROCESSING/>
+     <EXPERIMENT_LINKS>
+          <EXPERIMENT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS004524</ID>
+               </XREF_LINK>
+          </EXPERIMENT_LINK>
+          <EXPERIMENT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR020508</ID>
+               </XREF_LINK>
+          </EXPERIMENT_LINK>
+          <EXPERIMENT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>SRA009256</ID>
+               </XREF_LINK>
+          </EXPERIMENT_LINK>
+          <EXPERIMENT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/submitted_files/SRX007379</ID>
+               </XREF_LINK>
+          </EXPERIMENT_LINK>
+          <EXPERIMENT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID>http://www.ebi.ac.uk/ena/data/view/reports/sra/fastq_files/SRX007379</ID>
+               </XREF_LINK>
+          </EXPERIMENT_LINK>
+     </EXPERIMENT_LINKS>
+     <EXPERIMENT_ATTRIBUTES>         
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>EXTRACTION_PROTOCOL</TAG>
+               <VALUE>SDS lysis</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>EXTRACTION_PROTOCOL_TYPE_OF_SONICATOR</TAG>
+               <VALUE>Bioruptor</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>EXTRACTION_PROTOCOL_SONICATION_CYCLES</TAG>
+               <VALUE>1</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_PROTOCOL</TAG>
+               <VALUE>standard</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_PROTOCOL_CHROMATIN_AMOUNT</TAG>
+               <VALUE>standard</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_PROTOCOL_BEAD_TYPE</TAG>
+               <VALUE>standard</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_PROTOCOL_BEAD_AMOUNT</TAG>
+               <VALUE>standard</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_PROTOCOL_ANTIBODY_AMOUNT</TAG>
+               <VALUE>standard</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_ANTIBODY</TAG>
+               <VALUE>H3K27Me3</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_ANTIBODY_PROVIDER</TAG>
+               <VALUE>Upstate</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_ANTIBODY_CATALOG</TAG>
+               <VALUE>07-449</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>CHIP_ANTIBODY_LOT</TAG>
+               <VALUE>DAM1387952</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>GEO accession</TAG>
+               <VALUE>GSM433167</VALUE>
+               <UNITS/>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>ENA-SPOT-COUNT</TAG>
+               <VALUE>12682151</VALUE>
+          </EXPERIMENT_ATTRIBUTE>
+          <EXPERIMENT_ATTRIBUTE>
+               <TAG>ENA-BASE-COUNT</TAG>
+               <VALUE>963843476</VALUE>
+          </EXPERIMENT_ATTRIBUTE>
+     </EXPERIMENT_ATTRIBUTES>
+</EXPERIMENT>
+</ROOT>

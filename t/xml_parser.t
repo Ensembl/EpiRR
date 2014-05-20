@@ -25,52 +25,58 @@ use EpiRR::Model::Sample;
 
 my $p = EpiRR::Parser::SRAXMLParser->new();
 {
-    my $xml     = xml('SRX007379.xml');
-    my $e = [];
-    my @actual = $p->parse_experiment($xml,$e);
+    my $xml    = xml('SRX007379.xml');
+    my $e      = [];
+    my @actual = $p->parse_experiment( $xml, $e );
 
-    my $expected = ['SRS004524','Histone H3K27me3','SRX007379',];
-    
+    my $expected = [ 'SRS004524', 'Histone H3K27me3', 'SRX007379', ];
+
     is_deeply( \@actual, $expected, "Parse Experiment XML" );
-    is_deeply($e,[],'No errors');
+    is_deeply( $e, [], 'No errors' );
 }
 {
     my $xml = xml('SRX_duplicate.xml');
-    my $e = [];
-    $p->parse_experiment($xml,$e);
+    my $e   = [];
+    $p->parse_experiment( $xml, $e );
 
     is_deeply(
         $e,
         [
             "Found multiple samples in XML (SRS004524 and SRS004524)",
-            "Found multiple experiment types in XML (Histone H3K27me3 and Histone H3K27me3)",
+"Found multiple experiment types in XML (Histone H3K27me3 and Histone H3K27me3)",
             "Found multiple experiments in XML (SRX007379 and SRX007379).",
         ],
         "Multiple experiments"
     );
 }
 {
-    my $xml = xml('empty.xml');
-    my $e = [];
-    my $experiment = $p->parse_experiment($xml,$e);
+    my $xml        = xml('empty.xml');
+    my $e          = [];
+    my $experiment = $p->parse_experiment( $xml, $e );
 
-    ok(!defined $experiment,"No experiment returned");
+    ok( !defined $experiment, "No experiment returned" );
+
+    is_deeply( $e, [ "No experiment found", ], "No experiments" );
+}
+
+{
+    my $xml        = xml('no_sample_or_et.xml');
+    my $e          = [];
+    my $experiment = $p->parse_experiment( $xml, $e );
+
+    ok( !defined $experiment, "No experiment returned" );
 
     is_deeply(
         $e,
-        [
-            "No experiment found",
-            "No experiment_type found",
-            "No sample found",
-        ],
-        "No experiments"
+        [ "No experiment_type found", "No sample found", ],
+        "No sample or experiment type"
     );
 }
 
 {
     my $xml    = xml('SRS004524.xml');
-    my $e = [];
-    my $actual = $p->parse_sample($xml,$e);
+    my $e      = [];
+    my $actual = $p->parse_sample( $xml, $e );
 
     my $expected = EpiRR::Model::Sample->new(
         sample_id => 'SRS004524',
@@ -93,21 +99,21 @@ my $p = EpiRR::Parser::SRAXMLParser->new();
     );
 
     is_deeply( $actual, $expected, 'Parsed Sample' );
-    is_deeply($e,[],'No sample errors');
+    is_deeply( $e, [], 'No sample errors' );
 }
 
 {
     my $xml = xml('empty.xml');
-    my $e = [];
-    $p->parse_sample($xml,$e);
+    my $e   = [];
+    $p->parse_sample( $xml, $e );
 
     is_deeply( $e, [ "Sample ID not found in XML", ], "No samples" );
 }
 
 {
     my $xml = xml('SRS_duplicate.xml');
-    my $e = [];
-    $p->parse_sample($xml,$e);
+    my $e   = [];
+    $p->parse_sample( $xml, $e );
 
     is_deeply(
         $e,
@@ -131,5 +137,5 @@ sub xml {
     }
     close $fh;
 
-    return $xml; 
+    return $xml;
 }
