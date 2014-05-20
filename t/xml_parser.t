@@ -64,8 +64,6 @@ my $p = EpiRR::Parser::SRAXMLParser->new();
     my $e          = [];
     my $experiment = $p->parse_experiment( $xml, $e );
 
-    ok( !defined $experiment, "No experiment returned" );
-
     is_deeply(
         $e,
         [ "No experiment_type found", "No sample found", ],
