@@ -8,6 +8,7 @@ requires 'LWP';
 requires 'LWP::Protocol::https';
 requires 'Mojolicious';
 requires 'Bio::DB::EUtilities';
+requires 'git://github.com/istreeter/BioSD.git';
 
 on 'test' => sub {
   requires 'Test::More';
