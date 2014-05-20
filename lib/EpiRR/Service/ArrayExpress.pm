@@ -34,17 +34,24 @@ sub lookup_raw_data {
     confess( "Cannot handle this archive: " . $raw_data->archive() )
       if ( !$self->handles_archive( $raw_data->archive() ) );
 
+    my $sample;
     my $experiment =
       $self->lookup_experiment( $raw_data->primary_id(), $errors );
 
-    $experiment->archive_url(
-        $self->get_url( $experiment->primary_id(), $raw_data->secondary_id() )
-    );
+    if ( !@$errors ) {
+        $experiment->archive_url(
+            $self->get_url(
+                $experiment->primary_id(),
+                $raw_data->secondary_id()
+            )
+        );
 
-    my $sample = $self->lookup_sample( $experiment->primary_id(),
-        $raw_data->secondary_id() );
+        $sample = $self->lookup_sample( $experiment->primary_id(),
+            $raw_data->secondary_id(), $errors );
+    }
 
     return ( $experiment, $sample );
+
 }
 
 sub get_url {
@@ -83,7 +90,7 @@ sub lookup_experiment {
     my $total_experiments = $data->{experiments}->{total} || 0;
     if ( $total_experiments != 1 ) {
         push @$errors,
-"ArrayExpress returned $total_experiments experiments, must have 1 to process";
+"ArrayExpress returned $total_experiments experiments for $id, must have 1 to process";
         return undef;
     }
 
@@ -107,7 +114,7 @@ sub lookup_sample {
         push @$errors, "No BioSamples group found for $experiment_id";
         return undef;
     }
-    
+
     my @samples;
     for my $g (@$groups) {
         my $s = $g->search_for_samples($sample_name);
@@ -119,19 +126,18 @@ sub lookup_sample {
           "No BioSamples records found for $experiment_id, $sample_name";
         return undef;
     }
-    if (scalar(@samples) > 1) {
-      push @$errors, "More than one BioSamples record found for $experiment_id, $sample_name";
+    if ( scalar(@samples) > 1 ) {
+        push @$errors,
+"More than one BioSamples record found for $experiment_id, $sample_name";
     }
-    
+
     my $s = pop @samples;
-    my $sample = EpiRR::Model::Sample->new(
-        sample_id => $s->id(),
-    );
-    
-    for my $p (@{$s->properties}) {
-      $sample->set_meta_data($p->class(), join(', ',@{$p->values()}));
+    my $sample = EpiRR::Model::Sample->new( sample_id => $s->id(), );
+
+    for my $p ( @{ $s->properties } ) {
+        $sample->set_meta_data( $p->class(), join( ', ', @{ $p->values() } ) );
     }
-    
+
     return $sample;
 
 }

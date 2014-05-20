@@ -42,16 +42,16 @@ my $ae = EpiRR::Service::ArrayExpress->new();
     my $expected_sample = EpiRR::Model::Sample->new(
         sample_id => 'SAMEA1438605',
         meta_data => {
-            'Organism'          => 'Homo sapiens',
+            'organism'          => 'Homo sapiens',
             'age'               => '50 years old',
             'anatomical region' => 'caput',
             'organism part'     => 'epididymis',
-            'Sample Description' =>
+            'sample description' =>
               'RS_norm-queue-50ans_(miRNA-1_0_2Xgain).CEL',
-            'Sample Name' => 'source GSM870141 1',
-            'Sample_source_name' =>
+            'sample name' => 'source GSM870141 1',
+            'sample_source_name' =>
               'caput of epididymides from 50 years old man',
-            'Sample_title'     => 'caput of epididymides from 50 years old man',
+            'sample_title'     => 'caput of epididymides from 50 years old man',
         },
     );
 
@@ -68,5 +68,20 @@ my $ae = EpiRR::Service::ArrayExpress->new();
     is_deeply( $output_sample, $expected_sample, "Found sample information" );
     is_deeply( $errors, [], 'No errors' );
 }
+
+{
+  my $errors = [];
+  my $input  = EpiRR::Model::RawData->new(
+      archive      => 'AE',
+      primary_id   => 'NO_DATA_HERE',
+      secondary_id => 'BOB'
+  );
+  my ( $output_experiment, $output_sample ) =
+    $ae->lookup_raw_data( $input, $errors );
+    
+    is_deeply($errors,['ArrayExpress returned 0 experiments for NO_DATA_HERE, must have 1 to process'])
+  
+}
+
 
 done_testing();
