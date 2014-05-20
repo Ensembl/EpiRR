@@ -63,15 +63,17 @@ sub lookup_raw_data {
 
     my ( $raw_data_out, $sample );
     my $experiment_type;
-    ( $experiment_type, $sample ) = $self->_geo_miniml($accession);
-    $raw_data_out =
-      EpiRR::Model::RawData->new( experiment_type => $experiment_type );
+    ( $experiment_type, $sample ) = $self->_geo_miniml( $accession, $errors );
 
-    my $archive_url = $self->archive_link_url() . uri_encode($accession);
-    $raw_data_out->archive_url($archive_url);
-    $raw_data_out->archive('GEO');
-    $raw_data_out->primary_id($accession);
+    if ( !@$errors ) {
+        $raw_data_out =
+          EpiRR::Model::RawData->new( experiment_type => $experiment_type );
 
+        my $archive_url = $self->archive_link_url() . uri_encode($accession);
+        $raw_data_out->archive_url($archive_url);
+        $raw_data_out->archive('GEO');
+        $raw_data_out->primary_id($accession);
+    }
     return ( $raw_data_out, $sample );
 
 }
@@ -80,6 +82,11 @@ sub _geo_miniml {
     my ( $self, $accession, $errors ) = @_;
 
     my $main_xml = $self->_get_xml($accession);
+
+    if ( $main_xml =~ m/\<!DOCTYPE HTML/ ) {
+        push @$errors, "Geo returned no data for $accession";
+        return;
+    }
 
     my ( $platform_id, $sample, $experiment_type ) =
       $self->geo_xml_parser()->parse_main( $main_xml, $errors );

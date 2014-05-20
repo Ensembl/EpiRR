@@ -50,19 +50,26 @@ sub lookup_raw_data {
 
     my $xml = $self->get_xml( $raw_data->primary_id() );
 
+    my @parser_errors;
     my ( $sample_id, $experiment_type, $experiment_id ) =
-      $self->xml_parser()->parse_experiment( $xml, $errors );
+      $self->xml_parser()->parse_experiment( $xml, \@parser_errors );
+
+    push @$errors,
+      map { $_ . ' for ' . $raw_data->primary_id() } @parser_errors;
 
     my $sample = $self->lookup_sample( $sample_id, $errors ) if ($sample_id);
 
-    my $archive_raw_data = EpiRR::Model::RawData->new(
-        archive         => $raw_data->archive,
-        primary_id      => $experiment_id,
-        experiment_type => $experiment_type,
-        archive_url     => $self->base_url() . $experiment_id,
-    );
+    my $archive_raw_data;
+    if ( !@$errors ) {
+        $archive_raw_data = EpiRR::Model::RawData->new(
+            archive         => $raw_data->archive,
+            primary_id      => $experiment_id,
+            experiment_type => $experiment_type,
+            archive_url     => $self->base_url() . $experiment_id,
+        );
+    }
 
-    return ($archive_raw_data,$sample);
+    return ( $archive_raw_data, $sample );
 }
 
 sub lookup_sample {

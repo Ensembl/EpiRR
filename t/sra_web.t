@@ -29,9 +29,22 @@ my $w = EpiRR::Service::ENAWeb->new();
 }
 
 {
+    my $input = EpiRR::Model::RawData->new(
+        archive    => 'ENA',
+        primary_id => 'NO_DATA_HERE'
+    );
+    my $errors = [];
+    my ( $output_experiment, $output_sample ) =
+      $w->lookup_raw_data( $input, $errors );
+    is_deeply(
+        $errors,
+        ["No experiment found for NO_DATA_HERE"],
+        'Produces error in incorrect experiment id'
+      );
+}
+{
     my $input =
       EpiRR::Model::RawData->new( archive => 'ENA', primary_id => 'SRX007379' );
-    my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);
 
     my $expected_sample = EpiRR::Model::Sample->new(
         sample_id => 'SRS004524',
@@ -59,6 +72,7 @@ my $w = EpiRR::Service::ENAWeb->new();
         archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
     );
 
+    my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);
     is_deeply( $output_experiment, $expected_experiment,
         "Found experiment information" );
     is_deeply( $output_sample, $expected_sample, "Found sample information" );

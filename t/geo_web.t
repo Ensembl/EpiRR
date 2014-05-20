@@ -24,34 +24,49 @@ use EpiRR::Model::RawData;
 my $geo = EpiRR::Service::GeoWeb->new();
 
 {
+    my $errors    = [];
+    my $accession = 'NO_DATA_HERE';
+    my ( $raw_data, $sample ) = $geo->lookup_raw_data(
+        EpiRR::Model::RawData->new(
+            archive    => 'GEO',
+            primary_id => $accession,
+        ),
+        $errors,
+    );
+    is_deeply( $errors, ['Geo returned no data for NO_DATA_HERE'],'Handles accession error' );
+}
+
+{
     my $accession = 'GSM409307';
 
     my $expected_sample = EpiRR::Model::Sample->new(
         sample_id => 'GSM409307',
         meta_data => {
-          molecule => 'genomic DNA',
-            disease => 'None',
-            biomaterial_provider => 'Cellular Dynamics International',
-            biomaterial_type => 'Cell Line',
-            line => 'H1',
-            lineage => 'Embryonic Stem Cell',
-            differentiation_stage => 'None',
+            molecule               => 'genomic DNA',
+            disease                => 'None',
+            biomaterial_provider   => 'Cellular Dynamics International',
+            biomaterial_type       => 'Cell Line',
+            line                   => 'H1',
+            lineage                => 'Embryonic Stem Cell',
+            differentiation_stage  => 'None',
             differentiation_method => 'None',
-            passage => 'Between 30 and 50',
-            medium => 'mTeSER',
-            Sex => 'Male',
-            extraction_protocol => 'See http://bioinformatics-renlab.ucsd.edu/RenLabChipProtocolV1.pdf',
+            passage                => 'Between 30 and 50',
+            medium                 => 'mTeSER',
+            Sex                    => 'Male',
+            extraction_protocol =>
+'See http://bioinformatics-renlab.ucsd.edu/RenLabChipProtocolV1.pdf',
             extraction_protocol_type_of_sonicator => 'Branson Tip Sonicator',
             extraction_protocol_sonication_cycles => '30',
-            chip_protocol => 'See http://bioinformatics-renlab.ucsd.edu/RenLabChipProtocolV1.pdf',
+            chip_protocol =>
+'See http://bioinformatics-renlab.ucsd.edu/RenLabChipProtocolV1.pdf',
             chip_protocol_chromatin_amount => '500 micrograms',
-            chip_protocol_bead_type => 'magnetic anti-rabbit',
-            chip_protocol_bead_amount => '33,500,000',
-            chip_protocol_antibody_amount => '5 micrograms',
-            chip_antibody => 'H3K4me1',
-            chip_antibody_provider => 'Abcam',
-            chip_antibody_catalog => 'ab8895',
-            chip_antibody_lot => '535659',
+            chip_protocol_bead_type        => 'magnetic anti-rabbit',
+            chip_protocol_bead_amount      => '33,500,000',
+            chip_protocol_antibody_amount  => '5 micrograms',
+            chip_antibody                  => 'H3K4me1',
+            chip_antibody_provider         => 'Abcam',
+            chip_antibody_catalog          => 'ab8895',
+            chip_antibody_lot              => '535659',
         }
     );
 
@@ -97,9 +112,10 @@ my $geo = EpiRR::Service::GeoWeb->new();
     );
 
     my $expected_raw_data = EpiRR::Model::RawData->new(
-        archive         => 'GEO',
-        primary_id      => $accession,
-        experiment_type => '[HuEx-1_0-st] Affymetrix Human Exon 1.0 ST Array [probe set (exon) version]',
+        archive    => 'GEO',
+        primary_id => $accession,
+        experiment_type =>
+'[HuEx-1_0-st] Affymetrix Human Exon 1.0 ST Array [probe set (exon) version]',
         archive_url =>
           'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM706504',
     );

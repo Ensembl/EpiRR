@@ -63,9 +63,12 @@ sub parse_experiment {
         }
     );
     $t->parse($xml);
-    push @$errors, "No experiment found"      unless $e_id;
-    push @$errors, "No experiment_type found" unless $et;
-    push @$errors, "No sample found"          unless $s_id;
+    push @$errors, "No experiment found" unless $e_id;
+    if ($e_id) {
+        push @$errors, "No experiment_type found" unless $et;
+        push @$errors, "No sample found"          unless $s_id;
+    }
+
     return ( $s_id, $et, $e_id );
 }
 
