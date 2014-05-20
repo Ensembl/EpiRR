@@ -144,4 +144,36 @@ is( $output_meta_data[0]->name(), 'foo', 'Correct meta data attribute' )
 is( $output_meta_data[0]->value(), 'bar', 'Correct meta data value' )
   if (@output_meta_data);
 
+my $user_level_output = $cs->db_to_user($test_output);
+
+#print Dumper($user_level_output);
+
+my $expected_user_level_output = EpiRR::Model::Dataset->new(
+    project   => $test_db->project_name(),
+    status    => 'Complete',
+    meta_data => { foo => 'bar' },
+    type      => 'Single donor',
+    accession => 'TPX00000001.1',
+    raw_data  => [
+        EpiRR::Model::RawData->new(
+            archive         => $test_db->archive_name(),
+            primary_id      => $experiment_ids[0],
+            secondary_id    => undef,
+            archive_url     => undef,
+            experiment_type => 'Type 1',
+        ),
+        EpiRR::Model::RawData->new(
+            archive         => $test_db->archive_name(),
+            primary_id      => $experiment_ids[1],
+            experiment_type => 'Type 2',
+            secondary_id    => undef,
+            archive_url     => undef,
+        )
+    ],
+);
+
+is_deeply( $user_level_output, $expected_user_level_output,
+    "Expected output from DB" );
+
 done_testing();
+
