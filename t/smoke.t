@@ -127,7 +127,7 @@ sub test_versioning {
         {
             dataset => $dataset,
             status  => $status,
-            type    => $type
+            type    => $type,
         }
     );
 

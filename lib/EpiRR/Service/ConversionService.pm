@@ -19,7 +19,6 @@ use Carp;
 use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
-use EpiRR::Service::CommonMetaDataBuilder;
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -203,10 +202,9 @@ sub _dataset {
         $dataset =
           $project->search_related( 'datasets',
             { local_name => $user_dataset->local_name() } )->single();
-
-        $dataset = $project->create_related( 'datasets', {} ) if ( !$dataset );
     }
-    elsif ($project) {
+    
+    if (!$dataset) {
         $dataset =
           $project->create_related( 'datasets',
             { local_name => $user_dataset->local_name() } );
