@@ -28,7 +28,7 @@ use EpiRR::Model::RawData;
 sub parse_main {
     my ( $self, $xml, $errors ) = @_;
 
-    my ( $platform_id, $experiment_type );
+    my ( $platform_id, $experiment_type, $library_strategy );
     my $s = EpiRR::Model::Sample->new();
 
     my $t = XML::Twig->new(
@@ -45,6 +45,10 @@ sub parse_main {
                     $s->set_meta_data( $tag, $value );
                 }
             },
+            'Library-Strategy' => sub {
+              my ( $t, $element ) = @_;
+               $library_strategy = $element->trimmed_text();
+            },
             'Sample' => sub {
               my ( $t, $element ) = @_;
               $s->sample_id($element->{'att'}->{'iid'});
@@ -56,7 +60,7 @@ sub parse_main {
         }
     );
     $t->parse($xml);
-    return ( $platform_id, $s, $experiment_type );
+    return ( $platform_id, $s, $experiment_type, $library_strategy );
 }
 
 sub parse_platform {

@@ -53,10 +53,10 @@ sub populate_basics {
             full_name => $self->archive_full_name()
         }
     );
-    for (qw(Complete Incomplete)) {
+    for (qw(DEFAULT Complete Incomplete)) {
         $self->schema()->status()->create( { name => $_ } );
     }
-    for ( 'Single donor', 'Pooled samples', 'Composite' ) {
+    for ( 'DEFAULT', 'Single donor', 'Pooled samples', 'Composite' ) {
 
         $self->schema()->type()->create( { name => $_ } );
     }

@@ -20,14 +20,14 @@ unique key (full_name)
 #enumeration of possible dataset states
 create table status (
 status_id int(10)  unsigned not null auto_increment,  
-name varchar(10) not null,
+name varchar(128) not null,
 primary key (status_id)
 ) ENGINE=InnoDB CHARSET=UTF8;
 
 #enumeration of possible dataset types
 create table type (
-type_id int(10)  unsigned not null auto_increment,  
-name varchar(10) not null,
+type_id int(10)  unsigned not null auto_increment, 
+name varchar(128) not null,
 primary key (type_id)
 ) ENGINE=InnoDB CHARSET=UTF8;
 
@@ -93,7 +93,7 @@ create table raw_data (
 raw_data_id int(10) unsigned not null auto_increment,
 dataset_version_id int(10) unsigned not null,
 primary_accession varchar(64) not null, 
-secondary_accession varchar(64) not null,
+secondary_accession varchar(64),
 data_type varchar(128) not null,
 experiment_type varchar(128) not null,
 archive_id  int(10) unsigned not null,

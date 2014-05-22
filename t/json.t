@@ -53,18 +53,20 @@ use File::Basename;
         description => ' some data ',
         raw_data    => [
             EpiRR::Model::RawData->new(
-                archive         => ' myarchive ',
-                primary_id      => ' p1 ',
-                secondary_id    => ' s1 ',
-                archive_url     => ' www . foo . bar ',
-                experiment_type => ' rna-seq ',
+                archive         => 'myarchive',
+                primary_id      => 'p1',
+                secondary_id    => 's1',
+                archive_url     => 'www.foo.bar',
+                experiment_type => 'rna-seq',
+                data_type       => 'rna',
             ),
             EpiRR::Model::RawData->new(
-                archive         => ' myarchive ',
-                primary_id      => ' p2 ',
-                secondary_id    => ' s2 ',
-                archive_url     => ' www . foo . bar ',
-                experiment_type => ' chip-seq ',
+                archive         => 'myarchive',
+                primary_id      => 'p2',
+                secondary_id    => 's2',
+                archive_url     => 'www.foo.bar',
+                experiment_type => 'chip-seq',
+                data_type       => 'chip',
             )
         ],
         meta_data => { tag => ' value ' },
@@ -80,18 +82,20 @@ use File::Basename;
         description => ' some data ',
         raw_data    => [
             {
-                archive         => ' myarchive ',
-                primary_id      => ' p1 ',
-                secondary_id    => ' s1 ',
-                archive_url     => ' www . foo . bar ',
-                experiment_type => ' rna-seq ',
+                archive         => 'myarchive',
+                primary_id      => 'p1',
+                secondary_id    => 's1',
+                archive_url     => 'www.foo.bar',
+                experiment_type => 'rna-seq',
+                data_type       => 'rna',
             },
             {
-                archive         => ' myarchive ',
-                primary_id      => ' p2 ',
-                secondary_id    => ' s2 ',
-                archive_url     => ' www . foo . bar ',
-                experiment_type => ' chip-seq ',
+                archive         => 'myarchive',
+                primary_id      => 'p2',
+                secondary_id    => 's2',
+                archive_url     => 'www.foo.bar',
+                experiment_type => 'chip-seq',
+                data_type       => 'chip',
             }
         ],
         meta_data => { tag => ' value ' },
@@ -100,12 +104,11 @@ use File::Basename;
 
     my $json = encode_json $dataset->TO_JSON();
 
-    my $parser = EpiRR::Parser::JsonParser->new(string => $json);
+    my $parser = EpiRR::Parser::JsonParser->new( string => $json );
 
     my $deserialized_datasets = $parser->parse();
 
-    is_deeply( $deserialized_datasets, $dataset,
-        "Deserialize JSON to object" );
+    is_deeply( $deserialized_datasets, $dataset, "Deserialize JSON to object" );
 
 }
 

@@ -58,7 +58,7 @@ sub db_to_user {
         project     => $dsv->dataset()->project()->name(),
         status      => $dsv->status()->name(),
         accession   => $dsv->full_accession(),
-        local_name  => $dsv->local_name(),
+        local_name  => $dsv->dataset()->local_name(),
         description => $dsv->description(),
         type        => $dsv->type()->name(),
     );
@@ -74,6 +74,7 @@ sub db_to_user {
             secondary_id    => $r->secondary_accession(),
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
+            data_type       => $r->data_type(),
         );
         $d->add_raw_data($x);
     }
@@ -109,7 +110,7 @@ sub user_to_db {
           $self->dataset_classifier()
           ->determine_classification( $simple_dataset, $samples, $errors )
           unless @$errors;
-          
+
         my $status =
           $self->schema()->status()->find( { name => $status_name } );
         my $type = $self->schema()->type()->find( { name => $type_name } );
@@ -186,7 +187,24 @@ sub _dataset {
               "Mismatch between project declared ($declared_project)"
               . " and that stored previously ($retrieved_project)"
               if ( $declared_project ne $retrieved_project );
+
+            my $declared_localname  = $user_dataset->local_name();
+            my $retrieved_localname = $dataset->local_name();
+
+            push @$errors,
+              "Mismatch between local name declared ($declared_localname)"
+              . " and that stored previously ($retrieved_localname)"
+              if ( $retrieved_localname
+                && $declared_localname
+                && $declared_localname ne $retrieved_localname );
         }
+    }
+    elsif ( $project && $user_dataset->local_name() ) {
+        $dataset =
+          $project->search_related( 'datasets',
+            { local_name => $user_dataset->local_name() } )->single();
+
+        $dataset = $project->create_related( 'datasets', {} ) if ( !$dataset );
     }
     elsif ($project) {
         $dataset = $project->create_related( 'datasets', {} );
@@ -195,12 +213,13 @@ sub _dataset {
 }
 
 sub _dataset_version {
-    my ( $self, $user_dataset, $dataset, $errors ) = @_;
+    my ( $self, $user_dataset, $dataset, $errors, $schema ) = @_;
 
     my $dataset_version = $dataset->create_related(
         'dataset_versions',
         {
-            local_name  => $user_dataset->local_name(),
+            status => $self->schema()->status()->find( { name => 'DEFAULT' } ),
+            type   => $self->schema()->type()->find(   { name => 'DEFAULT' } ),
             description => $user_dataset->description(),
         }
     );
@@ -246,6 +265,7 @@ sub _raw_data {
                     archive             => $archive,
                     archive_url         => $rd->archive_url(),
                     experiment_type     => $rd->experiment_type(),
+                    data_type           => $rd->data_type(),
                 }
             ) if ( !@$rd_errors );
             $user_rd->experiment_type( $rd->experiment_type() );

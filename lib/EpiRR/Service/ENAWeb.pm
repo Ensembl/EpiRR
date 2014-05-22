@@ -51,7 +51,7 @@ sub lookup_raw_data {
     my $xml = $self->get_xml( $raw_data->primary_id() );
 
     my @parser_errors;
-    my ( $sample_id, $experiment_type, $experiment_id ) =
+    my ( $sample_id, $experiment_type, $experiment_id, $data_type ) =
       $self->xml_parser()->parse_experiment( $xml, \@parser_errors );
 
     push @$errors,
@@ -65,6 +65,7 @@ sub lookup_raw_data {
             archive         => $raw_data->archive,
             primary_id      => $experiment_id,
             experiment_type => $experiment_type,
+            data_type       => $data_type,
             archive_url     => $self->base_url() . $experiment_id,
         );
     }

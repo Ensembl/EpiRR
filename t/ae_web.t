@@ -51,14 +51,15 @@ my $ae = EpiRR::Service::ArrayExpress->new();
             'sample name' => 'source GSM870141 1',
             'sample_source_name' =>
               'caput of epididymides from 50 years old man',
-            'sample_title'     => 'caput of epididymides from 50 years old man',
+            'sample_title' => 'caput of epididymides from 50 years old man',
         },
     );
 
     my $expected_experiment = EpiRR::Model::RawData->new(
         archive         => 'AE',
         primary_id      => 'E-GEOD-35522',
-        experiment_type => 'transcription profiling by array',
+        experiment_type => '[miRNA-1_0] Affymetrix miRNA Array',
+        data_type       => 'transcription profiling by array',
         archive_url =>
 'http://www.ebi.ac.uk/arrayexpress/experiments/E-GEOD-35522/samples/GSM870141%201',
     );
@@ -70,18 +71,22 @@ my $ae = EpiRR::Service::ArrayExpress->new();
 }
 
 {
-  my $errors = [];
-  my $input  = EpiRR::Model::RawData->new(
-      archive      => 'AE',
-      primary_id   => 'NO_DATA_HERE',
-      secondary_id => 'BOB'
-  );
-  my ( $output_experiment, $output_sample ) =
-    $ae->lookup_raw_data( $input, $errors );
-    
-    is_deeply($errors,['ArrayExpress returned 0 experiments for NO_DATA_HERE, must have 1 to process'])
-  
-}
+    my $errors = [];
+    my $input  = EpiRR::Model::RawData->new(
+        archive      => 'AE',
+        primary_id   => 'NO_DATA_HERE',
+        secondary_id => 'BOB'
+    );
+    my ( $output_experiment, $output_sample ) =
+      $ae->lookup_raw_data( $input, $errors );
 
+    is_deeply(
+        $errors,
+        [
+'ArrayExpress returned 0 experiments for NO_DATA_HERE, must have 1 to process'
+        ]
+      )
+
+}
 
 done_testing();

@@ -75,10 +75,21 @@ sub _decorate {
     }
 
     for my $rd ( $dataset->all_raw_data ) {
-        my $et = lc $rd->experiment_type() ;
-        $et =~ s/histone //;
-        $et =~ tr/ -/__/;
-        $decorated->{urls}{$et} = $rd->archive_url();
+        my $url_key;
+
+        if ( $rd->data_type eq 'ChIP-Seq' ) {
+            $url_key = $rd->experiment_type();
+            $url_key =~ s/histone //i;
+        }
+        else {
+            $url_key = $rd->data_type();
+        }
+
+        $url_key = lc($url_key);
+
+        $url_key =~ tr/ -/__/;
+
+        $decorated->{urls}{$url_key} = $rd->archive_url();
     }
 
     return $decorated;

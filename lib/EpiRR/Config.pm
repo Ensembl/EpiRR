@@ -98,7 +98,7 @@ our $container = container 'EpiRR' => as {
         }
     );
     
-    service 'json_file_parser' => (class => 'EpiRR::Parser::JsonFileParser');
+    service 'json_file_parser' => (class => 'EpiRR::Parser::JsonParser');
 
     service 'contact_email' => 'VALID_EMAIL';
 

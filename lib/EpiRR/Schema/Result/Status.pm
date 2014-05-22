@@ -46,7 +46,7 @@ __PACKAGE__->table("status");
 
   data_type: 'varchar'
   is_nullable: 0
-  size: 10
+  size: 128
 
 =cut
 
@@ -59,7 +59,7 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "name",
-  { data_type => "varchar", is_nullable => 0, size => 10 },
+  { data_type => "varchar", is_nullable => 0, size => 128 },
 );
 
 =head1 PRIMARY KEY
@@ -92,8 +92,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:35:17
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qsx3Sh8zPOkQQiAW0VGe0g
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:52:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QGAI2AaQe9QfEAa804U7yQ
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #

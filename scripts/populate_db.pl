@@ -35,14 +35,14 @@ croak("Cannot find schema") unless ($schema);
 my $classifier = $container->resolve( service => 'dataset_classifier' );
 croak("Cannot find classifier") unless ($classifier);
 
-for my $status_name ( $classifier->all_status_names() ) {
+for my $status_name ( 'DEFAULT', $classifier->all_status_names() ) {
     my $existing_status = $schema->status()->find( { name => $status_name } );
     if ( !$existing_status ) {
         $schema->status()->create( { name => $status_name, } );
     }
 }
 
-for my $type_name ( $classifier->all_type_names() ) {
+for my $type_name ( 'DEFAULT', $classifier->all_type_names() ) {
     my $existing_type = $schema->type()->find( { name => $type_name } );
     if ( !$existing_type ) {
         $schema->type()->create( { name => $type_name, } );

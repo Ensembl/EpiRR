@@ -29,7 +29,7 @@ my $p = EpiRR::Parser::SRAXMLParser->new();
     my $e      = [];
     my @actual = $p->parse_experiment( $xml, $e );
 
-    my $expected = [ 'SRS004524', 'Histone H3K27me3', 'SRX007379', ];
+    my $expected = [ 'SRS004524', 'Histone H3K27me3', 'SRX007379','ChIP-Seq' ];
 
     is_deeply( \@actual, $expected, "Parse Experiment XML" );
     is_deeply( $e, [], 'No errors' );

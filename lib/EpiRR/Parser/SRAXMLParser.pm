@@ -28,7 +28,7 @@ use EpiRR::Model::RawData;
 sub parse_experiment {
     my ( $self, $xml, $errors ) = @_;
 
-    my ( $e_id, $s_id, $et );
+    my ( $e_id, $s_id, $et, $ls );
 
     my $t = XML::Twig->new(
         twig_handlers => {
@@ -39,6 +39,10 @@ sub parse_experiment {
                   "Found multiple experiments in XML ($e_id and $id)."
                   if $e_id;
                 $e_id = $id;
+            },
+            'LIBRARY_STRATEGY' => sub {
+                my ( $t, $element ) = @_;
+                  $ls = $element->trimmed_text();
             },
             'SAMPLE_DESCRIPTOR' => sub {
                 my ( $t, $element ) = @_;
@@ -65,11 +69,12 @@ sub parse_experiment {
     $t->parse($xml);
     push @$errors, "No experiment found" unless $e_id;
     if ($e_id) {
-        push @$errors, "No experiment_type found" unless $et;
-        push @$errors, "No sample found"          unless $s_id;
+        push @$errors, "No experiment_type found"  unless $et;
+        push @$errors, "No sample found"           unless $s_id;
+        push @$errors, "No library_strategy found" unless $ls;
     }
 
-    return ( $s_id, $et, $e_id );
+    return ( $s_id, $et, $e_id, $ls );
 }
 
 sub parse_sample {

@@ -1,7 +1,7 @@
 function init_facetlize() {
   $.getJSON("http://localhost:3000/view/decorated/all", function(data) {
     var item_template =
-      '<% var datatypes = ["dna_methylation","mrna_seq","chip_seq_input","h3k4me3","h3k4me1","h3k9me3","h3k27ac","h3k27me3","h3k36me3"] %>' +
+      '<% var datatypes = ["bisulfite-seq","dnase-hypersensitivity","rna_seq","chip_seq_input","h3k4me3","h3k4me1","h3k9me3","h3k27ac","h3k27me3","h3k36me3"] %>' +
       '<tr class="item">' +
       '<td class="accession"><%= obj.accession %></td>' +
       '<td><%= obj.project %></td>' +

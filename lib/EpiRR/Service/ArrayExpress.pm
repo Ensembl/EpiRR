@@ -94,13 +94,16 @@ sub lookup_experiment {
         return undef;
     }
 
-    my $experiment_type = $data->{experiments}->{experiment}->{experimenttype};
-    my $experiment_id   = $data->{experiments}->{experiment}->{accession};
+    my $data_type = $data->{experiments}->{experiment}->{experimenttype};
+    my $experiment_type =
+      $data->{experiments}->{experiment}->{arraydesign}->{name};
+    my $experiment_id = $data->{experiments}->{experiment}->{accession};
 
     my $raw_data = EpiRR::Model::RawData->new(
         archive         => 'AE',
         primary_id      => $experiment_id,
         experiment_type => $experiment_type,
+        data_type       => $data_type,
     );
 
     return ($raw_data);
