@@ -41,6 +41,49 @@ sub fetch_current {
     return \@dsv;
 }
 
+sub fetch_decorated_current {
+    my ($self) = @_;
+
+    my $datasets = $self->fetch_current();
+
+    my @d_datasets = map { _decorate($_) } @$datasets;
+
+    return \@d_datasets;
+}
+
+sub _decorate {
+    my ($dataset) = @_;
+    my $decorated = $dataset->to_hash();
+
+    delete $decorated->{meta_data};
+    delete $decorated->{raw_data};
+
+    my @desc_keys = qw(
+      disease   biomaterial_type line
+      donor_id  pool_id
+      cell_type tissue_type
+    );
+    my @tags =
+      grep { $_ && lc($_) ne 'na' && lc($_) ne 'none' }
+      $dataset->get_meta_data(@desc_keys);
+
+    $decorated->{auto_desc} = join( ',', @tags );
+
+    for my $kv ( $dataset->meta_data_kv() ) {
+        my $k = 'md_' . $kv->[0];
+        $decorated->{$k} = $kv->[1];
+    }
+
+    for my $rd ( $dataset->all_raw_data ) {
+        my $et = lc $rd->experiment_type() ;
+        $et =~ s/histone //;
+        $et =~ tr/ -/__/;
+        $decorated->{urls}{$et} = $rd->archive_url();
+    }
+
+    return $decorated;
+}
+
 sub fetch {
     my ( $self, $id ) = @_;
 
@@ -76,12 +119,14 @@ sub submit {
     }
 
     if ( !@$errors ) {
-        my $dataset = $self->conversion_service()->user_to_db( $user_datasets->[0], $errors );
-        if (@$errors){
-          return ('',$errors);
+        my $dataset =
+          $self->conversion_service()
+          ->user_to_db( $user_datasets->[0], $errors );
+        if (@$errors) {
+            return ( '', $errors );
         }
         else {
-          return ($dataset->accession,$errors);
+            return ( $dataset->accession, $errors );
         }
     }
 }

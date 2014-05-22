@@ -1,0 +1,82 @@
+/* First come the styles which are used by facet search */
+
+      .facetsearch {
+        display: inline-block;
+        width: 200px;
+        vertical-align: top;
+      }
+      .activeorderby,
+      .activefacet {
+        color: red;
+      }
+      .bottomline {
+        padding: 10px 0 10px 0;
+        font-weight: bold;
+      }
+      .bottomline .orderby, 
+      .bottomline .facettotalcount {
+        display: inline-block;
+      }
+      .bottomline .orderby ul,
+      .bottomline .orderby li {
+        display: inline;
+        padding: 0;
+      }
+      .bottomline .orderby-title {
+        margin: 0 0 0 10px;
+      }
+      .bottomline .deselectstartover {
+        float: right;
+      }
+
+      #showmorebutton {
+        border: 1px solid #AAA;
+        border-radius: 15px;
+        background-color: #DDD;
+        margin: 0 0 10px 0;
+        padding: 10px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      /* General purpose styles */
+
+      body {
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+      
+      table{
+        border-collapse: collapse;
+      }
+      td.assays {
+        width: 30px;
+      } 
+      th.reg {
+        vertical-align:bottom;
+      }  
+      th.assays{
+        height: 80px;
+        white-space: nowrap;
+      }      
+      th.assays > div {
+        -ms-transform:translate(10px, 22px) rotate(315deg);
+        -moz-transform:translate(10px, 22px) rotate(315deg);
+        -webkit-transform:translate(10px, 22px) rotate(315deg);
+        -o-transform:translate(10px, 22px) rotate(315deg);
+        transform:translate(10px, 22px) rotate(315deg);
+        width: 30px;
+      }
+      th.assays > div > span {
+        border-bottom: 1px solid #ccc;
+        padding: 5px 10px;
+      }
+      td.assays {
+        text-align: center;
+      }
+      tbody tr:nth-child(even) {
+         background-color: lightgray;
+      }
+      

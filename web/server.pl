@@ -30,21 +30,9 @@ get '/view/all' => sub {
     $self->render( json => $controller->fetch_current() );
 };
 
-post '/submit/:project' => sub {
+get '/view/decorated/all' => sub {
     my $self = shift;
-
-    my $project = $self->param('project');
-    my $content = $self->req->body();
-    my ( $id, $errors ) = $controller->submit( $project, $content );
-
-    if (@$errors) {
-        $self->res->code(400);
-        $self->res->message('Bad request');
-        $self->render( json => $errors );
-    }
-    else {
-        $self->redirect_to( json => $id );
-    }
+    $self->render( json => $controller->fetch_decorated_current() );
 };
 
 get '/view/:id' => sub {
@@ -58,6 +46,22 @@ get '/view/:id' => sub {
         $self->res->code(404);
         $self->res->message('Not Found');
         $self->render();
+    }
+};
+
+post '/submit/:project' => sub {
+    my $self = shift;
+    my $project = $self->param('project');
+    my $content = $self->req->body();
+    my ( $id, $errors ) = $controller->submit( $project, $content );
+
+    if (@$errors) {
+        $self->res->code(400);
+        $self->res->message('Bad request');
+        $self->render( json => $errors );
+    }
+    else {
+        $self->redirect_to( json => $id );
     }
 };
 
