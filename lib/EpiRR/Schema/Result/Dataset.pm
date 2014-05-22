@@ -15,6 +15,18 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=back
+
+=cut
+
+__PACKAGE__->load_components("InflateColumn::DateTime");
+
 =head1 TABLE: C<dataset>
 
 =cut
@@ -43,6 +55,12 @@ __PACKAGE__->table("dataset");
   is_nullable: 1
   size: 18
 
+=head2 local_name
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 128
+
 =head2 created
 
   data_type: 'timestamp'
@@ -69,6 +87,8 @@ __PACKAGE__->add_columns(
   },
   "accession",
   { data_type => "varchar", is_nullable => 1, size => 18 },
+  "local_name",
+  { data_type => "varchar", is_nullable => 1, size => 128 },
   "created",
   {
     data_type => "timestamp",
@@ -89,6 +109,22 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("dataset_id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<project_id_2>
+
+=over 4
+
+=item * L</project_id>
+
+=item * L</local_name>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("project_id_2", ["project_id", "local_name"]);
 
 =head1 RELATIONS
 
@@ -123,8 +159,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 13:14:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:I10IXPiXOVLGa4dn0X4nSA
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:35:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mPUT+bsyLEJOdGzpWLzh/Q
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #

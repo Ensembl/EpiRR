@@ -15,6 +15,18 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
+=head1 COMPONENTS LOADED
+
+=over 4
+
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=back
+
+=cut
+
+__PACKAGE__->load_components("InflateColumn::DateTime");
+
 =head1 TABLE: C<raw_data>
 
 =cut
@@ -48,6 +60,12 @@ __PACKAGE__->table("raw_data");
   data_type: 'varchar'
   is_nullable: 0
   size: 64
+
+=head2 data_type
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 128
 
 =head2 experiment_type
 
@@ -89,6 +107,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 0, size => 64 },
   "secondary_accession",
   { data_type => "varchar", is_nullable => 0, size => 64 },
+  "data_type",
+  { data_type => "varchar", is_nullable => 0, size => 128 },
   "experiment_type",
   { data_type => "varchar", is_nullable => 0, size => 128 },
   "archive_id",
@@ -147,8 +167,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-12-10 14:25:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AmX3/gc92j7wZYxqneqbNQ
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:35:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wLBv4kVrOKpnWz8vFLUmbg
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #

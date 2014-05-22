@@ -34,20 +34,20 @@ create table dataset (
 dataset_id integer primary key,
 project_id integer,
 accession text,
+local_name text,
 created datetime,
 constraint dpi foreign key (project_id) references project(project_id)
 );
 
 create index i_ds_pi on dataset(project_id);
 create index i_ds_acession on dataset(accession);
-
+create unique index i_ds_pi_ln on dataset(project_id,local_name);
 
 create table dataset_version (
 dataset_version_id integer primary key,
 dataset_id integer,
 version integer,
 is_current boolean,
-local_name text,
 description text,
 full_accession text,
 status_id integer,
@@ -79,6 +79,7 @@ primary_accession text,
 secondary_accession text,
 archive_id integer,
 archive_url text,
+data_type text,
 experiment_type text,
 foreign key (dataset_version_id) references dataset_version(dataset_version_id),
 foreign key (archive_id) references archive(archive_id)

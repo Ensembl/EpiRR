@@ -12,8 +12,8 @@ use base 'DBIx::Class::Schema';
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2013-11-11 12:50:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PFXg+Br5giLTBZI/xYqRPg
+# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:35:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gwCg2FDo6HEk3PUZsl/xCQ
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #

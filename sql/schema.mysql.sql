@@ -45,11 +45,13 @@ create table dataset (
 dataset_id int(10) unsigned not null auto_increment,
 project_id int(10) unsigned not null,
 accession varchar(18),
+local_name varchar(128),
 created timestamp,
 primary key (dataset_id),
 key(project_id),
 key(accession),
-foreign key (project_id) references project(project_id)
+foreign key (project_id) references project(project_id),
+unique key (project_id,local_name)
 ) ENGINE=InnoDB CHARSET=UTF8;
 
 #the details of a dataset. can change, so expect a new one on each update
@@ -58,7 +60,6 @@ dataset_version_id int(10) unsigned not null auto_increment,
 dataset_id int(10) unsigned not null,
 version int(4) unsigned not null,
 is_current boolean not null,
-local_name varchar(128),
 description varchar(512),
 full_accession varchar(20) not null,
 status_id int(10) unsigned not null,
@@ -93,6 +94,7 @@ raw_data_id int(10) unsigned not null auto_increment,
 dataset_version_id int(10) unsigned not null,
 primary_accession varchar(64) not null, 
 secondary_accession varchar(64) not null,
+data_type varchar(128) not null,
 experiment_type varchar(128) not null,
 archive_id  int(10) unsigned not null,
 archive_url varchar(512),
