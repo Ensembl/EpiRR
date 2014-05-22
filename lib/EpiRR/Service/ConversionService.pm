@@ -207,7 +207,10 @@ sub _dataset {
         $dataset = $project->create_related( 'datasets', {} ) if ( !$dataset );
     }
     elsif ($project) {
-        $dataset = $project->create_related( 'datasets', {} );
+        $dataset =
+          $project->create_related( 'datasets',
+            { local_name => $user_dataset->local_name() } );
+
     }
     return $dataset;
 }
