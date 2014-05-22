@@ -1,8 +1,16 @@
 /* First come the styles which are used by facet search */
-
+      #facets{    
+        width: 150px;
+        float: left;
+        display: inline;
+        margin: 0;
+        padding: 5px;
+        margin-right: 10px;
+        border: 2px solid lightgray;
+        border-radius: 10px;
+      }
       .facetsearch {
         display: inline-block;
-        width: 200px;
         vertical-align: top;
       }
       .activeorderby,
@@ -13,20 +21,21 @@
         padding: 10px 0 10px 0;
         font-weight: bold;
       }
-      .bottomline .orderby, 
+      .bottomline .orderby, {
+        display: block;
+      }
       .bottomline .facettotalcount {
-        display: inline-block;
+        display: block;
       }
       .bottomline .orderby ul,
       .bottomline .orderby li {
-        display: inline;
-        padding: 0;
+        display: block;
       }
-      .bottomline .orderby-title {
+/*      .bottomline .orderby-title {
         margin: 0 0 0 10px;
-      }
+      }*/
       .bottomline .deselectstartover {
-        float: right;
+  /*      float: right;*/
       }
 
       #showmorebutton {
@@ -79,4 +88,13 @@
       tbody tr:nth-child(even) {
          background-color: lightgray;
       }
+      
+      td.assays a {
+        color: green;
+        font-size: 20px;
+        text-decoration:none;
+      }
+      
+      
+
       

@@ -9,7 +9,7 @@ function init_facetlize() {
       '<td><%= obj.auto_desc %> </td>' +
       '<td><%= obj.type %></td>' +
       '<% _.each(datatypes, function(dt) { %> <td class="assays"><% if (obj.urls[dt]) { %>' + 
-      '<a href="<%= obj.urls[dt] %>">x</a>' +
+      '<a href="<%= obj.urls[dt] %>">&#x25cf;</a>' +
       ' <% } %></td> <% }); %>' +
 
     '</tr>';
@@ -27,9 +27,10 @@ function init_facetlize() {
       resultTemplate: item_template,
       paginationCount: 50,
       orderByOptions: {
+        'accession': 'Accession',
         'project': 'Project',
-        'status': 'Status',
-        'accession': 'Accession'
+        'species': 'Species',
+        'auto_desc': 'Description'
       }
     };
 
