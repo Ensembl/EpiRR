@@ -298,6 +298,7 @@ sub _raw_data {
                 }
             ) if ( !@$rd_errors );
             $user_rd->experiment_type( $rd->experiment_type() );
+            $user_rd->data_type($rd->data_type);
         }
         else {
             push @$rd_errors, "Do not know how to read raw data from archive";
@@ -307,7 +308,7 @@ sub _raw_data {
     }
 
     push @$errors, "No samples found" unless @samples;
-
+        
     return \@samples;
 }
 

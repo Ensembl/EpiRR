@@ -14,6 +14,7 @@
 package EpiRR::Service::IhecDatasetClassifier;
 
 use Moose;
+use Carp;
 
 with 'EpiRR::Roles::DatasetClassifier';
 
@@ -90,17 +91,15 @@ sub experimental_completeness {
     my ( $self, $dataset, $errors ) = @_;
     my %et;
 
-    RD: for my $rd ( $dataset->all_raw_data() ) {
+    for my $rd ( $dataset->all_raw_data() ) {
 
         if ( !$rd->experiment_type ) {
-            push @$errors, 'No experiment type for ' . $rd->primary_id();
-            next RD;
+            confess( 'No experiment type for ' . $rd->primary_id() );
         }
         if ( !$rd->data_type ) {
-            push @$errors, 'No data type for ' . $rd->primary_id();
-            next RD;
+            confess( 'No data type for ' . $rd->primary_id() );
         }
-        
+
         my $key;
         if ( $rd->data_type() eq 'ChIP-Seq' ) {
             $key = $rd->experiment_type();
