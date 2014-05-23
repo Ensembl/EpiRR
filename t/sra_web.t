@@ -40,7 +40,7 @@ my $w = EpiRR::Service::ENAWeb->new();
         $errors,
         ["No experiment found for NO_DATA_HERE"],
         'Produces error in incorrect experiment id'
-      );
+    );
 }
 {
     my $input =
@@ -70,7 +70,7 @@ my $w = EpiRR::Service::ENAWeb->new();
         primary_id      => 'SRX007379',
         experiment_type => 'Histone H3K27me3',
         archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
-        data_type => 'ChIP-Seq'
+        data_type       => 'ChIP-Seq',
     );
 
     my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);
