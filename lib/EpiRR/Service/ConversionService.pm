@@ -19,6 +19,7 @@ use Carp;
 use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
+use Data::Compare;
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -94,7 +95,8 @@ sub user_to_db {
 
     $self->schema()->txn_begin();
 
-    my ($dataset) = $self->_dataset( $simple_dataset, $errors ) if !@$errors;
+    my ( $dataset, $existing_dsv ) = $self->_dataset( $simple_dataset, $errors )
+      if !@$errors;
 
     my $dataset_version =
       $self->_dataset_version( $simple_dataset, $dataset, $errors )
@@ -118,6 +120,25 @@ sub user_to_db {
 
         $dataset_version->status($status);
         $dataset_version->type($type);
+    }
+
+    if ( !@$errors && $existing_dsv ) {
+        my $existing_dataset = $self->db_to_user($existing_dsv)->to_hash();
+        my $new_dataset      = $self->db_to_user($dataset_version)->to_hash();
+
+        for ( $existing_dataset, $new_dataset ) {
+            $_->{full_accession} = '';
+            $_->{version}        = '';
+        }
+
+        my $comparison = Data::Compare->new( $existing_dataset, $new_dataset );
+        if ( $comparison->Cmp() ) {
+
+            #identical, so the update is unnecessary
+            $self->schema()->txn_rollback();
+            return $existing_dsv;
+        }
+
     }
 
     if (@$errors) {
@@ -203,12 +224,13 @@ sub _dataset {
     elsif ( $project && $user_dataset->local_name() ) {
         $dataset =
           $project->search_related( 'datasets',
-            { local_name => $user_dataset->local_name() } )->single(); #???
+            { local_name => $user_dataset->local_name() } )->single();
     }
 
-    my $exiting_dataset_version;
-    if ( $dataset ) {
-      $exiting_dataset_version = $dataset->find_related('datasets',{is_current => 1}).single();
+    my $existing_dataset_version;
+    if ($dataset) {
+        $existing_dataset_version =
+          $dataset->find_related( 'datasets', { is_current => 1 } ) . single();
     }
     else {
         $dataset =
@@ -216,7 +238,7 @@ sub _dataset {
             { local_name => $user_dataset->local_name() } );
 
     }
-    return $dataset;
+    return ( $dataset, $existing_dataset_version );
 }
 
 sub _dataset_version {
