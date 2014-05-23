@@ -51,7 +51,7 @@ our $container = container 'EpiRR' => as {
     );
 
     service 'datasetClassifier' => (
-        class     => 'EpiRR::Service::IhecBinaryDatasetClassifier',
+        class     => 'EpiRR::Service::IhecDatasetClassifier',
         lifecycle => 'Singleton',
     );
 

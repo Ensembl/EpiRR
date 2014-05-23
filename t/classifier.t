@@ -15,27 +15,28 @@
 use strict;
 use warnings;
 
-use EpiRR::Service::IhecBinaryDatasetClassifier;
+use EpiRR::Service::IhecDatasetClassifier;
 use EpiRR::Model::RawData;
 use EpiRR::Model::Sample;
 use EpiRR::Model::Dataset;
 use Test::More;
 
-my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
+my $ds = EpiRR::Service::IhecDatasetClassifier->new();
 
 {
     my $input_ds = EpiRR::Model::Dataset->new(
         raw_data => [
             EpiRR::Model::RawData->new(
-                experiment_type   => 'Anything',
-                primary_accession => 'rd1',
+                experiment_type => 'Anything',
+                primary_id      => 'rd1',
+                data_type       => 'dt1',
             )
         ]
     );
     my $input_s = [
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { donor_id=> 'd1' }
+            meta_data => { donor_id => 'd1' }
         )
     ];
     my $errors = [];
@@ -50,21 +51,22 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
 {
     my $input_ds = EpiRR::Model::Dataset->new();
     for my $et (
-        'DNA Methylation',
-        'ChIP-Seq Input',
-        'Histone H3K4me1',
-        'Histone H3K4me3',
-        'Histone H3K9me3',
-        'Histone H3K9ac',
-        'Histone H3K27me3',
-        'Histone H3K36me3',
-        'mRNA-Seq',
+        [ 'Bisulfite-Seq', 'DNA Methylation' ],
+        [ 'ChIP-Seq',      'ChIP-Seq Input' ],
+        [ 'ChIP-Seq',      'Histone H3K4me1' ],
+        [ 'ChIP-Seq',      'Histone H3K4me3' ],
+        [ 'ChIP-Seq',      'Histone H3K9me3' ],
+        [ 'ChIP-Seq',      'Histone H3K9ac' ],
+        [ 'ChIP-Seq',      'Histone H3K27me3' ],
+        [ 'ChIP-Seq',      'Histone H3K36me3' ],
+        [ 'RNA-Seq',       'mRNA-seq' ],
       )
     {
         $input_ds->add_raw_data(
             EpiRR::Model::RawData->new(
-                experiment_type   => $et,
-                primary_accession => 'rd1',
+                data_type       => $et->[0],
+                experiment_type => $et->[1],
+                primary_id      => 'rd1',
             )
         );
     }
@@ -77,15 +79,12 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
 
 {
     my $input_ds = EpiRR::Model::Dataset->new();
-    for my $et (
-        '',
-        'mRNA-Seq',
-      )
-    {
+    for my $et ( '', 'RNA-Seq', ) {
         $input_ds->add_raw_data(
             EpiRR::Model::RawData->new(
-                experiment_type   => $et,
-                primary_id => 'rd1',
+                experiment_type => $et,
+                primary_id      => 'rd1',
+                data_type       => '1',
             )
         );
     }
@@ -94,9 +93,7 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
 
     is_deeply(
         $errors,
-        [
-            'No experiment type for rd1',
-        ],
+        [ 'No experiment type for rd1', ],
         "No experiment type generates error"
     );
 }
@@ -106,11 +103,11 @@ my $ds = EpiRR::Service::IhecBinaryDatasetClassifier->new();
     my $input_s = [
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { donor_id=> 'd1' }
+            meta_data => { donor_id => 'd1' }
         ),
         EpiRR::Model::Sample->new(
             sample_id => 's1',
-            meta_data => { donor_id=> 'd2' }
+            meta_data => { donor_id => 'd2' }
         )
     ];
 

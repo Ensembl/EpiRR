@@ -11,7 +11,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-package EpiRR::Service::IhecBinaryDatasetClassifier;
+package EpiRR::Service::IhecDatasetClassifier;
 
 use Moose;
 
@@ -21,20 +21,24 @@ has '+status_names' => ( default => sub { [ 'Complete', 'Incomplete' ] }, );
 has '+type_names' =>
   ( default => sub { [ 'Composite', 'Pooled samples', 'Single donor' ] }, );
 
-has 'required_experiment_types' => (
+has 'required_data' => (
     is      => 'rw',
-    isa     => 'ArrayRef[ArrayRef[Str]]',
+    isa     => 'ArrayRef[Str]',
     traits  => ['Array'],
     default => sub {
         [
-            ['DNA Methylation'],  ['ChIP-Seq Input'],
-            ['Histone H3K4me1'],  ['Histone H3K4me3'],
-            ['Histone H3K9me3'],  ['Histone H3K9ac'],
-            ['Histone H3K27me3'], ['Histone H3K36me3'],
-            ['mRNA-Seq'],
+            'Bisulfite-Seq',
+            'ChIP-Seq Input',
+            'Histone H3K4me1',
+            'Histone H3K4me3',
+            'Histone H3K9me3',
+            'Histone H3K9ac',
+            'Histone H3K27me3',
+            'Histone H3K36me3',
+            'RNA-Seq',
         ];
     },
-    handles => { 'all_required_experiment_types' => 'elements' }
+    handles => { 'all_required_data' => 'elements' }
 );
 
 sub determine_classification {
@@ -86,22 +90,33 @@ sub experimental_completeness {
     my ( $self, $dataset, $errors ) = @_;
     my %et;
 
-    for my $rd ( $dataset->all_raw_data() ) {
-        if ( $rd->experiment_type() ) {
-            $et{ $rd->experiment_type() }++;
+    RD: for my $rd ( $dataset->all_raw_data() ) {
+
+        if ( !$rd->experiment_type ) {
+            push @$errors, 'No experiment type for ' . $rd->primary_id();
+            next RD;
+        }
+        if ( !$rd->data_type ) {
+            push @$errors, 'No data type for ' . $rd->primary_id();
+            next RD;
+        }
+        
+        my $key;
+        if ( $rd->data_type() eq 'ChIP-Seq' ) {
+            $key = $rd->experiment_type();
         }
         else {
-            push @$errors, 'No experiment type for ' . $rd->primary_id();
+            $key = $rd->data_type();
         }
+
+        $et{$key}++;
+
     }
 
     my $classification = 'Complete';
 
-    for my $rets ( $self->all_required_experiment_types() ) {
-        my $found = 0;
-        for my $ret (@$rets) {
-            $found++ if ( exists $et{$ret} );
-        }
+    for my $ret ( $self->all_required_data() ) {
+        my $found = $et{$ret};
         if ( !$found ) {
             $classification = 'Incomplete';
         }
