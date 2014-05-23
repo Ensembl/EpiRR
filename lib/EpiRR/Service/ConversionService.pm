@@ -230,7 +230,7 @@ sub _dataset {
     my $existing_dataset_version;
     if ($dataset) {
         $existing_dataset_version =
-          $dataset->find_related( 'dataset_versions', { is_current => 1 } )->single();
+          $dataset->find_related( 'dataset_versions', { is_current => 1 } );
     }
     else {
         $dataset =
