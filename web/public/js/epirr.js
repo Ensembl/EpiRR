@@ -3,7 +3,7 @@ function init_facetlize() {
     var item_template =
       '<% var datatypes = ["bisulfite-seq","dnase-hypersensitivity","rna_seq","chip_seq_input","h3k4me3","h3k4me1","h3k9me3","h3k27ac","h3k27me3","h3k36me3"] %>' +
       '<tr class="item">' +
-      '<td class="accession"><%= obj.accession %></td>' +
+      '<td class="accession"><%= obj.full_accession %></td>' +
       '<td><%= obj.project %></td>' +
       '<td><%= obj.md_species %></td>' +
       '<td><%= obj.auto_desc %> </td>' +
