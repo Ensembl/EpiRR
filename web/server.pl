@@ -49,21 +49,5 @@ get '/view/:id' => sub {
     }
 };
 
-post '/submit/:project' => sub {
-    my $self = shift;
-    my $project = $self->param('project');
-    my $content = $self->req->body();
-    my ( $id, $errors ) = $controller->submit( $project, $content );
-
-    if (@$errors) {
-        $self->res->code(400);
-        $self->res->message('Bad request');
-        $self->render( json => $errors );
-    }
-    else {
-        $self->redirect_to( json => $id );
-    }
-};
-
 # Start the Mojolicious command system
 app->start;
