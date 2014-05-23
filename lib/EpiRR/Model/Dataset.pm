@@ -36,6 +36,15 @@ has 'accession' => (
     default   => '',
     predicate => 'has_accession'
 );
+has 'full_accession' => (
+    is  => 'rw',
+    isa => 'Maybe[Str]',
+);
+has 'version' => (
+    is  => 'rw',
+    isa => 'Maybe[Int]',
+);
+
 has 'local_name'  => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 has 'description' => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 
@@ -61,14 +70,16 @@ sub to_hash {
     my %meta_data = $self->all_meta_data();
 
     return {
-        project     => $self->project,
-        status      => $self->status,
-        type        => $self->type,
-        accession   => $self->accession,
-        local_name  => $self->local_name,
-        description => $self->description,
-        raw_data    => \@raw_data,
-        meta_data   => \%meta_data,
+        project        => $self->project,
+        status         => $self->status,
+        type           => $self->type,
+        accession      => $self->accession,
+        local_name     => $self->local_name,
+        description    => $self->description,
+        full_accession => $self->full_accession,
+        version        => $self->version,
+        raw_data       => \@raw_data,
+        meta_data      => \%meta_data,
     };
 }
 

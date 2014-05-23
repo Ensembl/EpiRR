@@ -105,9 +105,9 @@ my $cs = EpiRR::Service::ConversionService->new(
 );
 
 my $test_input = EpiRR::Model::Dataset->new(
-    project  => $test_db->project_name(),
+    project    => $test_db->project_name(),
     local_name => 'our test set',
-    raw_data => [
+    raw_data   => [
         EpiRR::Model::RawData->new(
             archive    => $test_db->archive_name(),
             primary_id => $experiment_ids[0]
@@ -133,7 +133,8 @@ is(
     $test_db->project_name(),
     "Correct project"
 ) if ( $test_output->dataset() );
-is ($test_output->dataset()->local_name(),'our test set','local name is set');
+is( $test_output->dataset()->local_name(), 'our test set',
+    'local name is set' );
 
 my @output_raw_data = $test_output->raw_datas();
 is( scalar(@output_raw_data), 2, "Two raw data" );
@@ -149,11 +150,13 @@ is( $output_meta_data[0]->value(), 'bar', 'Correct meta data value' )
 my $user_level_output = $cs->db_to_user($test_output);
 
 my $expected_user_level_output = EpiRR::Model::Dataset->new(
-    project    => $test_db->project_name(),
-    status     => 'Complete',
-    meta_data  => { foo => 'bar' },
-    type       => 'Single donor',
-    accession  => 'TPX00000001.1',
+    project        => $test_db->project_name(),
+    status         => 'Complete',
+    meta_data      => { foo => 'bar' },
+    type           => 'Single donor',
+    full_accession => 'TPX00000001.1',
+    accession      => 'TPX00000001',
+    version        => 1,
     local_name => 'our test set',
     raw_data   => [
         EpiRR::Model::RawData->new(

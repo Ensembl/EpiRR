@@ -54,12 +54,14 @@ sub db_to_user {
       unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
 
     my $d = EpiRR::Model::Dataset->new(
-        project     => $dsv->dataset()->project()->name(),
-        status      => $dsv->status()->name(),
-        accession   => $dsv->full_accession(),
-        local_name  => $dsv->dataset()->local_name(),
-        description => $dsv->description(),
-        type        => $dsv->type()->name(),
+        project        => $dsv->dataset()->project()->name(),
+        status         => $dsv->status()->name(),
+        full_accession => $dsv->full_accession(),
+        accession      => $dsv->dataset()->accession(),
+        version        => $dsv->version(),
+        local_name     => $dsv->dataset()->local_name(),
+        description    => $dsv->description(),
+        type           => $dsv->type()->name(),
     );
 
     for my $m ( $dsv->meta_datas ) {
@@ -92,7 +94,7 @@ sub user_to_db {
 
     $self->schema()->txn_begin();
 
-    my $dataset = $self->_dataset( $simple_dataset, $errors ) if !@$errors;
+    my ($dataset) = $self->_dataset( $simple_dataset, $errors ) if !@$errors;
 
     my $dataset_version =
       $self->_dataset_version( $simple_dataset, $dataset, $errors )
@@ -201,10 +203,14 @@ sub _dataset {
     elsif ( $project && $user_dataset->local_name() ) {
         $dataset =
           $project->search_related( 'datasets',
-            { local_name => $user_dataset->local_name() } )->single();
+            { local_name => $user_dataset->local_name() } )->single(); #???
     }
-    
-    if (!$dataset) {
+
+    my $exiting_dataset_version;
+    if ( $dataset ) {
+      $exiting_dataset_version = $dataset->find_related('datasets',{is_current => 1}).single();
+    }
+    else {
         $dataset =
           $project->create_related( 'datasets',
             { local_name => $user_dataset->local_name() } );
