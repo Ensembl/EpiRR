@@ -64,16 +64,16 @@ else {
 croak("Output would overwrite existing file $outfile") if (!$overwrite && -e $outfile);
 open my $fh, '>', $outfile or croak("Could not open $outfile: $!");
 
-$text_file_parser->file_path($file);
-$text_file_parser->parse();
+$parser->file_path($file);
+$parser->parse();
 
-if ( $text_file_parser->error_count() ) {
+if ( $parser->error_count() ) {
     print STDERR "Error(s) when parsing text file, will not proceed." . $/;
-    print $fh $_.$/ for ( $text_file_parser->all_errors() );
+    print $fh $_.$/ for ( $parser->all_errors() );
     exit 1;
 }
 
-my $user_dataset = $text_file_parser->dataset();
+my $user_dataset = $parser->dataset();
 my $errors       = [];
 my $db_dataset   = $conversion_service->user_to_db( $user_dataset, $errors );
 
