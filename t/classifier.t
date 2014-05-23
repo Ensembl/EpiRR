@@ -56,7 +56,7 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
         [ 'ChIP-Seq',      'Histone H3K4me1' ],
         [ 'ChIP-Seq',      'Histone H3K4me3' ],
         [ 'ChIP-Seq',      'Histone H3K9me3' ],
-        [ 'ChIP-Seq',      'Histone H3K9ac' ],
+        [ 'ChIP-Seq',      'Histone H3K27ac' ],
         [ 'ChIP-Seq',      'Histone H3K27me3' ],
         [ 'ChIP-Seq',      'Histone H3K36me3' ],
         [ 'RNA-Seq',       'mRNA-seq' ],
@@ -89,11 +89,11 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
         );
     }
     my $errors = [];
-    my $status = $ds->experimental_completeness( $input_ds, $errors );
-
-    is_deeply(
-        $errors,
-        [ 'No experiment type for rd1', ],
+    eval {
+      my $status = $ds->experimental_completeness( $input_ds, $errors );
+    };
+    ok(
+        $@ =~ m/^No experiment type for rd1/,
         "No experiment type generates error"
     );
 }

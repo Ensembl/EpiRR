@@ -30,12 +30,12 @@ has 'required_data' => (
         [
             'Bisulfite-Seq',
             'ChIP-Seq Input',
-            'Histone H3K4me1',
-            'Histone H3K4me3',
-            'Histone H3K9me3',
-            'Histone H3K9ac',
             'Histone H3K27me3',
             'Histone H3K36me3',
+            'Histone H3K4me1',
+            'Histone H3K4me3',
+            'Histone H3K27ac',
+            'Histone H3K9me3',
             'RNA-Seq',
         ];
     },
@@ -109,7 +109,6 @@ sub experimental_completeness {
         }
 
         $et{$key}++;
-
     }
 
     my $classification = 'Complete';
