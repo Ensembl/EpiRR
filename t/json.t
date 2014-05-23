@@ -45,13 +45,15 @@ use File::Basename;
 
 {
     my $dataset = EpiRR::Model::Dataset->new(
-        project     => ' project ',
-        status      => ' ok ',
-        type        => ' finished ',
-        accession   => ' foo1 ',
-        local_name  => ' foo1_local ',
-        description => ' some data ',
-        raw_data    => [
+        project        => 'project',
+        status         => 'ok',
+        type           => 'finished',
+        accession      => 'foo1',
+        full_accession => 'foo1.1',
+        version        => 1,
+        local_name     => 'foo1_local',
+        description    => 'some data',
+        raw_data       => [
             EpiRR::Model::RawData->new(
                 archive         => 'myarchive',
                 primary_id      => 'p1',
@@ -69,18 +71,20 @@ use File::Basename;
                 data_type       => 'chip',
             )
         ],
-        meta_data => { tag => ' value ' },
+        meta_data => { tag => 'value' },
     );
 
     my $actual        = $dataset->to_hash();
     my $expected_hash = {
-        project     => ' project ',
-        status      => ' ok ',
-        type        => ' finished ',
-        accession   => ' foo1 ',
-        local_name  => ' foo1_local ',
-        description => ' some data ',
-        raw_data    => [
+        project        => 'project',
+        status         => 'ok',
+        type           => 'finished',
+        accession      => 'foo1',
+        full_accession => 'foo1.1',
+        version        => 1,
+        local_name     => 'foo1_local',
+        description    => 'some data',
+        raw_data       => [
             {
                 archive         => 'myarchive',
                 primary_id      => 'p1',
@@ -98,7 +102,7 @@ use File::Basename;
                 data_type       => 'chip',
             }
         ],
-        meta_data => { tag => ' value ' },
+        meta_data => { tag => 'value' },
     };
     is_deeply( $actual, $expected_hash, "Convert dataset to hash" );
 
