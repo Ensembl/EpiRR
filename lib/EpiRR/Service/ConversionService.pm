@@ -181,6 +181,40 @@ sub _create_meta_data {
 
 }
 
+sub _retrieve_and_check_dataset {
+  my ($self,$user_dataset,$errors) = @_;
+  
+  my $dataset =
+    $self->schema()->dataset()
+    ->find( { accession => $user_dataset->accession() } );
+
+  push @$errors,
+    "No dataset found for accession " . $user_dataset->accession()
+    if ( !$dataset );
+
+  if ($dataset) {
+      my $declared_project  = $user_dataset->project();
+      my $retrieved_project = $dataset->project()->name();
+
+      push @$errors,
+        "Mismatch between project declared ($declared_project)"
+        . " and that stored previously ($retrieved_project)"
+        if ( $declared_project ne $retrieved_project );
+
+      my $declared_localname  = $user_dataset->local_name();
+      my $retrieved_localname = $dataset->local_name();
+
+      push @$errors,
+        "Mismatch between local name declared ($declared_localname)"
+        . " and that stored previously ($retrieved_localname)"
+        if ( $retrieved_localname
+          && $declared_localname
+          && $declared_localname ne $retrieved_localname );
+  }
+  
+  return $dataset;
+}
+
 sub _dataset {
     my ( $self, $user_dataset, $errors ) = @_;
 
@@ -193,35 +227,9 @@ sub _dataset {
 
     my $dataset;
     if ( $user_dataset->accession() ) {
-        $dataset =
-          $self->schema()->dataset()
-          ->find( { accession => $user_dataset->accession() } );
-
-        push @$errors,
-          "No dataset found for accession " . $user_dataset->accession()
-          if ( !$dataset );
-
-        if ($dataset) {
-            my $declared_project  = $user_dataset->project();
-            my $retrieved_project = $dataset->project()->name();
-
-            push @$errors,
-              "Mismatch between project declared ($declared_project)"
-              . " and that stored previously ($retrieved_project)"
-              if ( $declared_project ne $retrieved_project );
-
-            my $declared_localname  = $user_dataset->local_name();
-            my $retrieved_localname = $dataset->local_name();
-
-            push @$errors,
-              "Mismatch between local name declared ($declared_localname)"
-              . " and that stored previously ($retrieved_localname)"
-              if ( $retrieved_localname
-                && $declared_localname
-                && $declared_localname ne $retrieved_localname );
-        }
+      $self->_retrieve_and_check_dataset($user_dataset,$errors);
     }
-    elsif ( $project && $user_dataset->local_name() ) {
+    elsif ( $user_dataset->local_name() ) {
         $dataset =
           $project->search_related( 'datasets',
             { local_name => $user_dataset->local_name() } )->single();
@@ -230,7 +238,7 @@ sub _dataset {
     my $existing_dataset_version;
     if ($dataset) {
         $existing_dataset_version =
-          $dataset->find_related( 'dataset_versions', { is_current => 1 } );
+          $dataset->search_related( 'dataset_versions', { is_current => 1 } )->single();
     }
     else {
         $dataset =
