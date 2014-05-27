@@ -286,10 +286,12 @@ sub _raw_data {
             my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
-
+              
             if ( !@$rd_errors ) {
                 confess("No raw data returned for $rd_txt") unless $rd;
                 confess("No sample returned for $rd_txt")   unless $s;
+                push @$rd_errors, "No experiment type found for $rd_text" unless $rd->experiment_type;
+                push @$rd_errors, "No data type found for $rd_text" unless $rd->data_type;
             }
 
             push @samples, $s;
@@ -305,6 +307,7 @@ sub _raw_data {
                     data_type           => $rd->data_type(),
                 }
             ) if ( !@$rd_errors );
+            
             $user_rd->experiment_type( $rd->experiment_type() );
             $user_rd->data_type($rd->data_type);
         }
