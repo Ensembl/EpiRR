@@ -19,13 +19,13 @@ use EpiRR::Service::CommonMetaDataBuilder;
 use EpiRR::Model::Sample;
 use Test::More;
 
-my $b = EpiRR::Service::CommonMetaDataBuilder->new();
+my $b = EpiRR::Service::CommonMetaDataBuilder->new(required_meta_data => []);
 
 {
     my $input = [
         EpiRR::Model::Sample->new(
             sample_id => 'S1',
-            meta_data => { foo => 'bar', strudel => 'apple', attr => 'value' },
+            meta_data => { foo => 'bar', strudel => 'apple', attr => 'value', species => 'hs', biomaterial_type => 'bt' },
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',

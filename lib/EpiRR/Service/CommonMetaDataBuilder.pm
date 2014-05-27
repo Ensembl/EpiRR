@@ -17,6 +17,21 @@ use Moose;
 
 with 'EpiRR::Roles::MetaDataBuilder';
 
+has 'required_meta_data' => (
+    is      => 'rw',
+    isa     => 'ArrayRef[ArrayRef[Str]]',
+    traits  => ['Array'],
+    default => sub {
+        [
+            ['species'],
+            ['biomaterial_type'],
+            [ 'pool_id', 'donor_id',  'line' ],
+            [ 'line',    'cell_type', 'tissue_type' ],
+        ];
+    },
+    handles => { 'all_required_data' => 'elements' }
+);
+
 sub build_meta_data {
     my ( $self, $sample_records, $errors ) = @_;
     my @samples = @$sample_records;
@@ -26,6 +41,7 @@ sub build_meta_data {
     my %meta_data    = $first_sample->all_meta_data();
 
     for my $s (@samples) {
+      $self->check_minimal_meta_data($s,$errors);
         for my $k ( keys %meta_data ) {
             delete $meta_data{$k}
               if (!$s->meta_data_defined($k)
@@ -38,6 +54,21 @@ sub build_meta_data {
     }
 
     return %meta_data;
+}
+
+sub check_minimal_meta_data {
+  my ($self, $s,$errors) = @_;
+  
+  for my $required_metadata ($self->all_required_data()){
+    my $found = 0;
+    for my $meta_data_opt (@$required_metadata){
+      $found++ if ($s->meta_data_exists($meta_data_opt));
+    }
+    if (!$found){
+      my $sid = $s->sample_id();
+      push @$errors, "Meta data for sample $sid should include one of the following: ".join(', ', @$required_metadata);
+    }
+  }
 }
 
 __PACKAGE__->meta->make_immutable;
