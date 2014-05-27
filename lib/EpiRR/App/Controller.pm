@@ -34,10 +34,21 @@ has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 sub fetch_current {
     my ($self) = @_;
 
+
+
     my $cs                = $self->conversion_service();
     my @current_data_sets = $self->schema()->dataset_version()->search(
         { is_current => 1 },
-        { prefetch   => { dataset => ['project'], type => [], status => [], }, }
+        {
+            prefetch => {
+                dataset => ['project'],
+                type    => [],
+                status  => [],
+                raw_datas => ['archive'],
+                meta_datas => [],
+            },
+            collapse => 1,
+        }
     );
     my @dsv = map { $cs->db_to_user($_) } @current_data_sets;
     return \@dsv;
