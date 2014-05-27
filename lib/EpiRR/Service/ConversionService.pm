@@ -236,7 +236,7 @@ sub _sample_species {
         return;
     }
 
-    my $doc_sums =
+    my ($doc_sums) =
       $self->eutils()
       ->esummary( [ $sample->get_meta_data('taxon_id') ], 'taxonomy' );
 

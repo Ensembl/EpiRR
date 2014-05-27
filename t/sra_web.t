@@ -63,6 +63,7 @@ my $w = EpiRR::Service::ENAWeb->new();
             'ena-spot-count'       => '23922417',
             'ena-base-count'       => '1537097042',
             'species'              => 'Homo sapiens',
+            taxon_id => 9606,
         },
     );
     my $expected_experiment = EpiRR::Model::RawData->new(

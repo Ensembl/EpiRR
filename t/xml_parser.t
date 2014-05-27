@@ -29,7 +29,7 @@ my $p = EpiRR::Parser::SRAXMLParser->new();
     my $e      = [];
     my @actual = $p->parse_experiment( $xml, $e );
 
-    my $expected = [ 'SRS004524', 'Histone H3K27me3', 'SRX007379','ChIP-Seq' ];
+    my $expected = [ 'SRS004524', 'Histone H3K27me3', 'SRX007379', 'ChIP-Seq' ];
 
     is_deeply( \@actual, $expected, "Parse Experiment XML" );
     is_deeply( $e, [], 'No errors' );
@@ -93,6 +93,7 @@ my $p = EpiRR::Parser::SRAXMLParser->new();
             'ena-spot-count'       => '23922417',
             'ena-base-count'       => '1537097042',
             'species'              => 'Homo sapiens',
+            taxon_id               => 9606,
         },
     );
 

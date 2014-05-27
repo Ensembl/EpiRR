@@ -37,7 +37,7 @@ sub parse_main {
                 my ( $t, $element ) = @_;
                 my $tag   = $element->{'att'}->{'tag'};
                 my $value = $element->trimmed_text();
- 
+
                 if ( $tag eq 'experiment_type' ) {
                     $experiment_type = $value;
                 }
@@ -46,17 +46,27 @@ sub parse_main {
                 }
             },
             'Library-Strategy' => sub {
-              my ( $t, $element ) = @_;
-               $library_strategy = $element->trimmed_text();
+                my ( $t, $element ) = @_;
+                $library_strategy = $element->trimmed_text();
             },
             'Sample' => sub {
-              my ( $t, $element ) = @_;
-              $s->sample_id($element->{'att'}->{'iid'});
+                my ( $t, $element ) = @_;
+                $s->sample_id( $element->{'att'}->{'iid'} );
             },
-            'Platform' => sub {
+            'Organism' => sub {
+                my ( $t, $element ) = @_;
+                my $taxid   = $element->{'att'}->{'taxid'};
+                my $species = $element->trimmed_text();
+
+                $s->set_meta_data(
+                    'taxon_id' => $taxid,
+                    'species'  => $species,
+                );
+              },
+              'Platform' => sub {
                 my ( $t, $element ) = @_;
                 $platform_id = $element->{'att'}->{'iid'};
-            },
+              },
         }
     );
     $t->parse($xml);
@@ -78,7 +88,7 @@ sub parse_platform {
         }
     );
     $t->parse($xml);
-    return ( $platform );
+    return ($platform);
 }
 
 __PACKAGE__->meta->make_immutable;

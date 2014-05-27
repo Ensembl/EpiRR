@@ -56,7 +56,7 @@ my $geo = EpiRR::Service::GeoWeb->new();
             differentiation_method => 'None',
             passage                => 'Between 30 and 50',
             medium                 => 'mTeSER',
-            Sex                    => 'Male',
+            sex                    => 'Male',
             extraction_protocol =>
 'See http://bioinformatics-renlab.ucsd.edu/RenLabChipProtocolV1.pdf',
             extraction_protocol_type_of_sonicator => 'Branson Tip Sonicator',
@@ -71,7 +71,9 @@ my $geo = EpiRR::Service::GeoWeb->new();
             chip_antibody_provider         => 'Abcam',
             chip_antibody_catalog          => 'ab8895',
             chip_antibody_lot              => '535659',
-        }
+            taxon_id                       => 9606,
+            species                        => 'Homo sapiens',
+        },
     );
 
     my $expected_raw_data = EpiRR::Model::RawData->new(
@@ -113,6 +115,8 @@ my $geo = EpiRR::Service::GeoWeb->new();
             'donor_sex'            => 'Male',
             'donor_ethnicity'      => 'Caucasian',
             'passage_if_expanded'  => 'NA',
+            'taxon_id'             => 9606,
+            'species'              => 'Homo sapiens',
         }
     );
 
