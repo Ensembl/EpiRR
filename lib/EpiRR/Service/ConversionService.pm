@@ -182,37 +182,37 @@ sub _create_meta_data {
 }
 
 sub _retrieve_and_check_dataset {
-  my ($self,$user_dataset,$errors) = @_;
-  
-  my $dataset =
-    $self->schema()->dataset()
-    ->find( { accession => $user_dataset->accession() } );
+    my ( $self, $user_dataset, $errors ) = @_;
 
-  push @$errors,
-    "No dataset found for accession " . $user_dataset->accession()
-    if ( !$dataset );
+    my $dataset =
+      $self->schema()->dataset()
+      ->find( { accession => $user_dataset->accession() } );
 
-  if ($dataset) {
-      my $declared_project  = $user_dataset->project();
-      my $retrieved_project = $dataset->project()->name();
+    push @$errors,
+      "No dataset found for accession " . $user_dataset->accession()
+      if ( !$dataset );
 
-      push @$errors,
-        "Mismatch between project declared ($declared_project)"
-        . " and that stored previously ($retrieved_project)"
-        if ( $declared_project ne $retrieved_project );
+    if ($dataset) {
+        my $declared_project  = $user_dataset->project();
+        my $retrieved_project = $dataset->project()->name();
 
-      my $declared_localname  = $user_dataset->local_name();
-      my $retrieved_localname = $dataset->local_name();
+        push @$errors,
+          "Mismatch between project declared ($declared_project)"
+          . " and that stored previously ($retrieved_project)"
+          if ( $declared_project ne $retrieved_project );
 
-      push @$errors,
-        "Mismatch between local name declared ($declared_localname)"
-        . " and that stored previously ($retrieved_localname)"
-        if ( $retrieved_localname
-          && $declared_localname
-          && $declared_localname ne $retrieved_localname );
-  }
-  
-  return $dataset;
+        my $declared_localname  = $user_dataset->local_name();
+        my $retrieved_localname = $dataset->local_name();
+
+        push @$errors,
+          "Mismatch between local name declared ($declared_localname)"
+          . " and that stored previously ($retrieved_localname)"
+          if ( $retrieved_localname
+            && $declared_localname
+            && $declared_localname ne $retrieved_localname );
+    }
+
+    return $dataset;
 }
 
 sub _dataset {
@@ -227,7 +227,7 @@ sub _dataset {
 
     my $dataset;
     if ( $user_dataset->accession() ) {
-      $self->_retrieve_and_check_dataset($user_dataset,$errors);
+        $self->_retrieve_and_check_dataset( $user_dataset, $errors );
     }
     elsif ( $user_dataset->local_name() ) {
         $dataset =
@@ -238,7 +238,8 @@ sub _dataset {
     my $existing_dataset_version;
     if ($dataset) {
         $existing_dataset_version =
-          $dataset->search_related( 'dataset_versions', { is_current => 1 } )->single();
+          $dataset->search_related( 'dataset_versions', { is_current => 1 } )
+          ->single();
     }
     else {
         $dataset =
@@ -286,12 +287,15 @@ sub _raw_data {
             my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
-              
+
             if ( !@$rd_errors ) {
                 confess("No raw data returned for $rd_txt") unless $rd;
                 confess("No sample returned for $rd_txt")   unless $s;
-                push @$rd_errors, "No experiment type found for $rd_text" unless $rd->experiment_type;
-                push @$rd_errors, "No data type found for $rd_text" unless $rd->data_type;
+
+                push @$rd_errors, "No experiment type found for $rd_txt"
+                  unless ( $rd->experiment_type() );
+                push @$rd_errors, "No data type found for $rd_txt"
+                  unless ( $rd->data_type() );
             }
 
             push @samples, $s;
@@ -307,9 +311,9 @@ sub _raw_data {
                     data_type           => $rd->data_type(),
                 }
             ) if ( !@$rd_errors );
-            
+
             $user_rd->experiment_type( $rd->experiment_type() );
-            $user_rd->data_type($rd->data_type);
+            $user_rd->data_type( $rd->data_type );
         }
         else {
             push @$rd_errors, "Do not know how to read raw data from archive";
@@ -319,7 +323,7 @@ sub _raw_data {
     }
 
     push @$errors, "No samples found" unless @samples;
-        
+
     return \@samples;
 }
 
