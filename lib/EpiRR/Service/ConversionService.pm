@@ -20,6 +20,7 @@ use EpiRR::Types;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 use Data::Compare;
+use EpiRR::Service::NcbiEUtils;
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -42,6 +43,11 @@ has 'meta_data_builder' => (
 has 'dataset_classifier' => (
     is       => 'rw',
     isa      => 'DatasetClassifier',
+    required => 1,
+);
+has 'eutils' => (
+    is       => 'rw',
+    isa      => 'EpiRR::Service::NcbiEUtils',
     required => 1,
 );
 
@@ -104,6 +110,10 @@ sub user_to_db {
 
     my $samples = $self->_raw_data( $simple_dataset, $dataset_version, $errors )
       if !@$errors;
+
+    for (@$samples) {
+        $self->_sample_species( $_, $errors );
+    }
 
     $self->_create_meta_data( $dataset_version, $samples, $errors )
       if !@$errors;
@@ -213,6 +223,27 @@ sub _retrieve_and_check_dataset {
     }
 
     return $dataset;
+}
+
+sub _sample_species {
+    my ( $self, $sample, $errors ) = @_;
+
+    return if ( $sample->meta_data_exists('species') );
+
+    if ( !$sample->meta_data_exists('taxon_id') ) {
+        push @$errors,
+          'No species or taxon ID for sample ' . $sample->sample_id();
+        return;
+    }
+
+    my $doc_sums =
+      $self->eutils()
+      ->esummary( [ $sample->get_meta_data('taxon_id') ], 'taxonomy' );
+
+    if ($doc_sums) {
+        my ($species) = $doc_sums->get_contents_by_name('ScientificName');
+        $sample->set_meta_data( 'species', $species );
+    }
 }
 
 sub _dataset {

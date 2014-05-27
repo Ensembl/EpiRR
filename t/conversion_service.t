@@ -34,6 +34,9 @@ use Data::Dumper;
 
 use EpiRR::Service::MetaDataBuilderStub;
 use EpiRR::Service::DatasetClassifierStub;
+use EpiRR::Service::NcbiEUtils;
+
+my $eutils = EpiRR::Service::NcbiEUtils->new( email => 'email' );
 
 my $test_db = EpiRR::DB::TestDB->new();
 my $schema  = $test_db->build_up();
@@ -52,7 +55,12 @@ my @aa_return_vals = (
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S1',
-            meta_data => { foo => 'bar', strudel => 'apple', DONOR_ID => 'a' },
+            meta_data => {
+                foo      => 'bar',
+                strudel  => 'apple',
+                DONOR_ID => 'a',
+                SPECIES  => 's1'
+            },
         )
     ],
     [
@@ -64,8 +72,12 @@ my @aa_return_vals = (
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
-            meta_data =>
-              { foo => 'bar', noodles => 'canoodles', DONOR_ID => 'b' },
+            meta_data => {
+                foo      => 'bar',
+                noodles  => 'canoodles',
+                DONOR_ID => 'b',
+                SPECIES  => 's1'
+            },
         )
     ]
 );
@@ -104,6 +116,7 @@ my $cs = EpiRR::Service::ConversionService->new(
     archive_services   => { $test_db->archive_name() => $mock_aa, },
     meta_data_builder  => $mock_mdb,
     dataset_classifier => $mock_ds,
+    eutils             => $eutils,
 );
 
 my $test_input = EpiRR::Model::Dataset->new(
@@ -129,7 +142,7 @@ is( $lookup_called, 2, "Called lookup method twice" );
 
 is_deeply( $errors, [], "No errors" );
 
-ok( $test_output->dataset(), "Has a project" );
+ok( $test_output->dataset(), "Has a dataset" );
 is(
     $test_output->dataset()->project()->name(),
     $test_db->project_name(),

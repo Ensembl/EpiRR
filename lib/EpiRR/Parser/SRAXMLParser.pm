@@ -104,6 +104,12 @@ sub parse_sample {
 
                 my $value = $element->text();
                 $s->set_meta_data( 'species', $value );
+              },
+              'TAXON_ID' => sub {
+                my ( $t, $element ) = @_;
+
+                my $value = $element->text();
+                $s->set_meta_data( 'taxon_id', $value );
               }
         }
     );

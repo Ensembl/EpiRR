@@ -34,6 +34,7 @@ our $container = container 'EpiRR' => as {
         dependencies => {
             meta_data_builder      => depends_on('meta_data_builder'),
             dataset_classifier     => depends_on('dataset_classifier'),
+            eutils                 => depends_on('ncbi_eutils'),
             schema                 => depends_on('database/dbic_schema'),
             ena_accessor           => depends_on('ena_web_accessor'),
             array_express_accessor => depends_on('array_express_accessor'),
@@ -97,8 +98,8 @@ our $container = container 'EpiRR' => as {
             eutils         => depends_on('ncbi_eutils'),
         }
     );
-    
-    service 'json_file_parser' => (class => 'EpiRR::Parser::JsonParser');
+
+    service 'json_file_parser' => ( class => 'EpiRR::Parser::JsonParser' );
 
     service 'contact_email' => 'VALID_EMAIL';
 
