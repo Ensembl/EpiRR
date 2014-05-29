@@ -255,16 +255,17 @@ sub _dataset {
     push @$errors, "No project found for $project_name" if ( !$project );
 
     return if @$errors;
-
+    
     my $dataset;
     if ( $user_dataset->accession() ) {
-        $self->_retrieve_and_check_dataset( $user_dataset, $errors );
+        $dataset = $self->_retrieve_and_check_dataset( $user_dataset, $errors );
     }
     elsif ( $user_dataset->local_name() ) {
         $dataset =
           $project->search_related( 'datasets',
             { local_name => $user_dataset->local_name() } )->single();
     }
+    #else not looking for an existing dataset
 
     my $existing_dataset_version;
     if ($dataset) {
@@ -273,23 +274,25 @@ sub _dataset {
           ->single();
     }
     else {
-        $dataset =
-          $project->create_related( 'datasets',
-            { local_name => $user_dataset->local_name() } );
-
+        $dataset = $self->schema()->dataset()->create(
+            {
+                local_name => $user_dataset->local_name(),
+                project    => $project,
+            }
+        );
     }
     return ( $dataset, $existing_dataset_version );
 }
 
 sub _dataset_version {
-    my ( $self, $user_dataset, $dataset, $errors, $schema ) = @_;
+    my ( $self, $user_dataset, $dataset, $errors ) = @_;
 
-    my $dataset_version = $dataset->create_related(
-        'dataset_versions',
+    my $dataset_version = $self->schema->dataset_version()->create(
         {
-            status => $self->schema()->status()->find( { name => 'DEFAULT' } ),
-            type   => $self->schema()->type()->find(   { name => 'DEFAULT' } ),
+            status => $self->schema()->status()->find({ name => 'DEFAULT' }),
+            type   => $self->schema()->type()->find({ name => 'DEFAULT' }),
             description => $user_dataset->description(),
+            dataset     => $dataset,
         }
     );
 
