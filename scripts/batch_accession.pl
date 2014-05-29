@@ -58,7 +58,7 @@ my $json = JSON->new();
 find( \&wanted, $dir );
 
 sub wanted {
-    if ( (m/\.ref\.json$/ || m/.ref$/) && ! m/^\./) {
+    if ( (m/\.json$/ || m/.ref$/) && ! m/^\./) {
         my $in_file  = $File::Find::name;
         my $out_file = $File::Find::name . '.out';
         my $err_file = $File::Find::name . '.err';
