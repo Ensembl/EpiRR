@@ -50,8 +50,7 @@ created timestamp,
 primary key (dataset_id),
 key(project_id),
 key(accession),
-foreign key (project_id) references project(project_id),
-unique key (project_id,local_name)
+foreign key (project_id) references project(project_id)
 ) ENGINE=InnoDB CHARSET=UTF8;
 
 #the details of a dataset. can change, so expect a new one on each update
