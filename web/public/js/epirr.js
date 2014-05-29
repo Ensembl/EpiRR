@@ -11,14 +11,15 @@ function init_facetlize() {
       '<% _.each(datatypes, function(dt) { %> <td class="assays"><% if (obj.urls[dt]) { %>' + 
       '<a href="<%= obj.urls[dt] %>">&#x25cf;</a>' +
       ' <% } %></td> <% }); %>' +
-
     '</tr>';
     settings = {
       items: data,
       facets: {
         'project': 'Project',
         'status': 'Status',
+        'md_species': 'Species',
         'md_disease': 'Disease',
+        'md_donor_health_status': 'Health Status',
         'md_tissue_type': 'Tissue',
         'md_cell_type': 'Cell Type',
       },
