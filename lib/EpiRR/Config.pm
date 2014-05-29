@@ -47,6 +47,7 @@ our $container = container 'EpiRR' => as {
                 meta_data_builder  => $s->param('meta_data_builder'),
                 dataset_classifier => $s->param('dataset_classifier'),
                 schema             => $s->param('schema'),
+                eutils             => $s->param('eutils'),
                 archive_services   => {
                     ENA  => $s->param('ena_accessor'),
                     SRA  => $s->param('sra_accessor'),
