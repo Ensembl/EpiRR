@@ -64,7 +64,7 @@ sub clean_meta_data {
   my @unwanted_keys;
   for my $key (keys %$meta_data){
     if ($key =~ m/^ena-/){
-      push @unwanted_keys $key;
+      push @unwanted_keys, $key;
     }
   }
   
