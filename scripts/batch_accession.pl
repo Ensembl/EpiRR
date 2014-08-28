@@ -71,11 +71,11 @@ sub wanted {
         my $e_mod_time = ( ( -e $err_file ) ? stat($err_file)->mtime : 0 );
         
         if ( $i_mod_time > $o_mod_time && $i_mod_time > $e_mod_time ) {
-            print STDOUT "Accessioning $in_file$/" unless $quiet;
+            print STDERR "Accessioning $in_file$/" unless $quiet;
             accession( $in_file, $out_file, $err_file );
         }
         else {
-            print STDOUT "Skipping $in_file$/" unless $quiet;
+            print STDERR "Skipping $in_file$/" unless $quiet;
         }
     }
 }
