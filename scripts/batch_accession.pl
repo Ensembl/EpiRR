@@ -58,9 +58,12 @@ my $json = JSON->new();
 find( \&wanted, $dir );
 
 sub wanted {
-    if ( (m/\.json$/ || m/.ref$/) && ! m/^\./) {
+    if ( (m/\.refepi.json$/ || m/\.refepi$/) && ! m/^\./) {
         my $in_file  = $File::Find::name;
-        my $out_file = $File::Find::name . '.out';
+        
+        my $out_file = $File::Find::name;
+        $out_file =~ s/\.json$//;
+        $out_file .= '.out.json';
         my $err_file = $File::Find::name . '.err';
 
         my $i_mod_time = stat($in_file)->mtime;
