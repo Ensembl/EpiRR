@@ -52,8 +52,23 @@ sub build_meta_data {
     if ( !%meta_data ) {
         push @$errors, "No common meta data found between samples";
     }
-
+    
+    $self->clean_meta_data(\%meta_data);
+    
     return %meta_data;
+}
+
+sub clean_meta_data {
+  my ($self, $meta_data) = @_;
+  
+  my @unwanted_keys;
+  for my $key (keys %$meta_data){
+    if ($key =~ m/^ena-/){
+      push @unwanted_keys $key;
+    }
+  }
+  
+  delete @{$meta_data}{@unwanted_keys};
 }
 
 sub check_minimal_meta_data {
