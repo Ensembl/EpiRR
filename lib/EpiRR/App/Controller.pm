@@ -90,12 +90,12 @@ sub _decorate {
     for my $rd ( $dataset->all_raw_data ) {
         my $url_key;
 
-        if ( $rd->data_type eq 'ChIP-Seq' ) {
+        if ( $rd->assay_type eq 'ChIP-Seq' ) {
             $url_key = $rd->experiment_type();
             $url_key =~ s/histone //i;
         }
         else {
-            $url_key = $rd->data_type();
+            $url_key = $rd->assay_type();
         }
 
         $url_key = lc($url_key);

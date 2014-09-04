@@ -55,7 +55,7 @@ sub lookup_raw_data {
 
     my $xml = $self->get_xml( $raw_data->primary_id() );
 
-    my ( $sample_id, $experiment_type, $experiment_id, $assay_type ) =
+    my ( $sample_id, $experiment_type, $experiment_id ) =
       $self->sra_xml_parser()->parse_experiment( $xml, $errors );
     my $sample = $self->sra_xml_parser()->parse_sample( $xml, $errors );
 
@@ -63,7 +63,6 @@ sub lookup_raw_data {
         archive         => $raw_data->archive,
         primary_id      => $experiment_id,
         experiment_type => $experiment_type,
-        assay_type      => $assay_type,
         archive_url     => $self->base_url() . $experiment_id,
     );
 

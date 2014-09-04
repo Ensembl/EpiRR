@@ -82,7 +82,7 @@ sub db_to_user {
             secondary_id    => $r->secondary_accession(),
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
-            data_type       => $r->data_type(),
+            assay_type       => $r->assay_type(),
         );
         $d->add_raw_data($x);
     }
@@ -328,8 +328,8 @@ sub _raw_data {
 
                 push @$rd_errors, "No experiment type found for $rd_txt"
                   unless ( $rd->experiment_type() );
-                push @$rd_errors, "No data type found for $rd_txt"
-                  unless ( $rd->data_type() );
+                push @$rd_errors, "No assay type found for $rd_txt"
+                  unless ( $rd->assay_type() );
             }
 
             push @samples, $s;
@@ -342,12 +342,12 @@ sub _raw_data {
                     archive             => $archive,
                     archive_url         => $rd->archive_url(),
                     experiment_type     => $rd->experiment_type(),
-                    data_type           => $rd->data_type(),
+                    assay_type           => $rd->assay_type(),
                 }
             ) if ( !@$rd_errors );
 
             $user_rd->experiment_type( $rd->experiment_type() );
-            $user_rd->data_type( $rd->data_type );
+            $user_rd->assay_type( $rd->assay_type );
         }
         else {
             push @$rd_errors, "Do not know how to read raw data from archive";

@@ -62,7 +62,7 @@ sub lookup_raw_data {
     my $accession = $raw_data->primary_id();
 
     my $raw_data_out;
-    my ( $experiment_type, $data_type, $sample ) =
+    my ( $experiment_type, $assay_type, $sample ) =
       $self->_geo_miniml( $accession, $errors );
 
     if ( !@$errors ) {
@@ -71,7 +71,7 @@ sub lookup_raw_data {
             archive     => 'GEO',
             primary_id  => $accession,
             experiment_type => $experiment_type,
-            data_type       => $data_type,
+            assay_type      => $assay_type,
         );
     }
 
@@ -88,17 +88,17 @@ sub _geo_miniml {
         push @$errors, "Geo returned no data for $accession";
         return;
     }
-    my ( $platform_id, $sample, $experiment_type, $data_type ) =
+    my ( $platform_id, $sample, $experiment_type, $assay_type ) =
       $self->geo_xml_parser()->parse_main( $main_xml, $errors );
-    
+
     if ( !$experiment_type ) {
         my $platform_xml = $self->_get_xml($platform_id);
         $experiment_type =
           $self->geo_xml_parser()->parse_platform( $platform_xml, $errors );
-        $data_type = $experiment_type;
+        $assay_type = $experiment_type;
     }
 
-    return ( $experiment_type, $data_type, $sample );
+    return ( $experiment_type, $assay_type, $sample );
 }
 
 sub _get_xml {

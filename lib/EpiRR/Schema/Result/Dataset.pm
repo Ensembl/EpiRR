@@ -15,18 +15,6 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 COMPONENTS LOADED
-
-=over 4
-
-=item * L<DBIx::Class::InflateColumn::DateTime>
-
-=back
-
-=cut
-
-__PACKAGE__->load_components("InflateColumn::DateTime");
-
 =head1 TABLE: C<dataset>
 
 =cut
@@ -110,22 +98,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("dataset_id");
 
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<project_id_2>
-
-=over 4
-
-=item * L</project_id>
-
-=item * L</local_name>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("project_id_2", ["project_id", "local_name"]);
-
 =head1 RELATIONS
 
 =head2 dataset_versions
@@ -159,8 +131,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07039 @ 2014-05-22 14:35:17
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mPUT+bsyLEJOdGzpWLzh/Q
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-04 09:49:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0C5CE5PLXBkAzcsXr412xQ
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #

@@ -94,7 +94,7 @@ sub lookup_experiment {
         return undef;
     }
 
-    my $data_type = $data->{experiments}->{experiment}->{experimenttype};
+    my $assay_type = $data->{experiments}->{experiment}->{experimenttype};
     my $experiment_type =
       $data->{experiments}->{experiment}->{arraydesign}->{name};
     my $experiment_id = $data->{experiments}->{experiment}->{accession};
@@ -103,7 +103,7 @@ sub lookup_experiment {
         archive         => 'AE',
         primary_id      => $experiment_id,
         experiment_type => $experiment_type,
-        data_type       => $data_type,
+        assay_type      => $assay_type,
     );
 
     return ($raw_data);

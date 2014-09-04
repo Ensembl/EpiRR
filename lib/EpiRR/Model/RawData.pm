@@ -24,7 +24,7 @@ has 'primary_id'      => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'secondary_id'    => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'archive_url'     => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'experiment_type' => ( is => 'rw', isa => 'Maybe[Str]' );
-has 'data_type'       => ( is => 'rw', isa => 'Maybe[Str]' );
+has 'assay_type'      => ( is => 'rw', isa => 'Maybe[Str]' );
 
 sub as_string {
     my ($self) = @_;
@@ -43,7 +43,7 @@ sub to_hash {
         'secondary_id'    => $self->secondary_id,
         'archive_url'     => $self->archive_url,
         'experiment_type' => $self->experiment_type,
-        'data_type'       => $self->data_type,
+        'assay_type'      => $self->assay_type,
     };
 }
 
