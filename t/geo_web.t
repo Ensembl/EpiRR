@@ -80,7 +80,7 @@ my $geo = EpiRR::Service::GeoWeb->new();
         archive         => 'GEO',
         primary_id      => $accession,
         experiment_type => 'Histone H3K4me1',
-        data_type       => 'ChIP-Seq',
+        assay_type       => 'ChIP-Seq',
         archive_url =>
           'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM409307',
     );
@@ -125,7 +125,7 @@ my $geo = EpiRR::Service::GeoWeb->new();
         primary_id => $accession,
         experiment_type =>
 '[HuEx-1_0-st] Affymetrix Human Exon 1.0 ST Array [probe set (exon) version]',
-        data_type =>
+        assay_type =>
 '[HuEx-1_0-st] Affymetrix Human Exon 1.0 ST Array [probe set (exon) version]',
         archive_url =>
           'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM706504',

@@ -29,7 +29,7 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
             EpiRR::Model::RawData->new(
                 experiment_type => 'Anything',
                 primary_id      => 'rd1',
-                data_type       => 'dt1',
+                assay_type       => 'dt1',
             )
         ]
     );
@@ -64,7 +64,7 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
     {
         $input_ds->add_raw_data(
             EpiRR::Model::RawData->new(
-                data_type       => $et->[0],
+                assay_type       => $et->[0],
                 experiment_type => $et->[1],
                 primary_id      => 'rd1',
             )
@@ -84,7 +84,7 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
             EpiRR::Model::RawData->new(
                 experiment_type => $et,
                 primary_id      => 'rd1',
-                data_type       => '1',
+                assay_type       => '1',
             )
         );
     }

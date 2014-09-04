@@ -60,7 +60,7 @@ use File::Basename;
                 secondary_id    => 's1',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'rna-seq',
-                data_type       => 'rna',
+                assay_type       => 'rna',
             ),
             EpiRR::Model::RawData->new(
                 archive         => 'myarchive',
@@ -68,7 +68,7 @@ use File::Basename;
                 secondary_id    => 's2',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'chip-seq',
-                data_type       => 'chip',
+                assay_type       => 'chip',
             )
         ],
         meta_data => { tag => 'value' },
@@ -91,7 +91,7 @@ use File::Basename;
                 secondary_id    => 's1',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'rna-seq',
-                data_type       => 'rna',
+                assay_type       => 'rna',
             },
             {
                 archive         => 'myarchive',
@@ -99,7 +99,7 @@ use File::Basename;
                 secondary_id    => 's2',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'chip-seq',
-                data_type       => 'chip',
+                assay_type       => 'chip',
             }
         ],
         meta_data => { tag => 'value' },

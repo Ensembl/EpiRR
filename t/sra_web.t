@@ -62,8 +62,8 @@ my $w = EpiRR::Service::ENAWeb->new();
             sex                    => 'Unknown',
             'ena-spot-count'       => '23922417',
             'ena-base-count'       => '1537097042',
-            'species'              => 'Homo sapiens',
-            taxon_id => 9606,
+            'species' => 'Homo sapiens',
+            taxon_id  => 9606,
         },
     );
     my $expected_experiment = EpiRR::Model::RawData->new(
@@ -71,7 +71,7 @@ my $w = EpiRR::Service::ENAWeb->new();
         primary_id      => 'SRX007379',
         experiment_type => 'Histone H3K27me3',
         archive_url     => 'http://www.ebi.ac.uk/ena/data/view/SRX007379',
-        data_type       => 'ChIP-Seq',
+        assay_type      => 'ChIP-Seq',
     );
 
     my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);

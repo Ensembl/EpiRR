@@ -96,16 +96,16 @@ sub experimental_completeness {
         if ( !$rd->experiment_type ) {
             confess( 'No experiment type for ' . $rd->primary_id() );
         }
-        if ( !$rd->data_type ) {
+        if ( !$rd->assay_type ) {
             confess( 'No data type for ' . $rd->primary_id() );
         }
 
         my $key;
-        if ( $rd->data_type() eq 'ChIP-Seq' ) {
+        if ( $rd->assay_type() eq 'ChIP-Seq' ) {
             $key = $rd->experiment_type();
         }
         else {
-            $key = $rd->data_type();
+            $key = $rd->assay_type();
         }
 
         $et{$key}++;

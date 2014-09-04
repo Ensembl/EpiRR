@@ -51,7 +51,7 @@ my @aa_return_vals = (
             archive         => $test_db->archive_name(),
             primary_id      => $experiment_ids[0],
             experiment_type => 'Type 1',
-            data_type       => 'dt',
+            assay_type       => 'dt',
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S1',
@@ -68,7 +68,7 @@ my @aa_return_vals = (
             archive         => $test_db->archive_name(),
             primary_id      => $experiment_ids[1],
             experiment_type => 'Type 2',
-            data_type       => 'dt',
+            assay_type       => 'dt',
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
@@ -180,7 +180,7 @@ my $expected_user_level_output = EpiRR::Model::Dataset->new(
             secondary_id    => undef,
             archive_url     => undef,
             experiment_type => 'Type 1',
-            data_type       => 'dt',
+            assay_type       => 'dt',
         ),
         EpiRR::Model::RawData->new(
             archive         => $test_db->archive_name(),
@@ -188,7 +188,7 @@ my $expected_user_level_output = EpiRR::Model::Dataset->new(
             experiment_type => 'Type 2',
             secondary_id    => undef,
             archive_url     => undef,
-            data_type       => 'dt',
+            assay_type       => 'dt',
         )
     ],
 );

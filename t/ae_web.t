@@ -59,7 +59,7 @@ my $ae = EpiRR::Service::ArrayExpress->new();
         archive         => 'AE',
         primary_id      => 'E-GEOD-35522',
         experiment_type => '[miRNA-1_0] Affymetrix miRNA Array',
-        data_type       => 'transcription profiling by array',
+        assay_type       => 'transcription profiling by array',
         archive_url =>
 'http://www.ebi.ac.uk/arrayexpress/experiments/E-GEOD-35522/samples/GSM870141%201',
     );
