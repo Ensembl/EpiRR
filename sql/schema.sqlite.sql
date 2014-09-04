@@ -79,7 +79,7 @@ primary_accession text,
 secondary_accession text,
 archive_id integer,
 archive_url text,
-data_type text,
+assay_type text,
 experiment_type text,
 foreign key (dataset_version_id) references dataset_version(dataset_version_id),
 foreign key (archive_id) references archive(archive_id)
