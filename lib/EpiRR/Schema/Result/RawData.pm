@@ -155,8 +155,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-04 09:53:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:i5TV5QQ1MieOcnWKS4lLVw
+# Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxSYF0W+CtG/+Tj1+lm/sg
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #
