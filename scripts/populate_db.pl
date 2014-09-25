@@ -19,9 +19,7 @@ use Getopt::Long;
 
 my $config_module = 'EpiRR::Config';
 
-GetOptions(
-    "config=s" => \$config_module,
-);
+GetOptions( "config=s" => \$config_module, );
 
 eval("require $config_module") or croak "cannot load module $config_module $@";
 
@@ -88,12 +86,12 @@ for my $name ( $conversion_service->all_archives() ) {
 
 #create project names
 my %projects = (
-    'BLUEPRINT'   => 'IHECRE',
-    'DEEP'        => 'IHECRE',
-    'EPP'         => 'IHECRE',
-    'NIH Roadmap' => 'IHECRE',
-    'CREST'       => 'IHECRE',
-    'CEMT'        => 'IHECRE'
+    'BLUEPRINT'               => 'IHECRE',
+    'DEEP'                    => 'IHECRE',
+    'EPP'                     => 'IHECRE',
+    'NIH Roadmap Epigenomics' => 'IHECRE',
+    'CREST'                   => 'IHECRE',
+    'CEMT'                    => 'IHECRE'
 );
 
 while ( my ( $name, $id_prefix ) = each %projects ) {
