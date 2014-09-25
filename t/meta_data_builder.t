@@ -19,7 +19,10 @@ use EpiRR::Service::CommonMetaDataBuilder;
 use EpiRR::Model::Sample;
 use Test::More;
 
-my $b = EpiRR::Service::CommonMetaDataBuilder->new( required_meta_data => [] );
+my $b = EpiRR::Service::CommonMetaDataBuilder->new(
+    required_sample_meta_data => [],
+    required_common_meta_data => [],
+);
 
 {
     my $input = [
@@ -68,9 +71,8 @@ my $b = EpiRR::Service::CommonMetaDataBuilder->new( required_meta_data => [] );
     );
 }
 
-$b =
-  EpiRR::Service::CommonMetaDataBuilder->new(
-    required_meta_data => [ ['foo'], [ 'pool_id', 'donor_id', 'line' ], ] );
+$b->required_common_meta_data(
+    [ ['foo'], [ 'pool_id', 'donor_id', 'line' ], ] );
 
 {
     my $input = [
@@ -86,16 +88,15 @@ $b =
     my $errors = [];
     my %actual = $b->build_meta_data( $input, $errors );
 
-    is_deeply( \%actual, {foo => 'BAR'}, 'Some common meta data returned' );
+    is_deeply( \%actual, { foo => 'BAR' }, 'Some common meta data returned' );
     is_deeply(
         $errors,
-        ['Common meta data should include one of the following: pool_id, donor_id, line'],
+        [
+'Common meta data should include one of the following: pool_id, donor_id, line'
+        ],
         'Reference epigenome metadata error message expected'
     );
 }
-
-
-
 
 done_testing();
 

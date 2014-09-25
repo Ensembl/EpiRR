@@ -17,7 +17,7 @@ use Moose;
 
 with 'EpiRR::Roles::MetaDataBuilder';
 
-has 'required_meta_data' => (
+has 'required_sample_meta_data' => (
     is      => 'rw',
     isa     => 'ArrayRef[ArrayRef[Str]]',
     traits  => ['Array'],
@@ -29,7 +29,21 @@ has 'required_meta_data' => (
             [ 'line',    'cell_type', 'tissue_type' ],
         ];
     },
-    handles => { 'all_required_data' => 'elements' }
+    handles => { 'all_required_sample_meta_data' => 'elements' }
+);
+
+has 'required_common_meta_data' => (
+is      => 'rw',
+isa     => 'ArrayRef[ArrayRef[Str]]',
+traits  => ['Array'],
+default => sub {
+    [
+        ['species'],
+        ['biomaterial_type'],
+        [ 'line',    'cell_type', 'tissue_type', 'disease' ],
+    ];
+},
+handles => { 'all_required_common_meta_data' => 'elements' }
 );
 
 sub build_meta_data {
@@ -41,7 +55,7 @@ sub build_meta_data {
     my %meta_data    = $first_sample->all_meta_data();
 
     for my $s (@samples) {
-      $self->check_minimal_meta_data($s,$errors);
+      $self->check_sample_meta_data($s,$errors);
         for my $k ( keys %meta_data ) {
             delete $meta_data{$k}
               if (!$s->meta_data_defined($k)
@@ -55,7 +69,7 @@ sub build_meta_data {
     
     $self->clean_meta_data(\%meta_data);
     
-    $self->check_minimal_common_meta_data(\%meta_data,$errors);
+    $self->check_common_meta_data(\%meta_data,$errors);
     
     
     return %meta_data;
@@ -74,10 +88,10 @@ sub clean_meta_data {
   delete @{$meta_data}{@unwanted_keys};
 }
 
-sub check_minimal_meta_data {
+sub check_sample_meta_data {
   my ($self, $s,$errors) = @_;
   
-  for my $required_metadata ($self->all_required_data()){
+  for my $required_metadata ($self->all_required_sample_meta_data()){
     my $found = 0;
     for my $meta_data_opt (@$required_metadata){
       $found++ if ($s->meta_data_exists($meta_data_opt));
@@ -89,10 +103,10 @@ sub check_minimal_meta_data {
   }
 }
 
-sub check_minimal_common_meta_data {
+sub check_common_meta_data {
   my ($self, $meta_data, $errors) = @_;
   
-  for my $required_metadata ($self->all_required_data()){
+  for my $required_metadata ($self->all_required_common_meta_data()){
     my $found = 0;
     for my $meta_data_opt (@$required_metadata){
       $found++ if ($meta_data->{$meta_data_opt});
