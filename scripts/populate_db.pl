@@ -18,11 +18,9 @@ use Carp;
 use Getopt::Long;
 
 my $config_module = 'EpiRR::Config';
-my $file;
 
 GetOptions(
     "config=s" => \$config_module,
-    "file=s"   => \$file,
 );
 
 eval("require $config_module") or croak "cannot load module $config_module $@";
