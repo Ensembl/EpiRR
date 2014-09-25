@@ -55,6 +55,9 @@ sub build_meta_data {
     
     $self->clean_meta_data(\%meta_data);
     
+    $self->check_minimal_common_meta_data(\%meta_data,$errors);
+    
+    
     return %meta_data;
 }
 
@@ -82,6 +85,20 @@ sub check_minimal_meta_data {
     if (!$found){
       my $sid = $s->sample_id();
       push @$errors, "Meta data for sample $sid should include one of the following: ".join(', ', @$required_metadata);
+    }
+  }
+}
+
+sub check_minimal_common_meta_data {
+  my ($self, $meta_data, $errors) = @_;
+  
+  for my $required_metadata ($self->all_required_data()){
+    my $found = 0;
+    for my $meta_data_opt (@$required_metadata){
+      $found++ if ($meta_data->{$meta_data_opt});
+    }
+    if (!$found){
+      push @$errors, "Common meta data should include one of the following: ".join(', ', @$required_metadata);
     }
   }
 }
