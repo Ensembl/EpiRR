@@ -75,12 +75,12 @@ The attributes required are common between both submission formats. The attribut
 
 These project names are currently supported. Please get in touch if there are any omissions or errors.
 
-BLUEPRINT
-DEEP
-EPP
-NIH Roadmap Epigenomics
-CREST
-CEMT
+ * BLUEPRINT
+ * DEEP
+ * EPP
+ * NIH Roadmap Epigenomics
+ * CREST
+ * CEMT
 
 ## Supported Archives
 
