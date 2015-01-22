@@ -8,7 +8,7 @@ EpiRR records the raw data that forms the basis of reference epigenomes, across 
 
 ## Submission
 
-IHEC projects with epigenomes to register should mail blueprint-dcc@ebi.ac.uk to arrange submission. Submissions are accepted as text or JSON files via private FTP site.
+IHEC projects with epigenomes to register should mail blueprint-dcc@ebi.ac.uk to arrange submission. Submissions are accepted as text or JSON files via private FTP site. One file must be used per reference epigenome.
 
 The minimal requirements for submission are
  - a valid project name
