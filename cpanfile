@@ -1,5 +1,7 @@
 requires 'DBIx::Class';
 requires 'Moose';
+requires 'JSON';
+requires 'JSON::XS';
 requires 'Class::Method::Modifiers';
 requires 'XML::Twig';
 requires 'URI::Encode';

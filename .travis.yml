@@ -1,5 +1,6 @@
 language: perl
 perl:
+  - "5.16"
   - "5.10"
 before_install:
     - "cpanm -n Devel::Cover::Report::Coveralls"
