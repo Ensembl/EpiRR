@@ -46,7 +46,7 @@ sub add_error {
 
     if ( $self->file_path() ) {
         $text .= ' at line ';
-        $text .= $self->file_handle()->input_line_number();
+        $text .= $.; # $. is the line number of the last accessed file handle
     }
 
     $self->push_error($text);
