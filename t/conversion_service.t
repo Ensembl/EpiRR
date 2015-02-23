@@ -16,6 +16,7 @@ use strict;
 use warnings;
 
 use EpiRR::Service::ConversionService;
+use EpiRR::Service::OutputService;
 use Test::More;
 use Test::MockObject::Extends;
 
@@ -119,6 +120,10 @@ my $cs = EpiRR::Service::ConversionService->new(
     eutils             => $eutils,
 );
 
+my $os = EpiRR::Service::OutputService->new(
+    schema             => $schema,
+);
+
 my $test_input = EpiRR::Model::Dataset->new(
     project    => $test_db->project_name(),
     local_name => 'our test set',
@@ -162,7 +167,7 @@ is( $output_meta_data[0]->name(), 'foo', 'Correct meta data attribute' )
 is( $output_meta_data[0]->value(), 'bar', 'Correct meta data value' )
   if (@output_meta_data);
 
-my $user_level_output = $cs->db_to_user($test_output);
+my $user_level_output = $os->db_to_user($test_output);
 
 my $expected_user_level_output = EpiRR::Model::Dataset->new(
     project        => $test_db->project_name(),

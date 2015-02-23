@@ -11,11 +11,10 @@ requires 'LWP::Protocol::https';
 requires 'Mojolicious';
 requires 'Bio::DB::EUtilities';
 requires 'Data::Compare';
-requires 'Plack';
 
 on 'test' => sub {
   requires 'Test::More';
-	requires 'Test::MockObject::Extends','==1.20120301';
+	requires 'Test::MockObject::Extends';
   requires 'DBD::SQLite';
 };
 

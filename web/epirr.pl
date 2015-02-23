@@ -17,13 +17,20 @@ use warnings;
 use Mojolicious::Lite;
 use Carp;
 
-my $mojo_config =
-  plugin Config => { default => { config_module => 'EpiRR::Config' } };
-my $config_module = $mojo_config->{config_module};
-eval("require $config_module") or croak "cannot load module $config_module $@";
+use EpiRR::Schema;
+use EpiRR::Service::OutputService;
+use EpiRR::App::Controller;
 
-my $container = $config_module->c();
-my $controller = $container->resolve( service => 'controller' );
+plugin 'Config';
+
+my $db = app->config('db');
+
+my $schema = EpiRR::Schema->connect( $db->{dsn}, $db->{user}, $db->{password}, )
+  || die "Could not connect";
+
+my $os = EpiRR::Service::OutputService->new( schema => $schema );
+my $controller =
+  EpiRR::App::Controller->new( output_service => $os, schema => $schema );
 
 get '/view/all' => sub {
     my $self = shift;

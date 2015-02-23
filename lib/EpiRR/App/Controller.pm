@@ -16,27 +16,18 @@ package EpiRR::App::Controller;
 use Moose;
 use Carp;
 use EpiRR::Parser::JsonParser;
-has 'conversion_service' => (
+has 'output_service' => (
     is       => 'rw',
-    isa      => 'EpiRR::Service::ConversionService',
+    isa      => 'EpiRR::Service::OutputService',
     required => 1,
-);
-has 'json_parser' => (
-    is       => 'rw',
-    isa      => 'EpiRR::Parser::JsonParser',
-    required => 1,
-    default  => sub {
-        EpiRR::Parser::JsonParser->new();
-    },
 );
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
+
 
 sub fetch_current {
     my ($self) = @_;
 
-
-
-    my $cs                = $self->conversion_service();
+    my $os                = $self->output_service();
     my @current_data_sets = $self->schema()->dataset_version()->search(
         { is_current => 1 },
         {
@@ -50,7 +41,7 @@ sub fetch_current {
             collapse => 1,
         }
     );
-    my @dsv = map { $cs->db_to_user($_) } @current_data_sets;
+    my @dsv = map { $os->db_to_user($_) } @current_data_sets;
     return \@dsv;
 }
 
@@ -121,38 +112,11 @@ sub fetch {
     }
 
     if ($data_set_version) {
-        return $self->conversion_service()->db_to_user($data_set_version);
+        return $self->output_service()->db_to_user($data_set_version);
     }
     else {
         return;
     }
 }
-
-sub submit {
-    my ( $self, $project, $json ) = @_;
-
-    my $errors = [];
-
-    my $user_datasets = $self->json_parser()->parse( $json, $errors );
-
-    if ( !$user_datasets ) {
-        push @$errors, 'No dataset decoded';
-    }
-    if ( scalar(@$user_datasets) ) {
-        push @$errors, 'Multiple datasets submitted';
-    }
-
-    if ( !@$errors ) {
-        my $dataset =
-          $self->conversion_service()
-          ->user_to_db( $user_datasets->[0], $errors );
-        if (@$errors) {
-            return ( '', $errors );
-        }
-        else {
-            return ( $dataset->accession, $errors );
-        }
-    }
-}
-
+__PACKAGE__->meta->make_immutable;
 1;

@@ -53,43 +53,6 @@ has 'eutils' => (
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
-sub db_to_user {
-    my ( $self, $dsv ) = @_;
-
-    confess("No DatasetVersion passed") unless $dsv;
-    confess("Argument must be a DatasetVersion")
-      unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
-
-    my $d = EpiRR::Model::Dataset->new(
-        project        => $dsv->dataset()->project()->name(),
-        status         => $dsv->status()->name(),
-        full_accession => $dsv->full_accession(),
-        accession      => $dsv->dataset()->accession(),
-        version        => $dsv->version(),
-        local_name     => $dsv->dataset()->local_name(),
-        description    => $dsv->description(),
-        type           => $dsv->type()->name(),
-    );
-
-    for my $m ( $dsv->meta_datas ) {
-        $d->set_meta_data( $m->name(), $m->value() );
-    }
-
-    for my $r ( $dsv->raw_datas ) {
-        my $x = EpiRR::Model::RawData->new(
-            archive         => $r->archive()->name(),
-            primary_id      => $r->primary_accession(),
-            secondary_id    => $r->secondary_accession(),
-            archive_url     => $r->archive_url(),
-            experiment_type => $r->experiment_type(),
-            assay_type       => $r->assay_type(),
-        );
-        $d->add_raw_data($x);
-    }
-
-    return $d;
-}
-
 sub user_to_db {
     my ( $self, $simple_dataset, $errors ) = @_;
 

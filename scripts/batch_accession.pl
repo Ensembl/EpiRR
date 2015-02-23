@@ -52,6 +52,8 @@ my $container = $config_module->c();
   my $conversion_service = $container->resolve( service => 'conversion_service' );
   croak("Cannot find conversion_service") unless ($conversion_service);
 
+  my $output_service = $container->resolve( service => 'output_service' );
+  croak("Cannot find output_service") unless ($output_service);
 }
 my $json = JSON->new();
 
@@ -116,7 +118,7 @@ sub accession {
         return;
     }
 
-    my $full_dataset = $conversion_service->db_to_user($db_dataset);
+    my $full_dataset = $output_service->db_to_user($db_dataset);
 
     print $ofh $json->pretty()->encode( $full_dataset->to_hash() );
 
