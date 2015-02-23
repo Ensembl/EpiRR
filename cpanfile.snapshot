@@ -3610,6 +3610,19 @@ DISTRIBUTIONS
       XSLoader 0
       strict 0
       warnings 0
+  namespace-autoclean-0.24
+    pathname: E/ET/ETHER/namespace-autoclean-0.24.tar.gz
+    provides:
+      namespace::autoclean 0.24
+    requirements:
+      B::Hooks::EndOfScope 0.12
+      List::Util 0
+      Module::Build::Tiny 0.039
+      Sub::Identify 0
+      namespace::clean 0.20
+      perl 5.006
+      strict 0
+      warnings 0
   namespace-clean-0.25
     pathname: R/RI/RIBASUSHI/namespace-clean-0.25.tar.gz
     provides:

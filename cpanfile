@@ -11,6 +11,7 @@ requires 'LWP::Protocol::https';
 requires 'Mojolicious';
 requires 'Bio::DB::EUtilities';
 requires 'Data::Compare';
+requires 'namespace::autoclean';
 
 on 'test' => sub {
   requires 'Test::More';
