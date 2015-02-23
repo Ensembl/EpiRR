@@ -1,0 +1,3644 @@
+# carton snapshot format: version 1.0
+DISTRIBUTIONS
+  Algorithm-C3-0.10
+    pathname: H/HA/HAARG/Algorithm-C3-0.10.tar.gz
+    provides:
+      Algorithm::C3 0.10
+    requirements:
+      Carp 0.01
+      ExtUtils::MakeMaker 0
+      Test::More 0.47
+      perl 5.006
+  Algorithm-Diff-1.1903
+    pathname: T/TY/TYEMQ/Algorithm-Diff-1.1903.tar.gz
+    provides:
+      Algorithm::Diff 1.1903
+      Algorithm::Diff::_impl 1.1903
+    requirements:
+      ExtUtils::MakeMaker 0
+  B-Hooks-EndOfScope-0.14
+    pathname: E/ET/ETHER/B-Hooks-EndOfScope-0.14.tar.gz
+    provides:
+      B::Hooks::EndOfScope 0.14
+      B::Hooks::EndOfScope::PP 0.14
+      B::Hooks::EndOfScope::XS 0.14
+    requirements:
+      ExtUtils::CBuilder 0.26
+      ExtUtils::MakeMaker 0
+      Module::Implementation 0.05
+      Module::Runtime 0.012
+      Sub::Exporter::Progressive 0.001006
+      Variable::Magic 0.48
+      strict 0
+      warnings 0
+  B-Hooks-OP-Check-0.19
+    pathname: Z/ZE/ZEFRAM/B-Hooks-OP-Check-0.19.tar.gz
+    provides:
+      B::Hooks::OP::Check 0.19
+      B::Hooks::OP::Check::Install::Files undef
+    requirements:
+      ExtUtils::Depends 0.302
+      ExtUtils::MakeMaker 6.42
+      Test::More 0
+      parent 0
+      perl 5.008001
+  Bio-EUtilities-1.73
+    pathname: C/CJ/CJFIELDS/Bio-EUtilities-1.73.tar.gz
+    provides:
+      Bio::DB::EUtilities 1.73
+      Bio::EUtilities undef
+      Bio::Tools::EUtilities 1.73
+      Bio::Tools::EUtilities::EUtilDataI 1.73
+      Bio::Tools::EUtilities::EUtilParameters 1.73
+      Bio::Tools::EUtilities::History 1.73
+      Bio::Tools::EUtilities::HistoryI 1.73
+      Bio::Tools::EUtilities::Info 1.73
+      Bio::Tools::EUtilities::Info::FieldInfo 1.73
+      Bio::Tools::EUtilities::Info::LinkInfo 1.73
+      Bio::Tools::EUtilities::Link 1.73
+      Bio::Tools::EUtilities::Link::LinkSet 1.73
+      Bio::Tools::EUtilities::Link::UrlLink 1.73
+      Bio::Tools::EUtilities::Query 1.73
+      Bio::Tools::EUtilities::Query::GlobalQuery 1.73
+      Bio::Tools::EUtilities::Summary 1.73
+      Bio::Tools::EUtilities::Summary::DocSum 1.73
+      Bio::Tools::EUtilities::Summary::Item 1.73
+      Bio::Tools::EUtilities::Summary::ItemContainerI 1.73
+    requirements:
+      Bio::DB::GenericWebAgent 0
+      Bio::ParameterBaseI 0
+      Bio::Root::IO 0
+      Bio::Root::Root 0
+      Bio::Root::RootI 0
+      ExtUtils::MakeMaker 6.30
+      HTTP::Request 0
+      LWP::UserAgent 0
+      Text::Wrap 0
+      URI 0
+      XML::Simple 0
+      base 0
+      strict 0
+      utf8 0
+      warnings 0
+  BioPerl-1.6.924
+    pathname: C/CJ/CJFIELDS/BioPerl-1.6.924.tar.gz
+    provides:
+      Bio undef
+      Bio::Align::AlignI 1.006924
+      Bio::Align::DNAStatistics 1.006924
+      Bio::Align::Graphics 1.006924
+      Bio::Align::PairwiseStatistics 1.006924
+      Bio::Align::ProteinStatistics 1.006924
+      Bio::Align::StatisticsI 1.006924
+      Bio::Align::Utilities 1.006924
+      Bio::AlignIO 1.006924
+      Bio::AlignIO::Handler::GenericAlignHandler 1.006924
+      Bio::AlignIO::arp 1.006924
+      Bio::AlignIO::bl2seq 1.006924
+      Bio::AlignIO::clustalw 1.006924
+      Bio::AlignIO::emboss 1.006924
+      Bio::AlignIO::fasta 1.006924
+      Bio::AlignIO::largemultifasta 1.006924
+      Bio::AlignIO::maf 1.006924
+      Bio::AlignIO::mase 1.006924
+      Bio::AlignIO::mega 1.006924
+      Bio::AlignIO::meme 1.006924
+      Bio::AlignIO::metafasta 1.006924
+      Bio::AlignIO::msf 1.006924
+      Bio::AlignIO::nexml 1.006924
+      Bio::AlignIO::nexus 1.006924
+      Bio::AlignIO::pfam 1.006924
+      Bio::AlignIO::phylip 1.006924
+      Bio::AlignIO::po 1.006924
+      Bio::AlignIO::proda 1.006924
+      Bio::AlignIO::prodom 1.006924
+      Bio::AlignIO::psi 1.006924
+      Bio::AlignIO::selex 1.006924
+      Bio::AlignIO::stockholm 1.006924
+      Bio::AlignIO::xmfa 1.006924
+      Bio::AnalysisI 1.006924
+      Bio::AnalysisI::JobI 1.006924
+      Bio::AnalysisParserI 1.006924
+      Bio::AnalysisResultI 1.006924
+      Bio::AnnotatableI 1.006924
+      Bio::Annotation::AnnotationFactory 1.006924
+      Bio::Annotation::Collection 1.006924
+      Bio::Annotation::Comment 1.006924
+      Bio::Annotation::DBLink 1.006924
+      Bio::Annotation::OntologyTerm 1.006924
+      Bio::Annotation::Reference 1.006924
+      Bio::Annotation::Relation 1.006924
+      Bio::Annotation::SimpleValue 1.006924
+      Bio::Annotation::StructuredValue 1.006924
+      Bio::Annotation::TagTree 1.006924
+      Bio::Annotation::Target 1.006924
+      Bio::Annotation::Tree 1.006924
+      Bio::Annotation::TypeManager 1.006924
+      Bio::AnnotationCollectionI 1.006924
+      Bio::AnnotationI 1.006924
+      Bio::Assembly::Contig 1.006924
+      Bio::Assembly::ContigAnalysis 1.006924
+      Bio::Assembly::IO 1.006924
+      Bio::Assembly::IO::ace 1.006924
+      Bio::Assembly::IO::bowtie 1.006924
+      Bio::Assembly::IO::maq 1.006924
+      Bio::Assembly::IO::phrap 1.006924
+      Bio::Assembly::IO::sam 1.006924
+      Bio::Assembly::IO::tigr 1.006924
+      Bio::Assembly::Scaffold 1.006924
+      Bio::Assembly::ScaffoldI 1.006924
+      Bio::Assembly::Singlet 1.006924
+      Bio::Assembly::Tools::ContigSpectrum 1.006924
+      Bio::Cluster::ClusterFactory 1.006924
+      Bio::Cluster::FamilyI 1.006924
+      Bio::Cluster::SequenceFamily 1.006924
+      Bio::Cluster::UniGene 1.006924
+      Bio::Cluster::UniGeneI 1.006924
+      Bio::ClusterI 1.006924
+      Bio::ClusterIO 1.006924
+      Bio::ClusterIO::dbsnp 1.006924
+      Bio::ClusterIO::unigene 1.006924
+      Bio::CodonUsage::IO 1.006924
+      Bio::CodonUsage::Table 1.006924
+      Bio::Coordinate::Chain 1.006924
+      Bio::Coordinate::Collection 1.006924
+      Bio::Coordinate::ExtrapolatingPair 1.006924
+      Bio::Coordinate::GeneMapper 1.006924
+      Bio::Coordinate::Graph 1.006924
+      Bio::Coordinate::MapperI 1.006924
+      Bio::Coordinate::Pair 1.006924
+      Bio::Coordinate::Result 1.006924
+      Bio::Coordinate::Result::Gap 1.006924
+      Bio::Coordinate::Result::Match 1.006924
+      Bio::Coordinate::ResultI 1.006924
+      Bio::Coordinate::Utils 1.006924
+      Bio::DB::Ace 1.006924
+      Bio::DB::BioFetch 1.006924
+      Bio::DB::CUTG 1.006924
+      Bio::DB::DBFetch 1.006924
+      Bio::DB::EMBL 1.006924
+      Bio::DB::EntrezGene 1.006924
+      Bio::DB::Expression 1.006924
+      Bio::DB::Expression::geo 1.006924
+      Bio::DB::Failover 1.006924
+      Bio::DB::Fasta 1.006924
+      Bio::DB::Fasta::Subdir 1.006924
+      Bio::DB::FileCache 1.006924
+      Bio::DB::Flat 1.006924
+      Bio::DB::Flat::BDB 1.006924
+      Bio::DB::Flat::BDB::embl 1.006924
+      Bio::DB::Flat::BDB::fasta 1.006924
+      Bio::DB::Flat::BDB::genbank 1.006924
+      Bio::DB::Flat::BDB::swiss 1.006924
+      Bio::DB::Flat::BinarySearch 1.006924
+      Bio::DB::GFF 1.006924
+      Bio::DB::GFF::Adaptor::ace 1.006924
+      Bio::DB::GFF::Adaptor::berkeleydb 1.006924
+      Bio::DB::GFF::Adaptor::berkeleydb::iterator 1.006924
+      Bio::DB::GFF::Adaptor::biofetch 1.006924
+      Bio::DB::GFF::Adaptor::biofetch_oracle 1.006924
+      Bio::DB::GFF::Adaptor::dbi 1.006924
+      Bio::DB::GFF::Adaptor::dbi::caching_handle 1.006924
+      Bio::DB::GFF::Adaptor::dbi::faux_dbh 1.006924
+      Bio::DB::GFF::Adaptor::dbi::iterator 1.006924
+      Bio::DB::GFF::Adaptor::dbi::mysql 1.006924
+      Bio::DB::GFF::Adaptor::dbi::mysqlace 1.006924
+      Bio::DB::GFF::Adaptor::dbi::mysqlcmap 1.006924
+      Bio::DB::GFF::Adaptor::dbi::mysqlopt 1.006924
+      Bio::DB::GFF::Adaptor::dbi::oracle 1.006924
+      Bio::DB::GFF::Adaptor::dbi::oracleace 1.006924
+      Bio::DB::GFF::Adaptor::dbi::pg 1.006924
+      Bio::DB::GFF::Adaptor::dbi::pg_fts 1.006924
+      Bio::DB::GFF::Adaptor::memory 1.006924
+      Bio::DB::GFF::Adaptor::memory::feature_serializer 1.006924
+      Bio::DB::GFF::Adaptor::memory::iterator 1.006924
+      Bio::DB::GFF::Aggregator 1.006924
+      Bio::DB::GFF::Aggregator::alignment 1.006924
+      Bio::DB::GFF::Aggregator::clone 1.006924
+      Bio::DB::GFF::Aggregator::coding 1.006924
+      Bio::DB::GFF::Aggregator::gene 1.006924
+      Bio::DB::GFF::Aggregator::match 1.006924
+      Bio::DB::GFF::Aggregator::none 1.006924
+      Bio::DB::GFF::Aggregator::orf 1.006924
+      Bio::DB::GFF::Aggregator::processed_transcript 1.006924
+      Bio::DB::GFF::Aggregator::so_transcript 1.006924
+      Bio::DB::GFF::Aggregator::transcript 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_acembly 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_ensgene 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_genscan 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_refgene 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_sanger22 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_sanger22pseudo 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_softberry 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_twinscan 1.006924
+      Bio::DB::GFF::Aggregator::ucsc_unigene 1.006924
+      Bio::DB::GFF::Featname 1.006924
+      Bio::DB::GFF::Feature 1.006924
+      Bio::DB::GFF::FeatureIterator 1.006924
+      Bio::DB::GFF::Homol 1.006924
+      Bio::DB::GFF::ID_Iterator 1.006924
+      Bio::DB::GFF::RelSegment 1.006924
+      Bio::DB::GFF::Segment 1.006924
+      Bio::DB::GFF::Typename 1.006924
+      Bio::DB::GFF::Util::Binning 1.006924
+      Bio::DB::GFF::Util::Rearrange 1.006924
+      Bio::DB::GenBank 1.006924
+      Bio::DB::GenPept 1.006924
+      Bio::DB::GenericWebAgent 1.006924
+      Bio::DB::HIV 1.006924
+      Bio::DB::HIV::HIVAnnotProcessor 1.006924
+      Bio::DB::HIV::HIVQueryHelper 1.006924
+      Bio::DB::InMemoryCache 1.006924
+      Bio::DB::Indexed::Stream 1.006924
+      Bio::DB::IndexedBase 1.006924
+      Bio::DB::LocationI 1.006924
+      Bio::DB::MeSH 1.006924
+      Bio::DB::NCBIHelper 1.006924
+      Bio::DB::Qual 1.006924
+      Bio::DB::Query::GenBank 1.006924
+      Bio::DB::Query::HIVQuery 1.006924
+      Bio::DB::Query::WebQuery 1.006924
+      Bio::DB::QueryI 1.006924
+      Bio::DB::RandomAccessI 1.006924
+      Bio::DB::RefSeq 1.006924
+      Bio::DB::ReferenceI 1.006924
+      Bio::DB::Registry 1.006924
+      Bio::DB::SeqFeature 1.006924
+      Bio::DB::SeqFeature::NormalizedFeature 1.006924
+      Bio::DB::SeqFeature::NormalizedFeatureI 1.006924
+      Bio::DB::SeqFeature::NormalizedTableFeatureI 1.006924
+      Bio::DB::SeqFeature::Segment 1.006924
+      Bio::DB::SeqFeature::Store 1.006924
+      Bio::DB::SeqFeature::Store::DBI::Iterator 1.006924
+      Bio::DB::SeqFeature::Store::DBI::Pg 1.006924
+      Bio::DB::SeqFeature::Store::DBI::SQLite 1.006924
+      Bio::DB::SeqFeature::Store::DBI::mysql 1.006924
+      Bio::DB::SeqFeature::Store::FeatureFileLoader 1.006924
+      Bio::DB::SeqFeature::Store::FeatureIterator 1.006924
+      Bio::DB::SeqFeature::Store::GFF2Loader 1.006924
+      Bio::DB::SeqFeature::Store::GFF3Loader 1.006924
+      Bio::DB::SeqFeature::Store::LoadHelper 1.006924
+      Bio::DB::SeqFeature::Store::Loader 1.006924
+      Bio::DB::SeqFeature::Store::bdb 1.006924
+      Bio::DB::SeqFeature::Store::berkeleydb 1.006924
+      Bio::DB::SeqFeature::Store::berkeleydb3 1.006924
+      Bio::DB::SeqFeature::Store::berkeleydb::Iterator 1.006924
+      Bio::DB::SeqFeature::Store::memory 1.006924
+      Bio::DB::SeqFeature::Store::memory::Iterator 1.006924
+      Bio::DB::SeqHound 1.006924
+      Bio::DB::SeqI 1.006924
+      Bio::DB::SeqVersion 1.006924
+      Bio::DB::SeqVersion::gi 1.006924
+      Bio::DB::SwissProt 1.006924
+      Bio::DB::TFBS 1.006924
+      Bio::DB::TFBS::transfac_pro 1.006924
+      Bio::DB::Taxonomy 1.006924
+      Bio::DB::Taxonomy::entrez 1.006924
+      Bio::DB::Taxonomy::flatfile 1.006924
+      Bio::DB::Taxonomy::greengenes 1.006924
+      Bio::DB::Taxonomy::list 1.006924
+      Bio::DB::Taxonomy::silva 1.006924
+      Bio::DB::Universal 1.006924
+      Bio::DB::UpdateableSeqI 1.006924
+      Bio::DB::WebDBSeqI 1.006924
+      Bio::DBLinkContainerI 1.006924
+      Bio::Das::FeatureTypeI 1.006924
+      Bio::Das::SegmentI 1.006924
+      Bio::DasI 1.006924
+      Bio::DescribableI 1.006924
+      Bio::Draw::Pictogram 1.006924
+      Bio::Event::EventGeneratorI 1.006924
+      Bio::Event::EventHandlerI 1.006924
+      Bio::Factory::AnalysisI 1.006924
+      Bio::Factory::ApplicationFactoryI 1.006924
+      Bio::Factory::DriverFactory 1.006924
+      Bio::Factory::FTLocationFactory 1.006924
+      Bio::Factory::LocationFactoryI 1.006924
+      Bio::Factory::MapFactoryI 1.006924
+      Bio::Factory::ObjectBuilderI 1.006924
+      Bio::Factory::ObjectFactory 1.006924
+      Bio::Factory::ObjectFactoryI 1.006924
+      Bio::Factory::SeqAnalysisParserFactory 1.006924
+      Bio::Factory::SeqAnalysisParserFactoryI 1.006924
+      Bio::Factory::SequenceFactoryI 1.006924
+      Bio::Factory::SequenceProcessorI 1.006924
+      Bio::Factory::SequenceStreamI 1.006924
+      Bio::Factory::TreeFactoryI 1.006924
+      Bio::FeatureHolderI 1.006924
+      Bio::HandlerBaseI 1.006924
+      Bio::IdCollectionI 1.006924
+      Bio::IdentifiableI 1.006924
+      Bio::Index::Abstract 1.006924
+      Bio::Index::AbstractSeq 1.006924
+      Bio::Index::Blast 1.006924
+      Bio::Index::BlastTable 1.006924
+      Bio::Index::EMBL 1.006924
+      Bio::Index::Fasta 1.006924
+      Bio::Index::Fastq 1.006924
+      Bio::Index::GenBank 1.006924
+      Bio::Index::Hmmer 1.006924
+      Bio::Index::Qual 1.006924
+      Bio::Index::Stockholm 1.006924
+      Bio::Index::SwissPfam 1.006924
+      Bio::Index::Swissprot 1.006924
+      Bio::LiveSeq::AARange 1.006924
+      Bio::LiveSeq::Chain 1.006924
+      Bio::LiveSeq::ChainI 1.006924
+      Bio::LiveSeq::DNA 1.006924
+      Bio::LiveSeq::Exon 1.006924
+      Bio::LiveSeq::Gene 1.006924
+      Bio::LiveSeq::IO::BioPerl 1.006924
+      Bio::LiveSeq::IO::Loader 1.006924
+      Bio::LiveSeq::Intron 1.006924
+      Bio::LiveSeq::Mutation 1.006924
+      Bio::LiveSeq::Mutator 1.006924
+      Bio::LiveSeq::Prim_Transcript 1.006924
+      Bio::LiveSeq::Range 1.006924
+      Bio::LiveSeq::Repeat_Region 1.006924
+      Bio::LiveSeq::Repeat_Unit 1.006924
+      Bio::LiveSeq::SeqI 1.006924
+      Bio::LiveSeq::Transcript 1.006924
+      Bio::LiveSeq::Translation 1.006924
+      Bio::LocatableSeq 1.006924
+      Bio::Location::Atomic 1.006924
+      Bio::Location::AvWithinCoordPolicy 1.006924
+      Bio::Location::CoordinatePolicyI 1.006924
+      Bio::Location::Fuzzy 1.006924
+      Bio::Location::FuzzyLocationI 1.006924
+      Bio::Location::NarrowestCoordPolicy 1.006924
+      Bio::Location::Simple 1.006924
+      Bio::Location::Split 1.006924
+      Bio::Location::SplitLocationI 1.006924
+      Bio::Location::WidestCoordPolicy 1.006924
+      Bio::LocationI 1.006924
+      Bio::Map::Clone 1.006924
+      Bio::Map::Contig 1.006924
+      Bio::Map::CytoMap 1.006924
+      Bio::Map::CytoMarker 1.006924
+      Bio::Map::CytoPosition 1.006924
+      Bio::Map::EntityI 1.006924
+      Bio::Map::FPCMarker 1.006924
+      Bio::Map::Gene 1.006924
+      Bio::Map::GeneMap 1.006924
+      Bio::Map::GenePosition 1.006924
+      Bio::Map::GeneRelative 1.006924
+      Bio::Map::LinkageMap 1.006924
+      Bio::Map::LinkagePosition 1.006924
+      Bio::Map::MapI 1.006924
+      Bio::Map::Mappable 1.006924
+      Bio::Map::MappableI 1.006924
+      Bio::Map::Marker 1.006924
+      Bio::Map::MarkerI 1.006924
+      Bio::Map::Microsatellite 1.006924
+      Bio::Map::OrderedPosition 1.006924
+      Bio::Map::OrderedPositionWithDistance 1.006924
+      Bio::Map::Physical 1.006924
+      Bio::Map::Position 1.006924
+      Bio::Map::PositionHandler 1.006924
+      Bio::Map::PositionHandlerI 1.006924
+      Bio::Map::PositionI 1.006924
+      Bio::Map::PositionWithSequence 1.006924
+      Bio::Map::Prediction 1.006924
+      Bio::Map::Relative 1.006924
+      Bio::Map::RelativeI 1.006924
+      Bio::Map::SimpleMap 1.006924
+      Bio::Map::TranscriptionFactor 1.006924
+      Bio::MapIO 1.006924
+      Bio::MapIO::fpc 1.006924
+      Bio::MapIO::mapmaker 1.006924
+      Bio::Matrix::Generic 1.006924
+      Bio::Matrix::IO 1.006924
+      Bio::Matrix::IO::mlagan 1.006924
+      Bio::Matrix::IO::phylip 1.006924
+      Bio::Matrix::IO::scoring 1.006924
+      Bio::Matrix::MatrixI 1.006924
+      Bio::Matrix::Mlagan 1.006924
+      Bio::Matrix::PSM::IO 1.006924
+      Bio::Matrix::PSM::IO::mast 1.006924
+      Bio::Matrix::PSM::IO::masta 1.006924
+      Bio::Matrix::PSM::IO::meme 1.006924
+      Bio::Matrix::PSM::IO::psiblast 1.006924
+      Bio::Matrix::PSM::IO::transfac 1.006924
+      Bio::Matrix::PSM::InstanceSite 1.006924
+      Bio::Matrix::PSM::InstanceSiteI 1.006924
+      Bio::Matrix::PSM::ProtMatrix 1.006924
+      Bio::Matrix::PSM::ProtPsm 1.006924
+      Bio::Matrix::PSM::Psm 1.006924
+      Bio::Matrix::PSM::PsmHeader 1.006924
+      Bio::Matrix::PSM::PsmHeaderI 1.006924
+      Bio::Matrix::PSM::PsmI 1.006924
+      Bio::Matrix::PSM::SiteMatrix 1.006924
+      Bio::Matrix::PSM::SiteMatrixI 1.006924
+      Bio::Matrix::PhylipDist 1.006924
+      Bio::Matrix::Scoring 1.006924
+      Bio::MolEvol::CodonModel 1.006924
+      Bio::Nexml::Factory 1.006924
+      Bio::NexmlIO 1.006924
+      Bio::Ontology::DocumentRegistry 1.006924
+      Bio::Ontology::GOterm 1.006924
+      Bio::Ontology::InterProTerm 1.006924
+      Bio::Ontology::OBOEngine 1.006924
+      Bio::Ontology::OBOterm 1.006924
+      Bio::Ontology::Ontology 1.006924
+      Bio::Ontology::OntologyEngineI 1.006924
+      Bio::Ontology::OntologyI 1.006924
+      Bio::Ontology::OntologyStore 1.006924
+      Bio::Ontology::Path 1.006924
+      Bio::Ontology::PathI 1.006924
+      Bio::Ontology::Relationship 1.006924
+      Bio::Ontology::RelationshipFactory 1.006924
+      Bio::Ontology::RelationshipI 1.006924
+      Bio::Ontology::RelationshipType 1.006924
+      Bio::Ontology::SimpleGOEngine::GraphAdaptor 1.006924
+      Bio::Ontology::SimpleOntologyEngine 1.006924
+      Bio::Ontology::Term 1.006924
+      Bio::Ontology::TermFactory 1.006924
+      Bio::Ontology::TermI 1.006924
+      Bio::OntologyIO 1.006924
+      Bio::OntologyIO::Handlers::BaseSAXHandler 1.006924
+      Bio::OntologyIO::Handlers::InterProHandler 1.006924
+      Bio::OntologyIO::Handlers::InterPro_BioSQL_Handler 1.006924
+      Bio::OntologyIO::InterProParser 1.006924
+      Bio::OntologyIO::dagflat 1.006924
+      Bio::OntologyIO::goflat 1.006924
+      Bio::OntologyIO::obo 1.006924
+      Bio::OntologyIO::simplehierarchy 1.006924
+      Bio::OntologyIO::soflat 1.006924
+      Bio::ParameterBaseI 1.006924
+      Bio::Perl 1.006924
+      Bio::Phenotype::Correlate 1.006924
+      Bio::Phenotype::MeSH::Term 1.006924
+      Bio::Phenotype::MeSH::Twig 1.006924
+      Bio::Phenotype::Measure 1.006924
+      Bio::Phenotype::OMIM::MiniMIMentry 1.006924
+      Bio::Phenotype::OMIM::OMIMentry 1.006924
+      Bio::Phenotype::OMIM::OMIMentryAllelicVariant 1.006924
+      Bio::Phenotype::OMIM::OMIMparser 1.006924
+      Bio::Phenotype::Phenotype 1.006924
+      Bio::Phenotype::PhenotypeI 1.006924
+      Bio::PhyloNetwork 1.006924
+      Bio::PhyloNetwork::Factory 1.006924
+      Bio::PhyloNetwork::FactoryX 1.006924
+      Bio::PhyloNetwork::GraphViz 1.006924
+      Bio::PhyloNetwork::RandomFactory 1.006924
+      Bio::PhyloNetwork::TreeFactory 1.006924
+      Bio::PhyloNetwork::TreeFactoryMulti 1.006924
+      Bio::PhyloNetwork::TreeFactoryX 1.006924
+      Bio::PhyloNetwork::muVector 1.006924
+      Bio::PopGen::Genotype 1.006924
+      Bio::PopGen::GenotypeI 1.006924
+      Bio::PopGen::HtSNP 1.006924
+      Bio::PopGen::IO 1.006924
+      Bio::PopGen::IO::csv 1.006924
+      Bio::PopGen::IO::hapmap 1.006924
+      Bio::PopGen::IO::phase 1.006924
+      Bio::PopGen::IO::prettybase 1.006924
+      Bio::PopGen::Individual 1.006924
+      Bio::PopGen::IndividualI 1.006924
+      Bio::PopGen::Marker 1.006924
+      Bio::PopGen::MarkerI 1.006924
+      Bio::PopGen::PopStats 1.006924
+      Bio::PopGen::Population 1.006924
+      Bio::PopGen::PopulationI 1.006924
+      Bio::PopGen::Simulation::Coalescent 1.006924
+      Bio::PopGen::Simulation::GeneticDrift 1.006924
+      Bio::PopGen::Statistics 1.006924
+      Bio::PopGen::TagHaplotype 1.006924
+      Bio::PopGen::Utilities 1.006924
+      Bio::PrimarySeq 1.006924
+      Bio::PrimarySeq::Fasta 1.006924
+      Bio::PrimarySeqI 1.006924
+      Bio::PullParserI 1.006924
+      Bio::Range 1.006924
+      Bio::RangeI 1.006924
+      Bio::Restriction::Analysis 1.006924
+      Bio::Restriction::Enzyme 1.006924
+      Bio::Restriction::Enzyme::MultiCut 1.006924
+      Bio::Restriction::Enzyme::MultiSite 1.006924
+      Bio::Restriction::EnzymeCollection 1.006924
+      Bio::Restriction::EnzymeI 1.006924
+      Bio::Restriction::IO 1.006924
+      Bio::Restriction::IO::bairoch 1.006924
+      Bio::Restriction::IO::base 1.006924
+      Bio::Restriction::IO::itype2 1.006924
+      Bio::Restriction::IO::prototype 1.006924
+      Bio::Restriction::IO::withrefm 1.006924
+      Bio::Root::Build 1.006924
+      Bio::Root::Exception 1.006924
+      Bio::Root::HTTPget 1.006924
+      Bio::Root::IO 1.006924
+      Bio::Root::Root 1.006924
+      Bio::Root::RootI 1.006924
+      Bio::Root::Storable 1.006924
+      Bio::Root::Test 1.006924
+      Bio::Root::Utilities 1.006924
+      Bio::Root::Version 1.006924
+      Bio::Search::BlastStatistics 1.006924
+      Bio::Search::BlastUtils 1.006924
+      Bio::Search::DatabaseI 1.006924
+      Bio::Search::GenericDatabase 1.006924
+      Bio::Search::GenericStatistics 1.006924
+      Bio::Search::HSP::BlastHSP 1.006924
+      Bio::Search::HSP::BlastPullHSP 1.006924
+      Bio::Search::HSP::FastaHSP 1.006924
+      Bio::Search::HSP::GenericHSP 1.006924
+      Bio::Search::HSP::HMMERHSP 1.006924
+      Bio::Search::HSP::HSPFactory 1.006924
+      Bio::Search::HSP::HSPI 1.006924
+      Bio::Search::HSP::HmmpfamHSP 1.006924
+      Bio::Search::HSP::ModelHSP 1.006924
+      Bio::Search::HSP::PSLHSP 1.006924
+      Bio::Search::HSP::PsiBlastHSP 1.006924
+      Bio::Search::HSP::PullHSPI 1.006924
+      Bio::Search::HSP::WABAHSP 1.006924
+      Bio::Search::Hit::BlastHit 1.006924
+      Bio::Search::Hit::BlastPullHit 1.006924
+      Bio::Search::Hit::Fasta 1.006924
+      Bio::Search::Hit::GenericHit 1.006924
+      Bio::Search::Hit::HMMERHit 1.006924
+      Bio::Search::Hit::HitFactory 1.006924
+      Bio::Search::Hit::HitI 1.006924
+      Bio::Search::Hit::HmmpfamHit 1.006924
+      Bio::Search::Hit::ModelHit 1.006924
+      Bio::Search::Hit::PsiBlastHit 1.006924
+      Bio::Search::Hit::PullHitI 1.006924
+      Bio::Search::Hit::hmmer3Hit 1.006924
+      Bio::Search::Iteration::GenericIteration 1.006924
+      Bio::Search::Iteration::IterationI 1.006924
+      Bio::Search::Processor 1.006924
+      Bio::Search::Result::BlastPullResult 1.006924
+      Bio::Search::Result::BlastResult 1.006924
+      Bio::Search::Result::CrossMatchResult 1.006924
+      Bio::Search::Result::GenericResult 1.006924
+      Bio::Search::Result::HMMERResult 1.006924
+      Bio::Search::Result::HmmpfamResult 1.006924
+      Bio::Search::Result::PullResultI 1.006924
+      Bio::Search::Result::ResultFactory 1.006924
+      Bio::Search::Result::ResultI 1.006924
+      Bio::Search::Result::WABAResult 1.006924
+      Bio::Search::Result::hmmer3Result 1.006924
+      Bio::Search::SearchUtils 1.006924
+      Bio::Search::StatisticsI 1.006924
+      Bio::Search::Tiling::MapTileUtils 1.006924
+      Bio::Search::Tiling::MapTiling 1.006924
+      Bio::Search::Tiling::TilingI 1.006924
+      Bio::SearchDist 1.006924
+      Bio::SearchIO 1.006924
+      Bio::SearchIO::EventHandlerI 1.006924
+      Bio::SearchIO::FastHitEventBuilder 1.006924
+      Bio::SearchIO::IteratedSearchResultEventBuilder 1.006924
+      Bio::SearchIO::SearchResultEventBuilder 1.006924
+      Bio::SearchIO::SearchWriterI 1.006924
+      Bio::SearchIO::Writer::BSMLResultWriter 1.006924
+      Bio::SearchIO::Writer::GbrowseGFF 1.006924
+      Bio::SearchIO::Writer::HSPTableWriter 1.006924
+      Bio::SearchIO::Writer::HTMLResultWriter 1.006924
+      Bio::SearchIO::Writer::HitTableWriter 1.006924
+      Bio::SearchIO::Writer::ResultTableWriter 1.006924
+      Bio::SearchIO::Writer::TextResultWriter 1.006924
+      Bio::SearchIO::XML::BlastHandler 1.006924
+      Bio::SearchIO::XML::PsiBlastHandler 1.006924
+      Bio::SearchIO::axt 1.006924
+      Bio::SearchIO::blast 1.006924
+      Bio::SearchIO::blast_pull 1.006924
+      Bio::SearchIO::blasttable 1.006924
+      Bio::SearchIO::blastxml 1.006924
+      Bio::SearchIO::cross_match 1.006924
+      Bio::SearchIO::erpin 1.006924
+      Bio::SearchIO::exonerate 1.006924
+      Bio::SearchIO::fasta 1.006924
+      Bio::SearchIO::gmap_f9 1.006924
+      Bio::SearchIO::hmmer 1.006924
+      Bio::SearchIO::hmmer2 1.006924
+      Bio::SearchIO::hmmer3 1.006924
+      Bio::SearchIO::hmmer_pull 1.006924
+      Bio::SearchIO::infernal 1.006924
+      Bio::SearchIO::megablast 1.006924
+      Bio::SearchIO::psl 1.006924
+      Bio::SearchIO::rnamotif 1.006924
+      Bio::SearchIO::sim4 1.006924
+      Bio::SearchIO::waba 1.006924
+      Bio::SearchIO::wise 1.006924
+      Bio::Seq 1.006924
+      Bio::Seq::BaseSeqProcessor 1.006924
+      Bio::Seq::EncodedSeq 1.006924
+      Bio::Seq::LargeLocatableSeq 1.006924
+      Bio::Seq::LargePrimarySeq 1.006924
+      Bio::Seq::LargeSeq 1.006924
+      Bio::Seq::LargeSeqI 1.006924
+      Bio::Seq::Meta 1.006924
+      Bio::Seq::Meta::Array 1.006924
+      Bio::Seq::MetaI 1.006924
+      Bio::Seq::PrimaryQual 1.006924
+      Bio::Seq::PrimaryQual::Qual 1.006924
+      Bio::Seq::PrimedSeq 1.006924
+      Bio::Seq::QualI 1.006924
+      Bio::Seq::Quality 1.006924
+      Bio::Seq::RichSeq 1.006924
+      Bio::Seq::RichSeqI 1.006924
+      Bio::Seq::SeqBuilder 1.006924
+      Bio::Seq::SeqFactory 1.006924
+      Bio::Seq::SeqFastaSpeedFactory 1.006924
+      Bio::Seq::SeqWithQuality 1.006924
+      Bio::Seq::SequenceTrace 1.006924
+      Bio::Seq::SimulatedRead 1.006924
+      Bio::Seq::TraceI 1.006924
+      Bio::SeqAnalysisParserI 1.006924
+      Bio::SeqEvolution::DNAPoint 1.006924
+      Bio::SeqEvolution::EvolutionI 1.006924
+      Bio::SeqEvolution::Factory 1.006924
+      Bio::SeqFeature::Amplicon 1.006924
+      Bio::SeqFeature::AnnotationAdaptor 1.006924
+      Bio::SeqFeature::Collection 1.006924
+      Bio::SeqFeature::CollectionI 1.006924
+      Bio::SeqFeature::Computation 1.006924
+      Bio::SeqFeature::FeaturePair 1.006924
+      Bio::SeqFeature::Gene::Exon 1.006924
+      Bio::SeqFeature::Gene::ExonI 1.006924
+      Bio::SeqFeature::Gene::GeneStructure 1.006924
+      Bio::SeqFeature::Gene::GeneStructureI 1.006924
+      Bio::SeqFeature::Gene::Intron 1.006924
+      Bio::SeqFeature::Gene::NC_Feature 1.006924
+      Bio::SeqFeature::Gene::Poly_A_site 1.006924
+      Bio::SeqFeature::Gene::Promoter 1.006924
+      Bio::SeqFeature::Gene::Transcript 1.006924
+      Bio::SeqFeature::Gene::TranscriptI 1.006924
+      Bio::SeqFeature::Gene::UTR 1.006924
+      Bio::SeqFeature::Generic 1.006924
+      Bio::SeqFeature::Lite 1.006924
+      Bio::SeqFeature::PositionProxy 1.006924
+      Bio::SeqFeature::Primer 1.006924
+      Bio::SeqFeature::SiRNA::Oligo 1.006924
+      Bio::SeqFeature::SiRNA::Pair 1.006924
+      Bio::SeqFeature::Similarity 1.006924
+      Bio::SeqFeature::SimilarityPair 1.006924
+      Bio::SeqFeature::SubSeq 1.006924
+      Bio::SeqFeature::Tools::FeatureNamer 1.006924
+      Bio::SeqFeature::Tools::IDHandler 1.006924
+      Bio::SeqFeature::Tools::TypeMapper 1.006924
+      Bio::SeqFeature::Tools::Unflattener 1.006924
+      Bio::SeqFeature::TypedSeqFeatureI 1.006924
+      Bio::SeqFeatureI 1.006924
+      Bio::SeqI 1.006924
+      Bio::SeqIO 1.006924
+      Bio::SeqIO::FTHelper 1.006924
+      Bio::SeqIO::Handler::GenericRichSeqHandler 1.006924
+      Bio::SeqIO::MultiFile 1.006924
+      Bio::SeqIO::abi 1.006924
+      Bio::SeqIO::ace 1.006924
+      Bio::SeqIO::agave 1.006924
+      Bio::SeqIO::alf 1.006924
+      Bio::SeqIO::asciitree 1.006924
+      Bio::SeqIO::bsml 1.006924
+      Bio::SeqIO::bsml_sax 1.006924
+      Bio::SeqIO::chadoxml 1.006924
+      Bio::SeqIO::chaos 1.006924
+      Bio::SeqIO::chaosxml 1.006924
+      Bio::SeqIO::ctf 1.006924
+      Bio::SeqIO::embl 1.006924
+      Bio::SeqIO::embldriver 1.006924
+      Bio::SeqIO::entrezgene 1.006924
+      Bio::SeqIO::excel 1.006924
+      Bio::SeqIO::exp 1.006924
+      Bio::SeqIO::fasta 1.006924
+      Bio::SeqIO::fastq 1.006924
+      Bio::SeqIO::flybase_chadoxml 1.006924
+      Bio::SeqIO::game 1.006924
+      Bio::SeqIO::game::featHandler 1.006924
+      Bio::SeqIO::game::gameHandler 1.006924
+      Bio::SeqIO::game::gameSubs 1.006924
+      Bio::SeqIO::game::gameWriter 1.006924
+      Bio::SeqIO::game::seqHandler 1.006924
+      Bio::SeqIO::gbdriver 1.006924
+      Bio::SeqIO::gbxml 1.006924
+      Bio::SeqIO::gcg 1.006924
+      Bio::SeqIO::genbank 1.006924
+      Bio::SeqIO::interpro 1.006924
+      Bio::SeqIO::kegg 1.006924
+      Bio::SeqIO::largefasta 1.006924
+      Bio::SeqIO::lasergene 1.006924
+      Bio::SeqIO::locuslink 1.006924
+      Bio::SeqIO::mbsout 1.006924
+      Bio::SeqIO::metafasta 1.006924
+      Bio::SeqIO::msout 1.006924
+      Bio::SeqIO::nexml 1.006924
+      Bio::SeqIO::phd 1.006924
+      Bio::SeqIO::pir 1.006924
+      Bio::SeqIO::pln 1.006924
+      Bio::SeqIO::qual 1.006924
+      Bio::SeqIO::raw 1.006924
+      Bio::SeqIO::scf 1.006924
+      Bio::SeqIO::seqxml 1.006924
+      Bio::SeqIO::strider 1.006924
+      Bio::SeqIO::swiss 1.006924
+      Bio::SeqIO::swissdriver 1.006924
+      Bio::SeqIO::tab 1.006924
+      Bio::SeqIO::table 1.006924
+      Bio::SeqIO::tigr 1.006924
+      Bio::SeqIO::tigrxml 1.006924
+      Bio::SeqIO::tinyseq 1.006924
+      Bio::SeqIO::tinyseq::tinyseqHandler 1.006924
+      Bio::SeqIO::ztr 1.006924
+      Bio::SeqUtils 1.006924
+      Bio::SimpleAlign 1.006924
+      Bio::SimpleAnalysisI 1.006924
+      Bio::Species 1.006924
+      Bio::Structure::Atom 1.006924
+      Bio::Structure::Chain 1.006924
+      Bio::Structure::Entry 1.006924
+      Bio::Structure::IO 1.006924
+      Bio::Structure::IO::pdb 1.006924
+      Bio::Structure::Model 1.006924
+      Bio::Structure::Residue 1.006924
+      Bio::Structure::SecStr::DSSP::Res 1.006924
+      Bio::Structure::SecStr::STRIDE::Res 1.006924
+      Bio::Structure::StructureI 1.006924
+      Bio::Symbol::Alphabet 1.006924
+      Bio::Symbol::AlphabetI 1.006924
+      Bio::Symbol::DNAAlphabet 1.006924
+      Bio::Symbol::ProteinAlphabet 1.006924
+      Bio::Symbol::Symbol 1.006924
+      Bio::Symbol::SymbolI 1.006924
+      Bio::Taxon 1.006924
+      Bio::Taxonomy 1.006924
+      Bio::Taxonomy::FactoryI 1.006924
+      Bio::Taxonomy::Node 1.006924
+      Bio::Taxonomy::Taxon 1.006924
+      Bio::Taxonomy::Tree 1.006924
+      Bio::Tools::AlignFactory 1.006924
+      Bio::Tools::Alignment::Consed 1.006924
+      Bio::Tools::Alignment::Trim 1.006924
+      Bio::Tools::AmpliconSearch 1.006924
+      Bio::Tools::Analysis::DNA::ESEfinder 1.006924
+      Bio::Tools::Analysis::Protein::Domcut 1.006924
+      Bio::Tools::Analysis::Protein::ELM 1.006924
+      Bio::Tools::Analysis::Protein::GOR4 1.006924
+      Bio::Tools::Analysis::Protein::HNN 1.006924
+      Bio::Tools::Analysis::Protein::Mitoprot 1.006924
+      Bio::Tools::Analysis::Protein::NetPhos 1.006924
+      Bio::Tools::Analysis::Protein::Scansite 1.006924
+      Bio::Tools::Analysis::Protein::Sopma 1.006924
+      Bio::Tools::Analysis::SimpleAnalysisBase 1.006924
+      Bio::Tools::AnalysisResult 1.006924
+      Bio::Tools::Blat 1.006924
+      Bio::Tools::CodonTable 1.006924
+      Bio::Tools::Coil 1.006924
+      Bio::Tools::ECnumber 1.006924
+      Bio::Tools::EMBOSS::Palindrome 1.006924
+      Bio::Tools::EPCR 1.006924
+      Bio::Tools::ERPIN 1.006924
+      Bio::Tools::ESTScan 1.006924
+      Bio::Tools::Eponine 1.006924
+      Bio::Tools::Est2Genome 1.006924
+      Bio::Tools::Fgenesh 1.006924
+      Bio::Tools::FootPrinter 1.006924
+      Bio::Tools::GFF 1.006924
+      Bio::Tools::Gel 1.006924
+      Bio::Tools::Geneid 1.006924
+      Bio::Tools::Genemark 1.006924
+      Bio::Tools::Genewise 1.006924
+      Bio::Tools::Genomewise 1.006924
+      Bio::Tools::Genscan 1.006924
+      Bio::Tools::Glimmer 1.006924
+      Bio::Tools::Grail 1.006924
+      Bio::Tools::GuessSeqFormat 1.006924
+      Bio::Tools::HMMER::Domain 1.006924
+      Bio::Tools::HMMER::Results 1.006924
+      Bio::Tools::HMMER::Set 1.006924
+      Bio::Tools::Hmmpfam 1.006924
+      Bio::Tools::IUPAC 1.006924
+      Bio::Tools::Infernal 1.006924
+      Bio::Tools::Lucy 1.006924
+      Bio::Tools::MZEF 1.006924
+      Bio::Tools::Match 1.006924
+      Bio::Tools::OddCodes 1.006924
+      Bio::Tools::Phylo::Gerp 1.006924
+      Bio::Tools::Phylo::Gumby 1.006924
+      Bio::Tools::Phylo::Molphy 1.006924
+      Bio::Tools::Phylo::Molphy::Result 1.006924
+      Bio::Tools::Phylo::PAML 1.006924
+      Bio::Tools::Phylo::PAML::Codeml 1.006924
+      Bio::Tools::Phylo::PAML::ModelResult 1.006924
+      Bio::Tools::Phylo::PAML::Result 1.006924
+      Bio::Tools::Phylo::Phylip::ProtDist 1.006924
+      Bio::Tools::Prediction::Exon 1.006924
+      Bio::Tools::Prediction::Gene 1.006924
+      Bio::Tools::Primer3 1.006924
+      Bio::Tools::Primer::Assessor::Base 1.006924
+      Bio::Tools::Primer::AssessorI 1.006924
+      Bio::Tools::Primer::Feature 1.006924
+      Bio::Tools::Primer::Pair 1.006924
+      Bio::Tools::Prints 1.006924
+      Bio::Tools::Profile 1.006924
+      Bio::Tools::Promoterwise 1.006924
+      Bio::Tools::PrositeScan 1.006924
+      Bio::Tools::Protparam 1.006924
+      Bio::Tools::Pseudowise 1.006924
+      Bio::Tools::QRNA 1.006924
+      Bio::Tools::RNAMotif 1.006924
+      Bio::Tools::RandomDistFunctions 1.006924
+      Bio::Tools::RepeatMasker 1.006924
+      Bio::Tools::Run::GenericParameters 1.006924
+      Bio::Tools::Run::ParametersI 1.006924
+      Bio::Tools::Run::RemoteBlast 1.006924
+      Bio::Tools::Run::StandAloneBlast 1.006924
+      Bio::Tools::Run::StandAloneNCBIBlast 1.006924
+      Bio::Tools::Run::StandAloneWUBlast 1.006924
+      Bio::Tools::Run::WrapperBase 1.006924
+      Bio::Tools::Seg 1.006924
+      Bio::Tools::SeqPattern 1.006924
+      Bio::Tools::SeqPattern::Backtranslate 1.006924
+      Bio::Tools::SeqStats 1.006924
+      Bio::Tools::SeqWords 1.006924
+      Bio::Tools::SiRNA 1.006924
+      Bio::Tools::SiRNA::Ruleset::saigo 1.006924
+      Bio::Tools::SiRNA::Ruleset::tuschl 1.006924
+      Bio::Tools::Sigcleave 1.006924
+      Bio::Tools::Signalp 1.006924
+      Bio::Tools::Signalp::ExtendedSignalp 1.006924
+      Bio::Tools::Sim4::Exon 1.006924
+      Bio::Tools::Sim4::Results 1.006924
+      Bio::Tools::Spidey::Exon 1.006924
+      Bio::Tools::Spidey::Results 1.006924
+      Bio::Tools::TandemRepeatsFinder 1.006924
+      Bio::Tools::TargetP 1.006924
+      Bio::Tools::Tmhmm 1.006924
+      Bio::Tools::dpAlign 1.006924
+      Bio::Tools::ipcress 1.006924
+      Bio::Tools::isPcr 1.006924
+      Bio::Tools::pICalculator 1.006924
+      Bio::Tools::pSW 1.006924
+      Bio::Tools::tRNAscanSE 1.006924
+      Bio::Tree::AlleleNode 1.006924
+      Bio::Tree::AnnotatableNode 1.006924
+      Bio::Tree::Compatible 1.006924
+      Bio::Tree::DistanceFactory 1.006924
+      Bio::Tree::Draw::Cladogram 1.006924
+      Bio::Tree::Node 1.006924
+      Bio::Tree::NodeI 1.006924
+      Bio::Tree::NodeNHX 1.006924
+      Bio::Tree::RandomFactory 1.006924
+      Bio::Tree::Statistics 1.006924
+      Bio::Tree::Tree 1.006924
+      Bio::Tree::TreeFunctionsI 1.006924
+      Bio::Tree::TreeI 1.006924
+      Bio::TreeIO 1.006924
+      Bio::TreeIO::NewickParser 1.006924
+      Bio::TreeIO::TreeEventBuilder 1.006924
+      Bio::TreeIO::cluster 1.006924
+      Bio::TreeIO::lintree 1.006924
+      Bio::TreeIO::newick 1.006924
+      Bio::TreeIO::nexml 1.006924
+      Bio::TreeIO::nexus 1.006924
+      Bio::TreeIO::nhx 1.006924
+      Bio::TreeIO::pag 1.006924
+      Bio::TreeIO::phyloxml 1.006924
+      Bio::TreeIO::svggraph 1.006924
+      Bio::TreeIO::tabtree 1.006924
+      Bio::UpdateableSeqI 1.006924
+      Bio::Variation::AAChange 1.006924
+      Bio::Variation::AAReverseMutate 1.006924
+      Bio::Variation::Allele 1.006924
+      Bio::Variation::DNAMutation 1.006924
+      Bio::Variation::IO 1.006924
+      Bio::Variation::IO::flat 1.006924
+      Bio::Variation::IO::xml 1.006924
+      Bio::Variation::RNAChange 1.006924
+      Bio::Variation::SNP 1.006924
+      Bio::Variation::SeqDiff 1.006924
+      Bio::Variation::VariantI 1.006924
+      Bio::WebAgent 1.006924
+      FeatureStore 1.006924
+    requirements:
+      CPAN 1.81
+      Data::Stag 0.11
+      ExtUtils::Manifest 1.52
+      IO::String 0
+      Module::Build 0.2805
+      Scalar::Util 0
+      Test::Harness 2.62
+      Test::Most 0
+      URI::Escape 0
+      perl v5.6.1
+  Bread-Board-0.32
+    pathname: D/DO/DOY/Bread-Board-0.32.tar.gz
+    provides:
+      Bread::Board 0.32
+      Bread::Board::BlockInjection 0.32
+      Bread::Board::ConstructorInjection 0.32
+      Bread::Board::Container 0.32
+      Bread::Board::Container::FromParameterized 0.32
+      Bread::Board::Container::Parameterized 0.32
+      Bread::Board::Dependency 0.32
+      Bread::Board::Dumper 0.32
+      Bread::Board::LifeCycle 0.32
+      Bread::Board::LifeCycle::Singleton 0.32
+      Bread::Board::LifeCycle::Singleton::WithParameters 0.32
+      Bread::Board::Literal 0.32
+      Bread::Board::Service 0.32
+      Bread::Board::Service::Alias 0.32
+      Bread::Board::Service::Deferred 0.32
+      Bread::Board::Service::Deferred::Thunk 0.32
+      Bread::Board::Service::Inferred 0.32
+      Bread::Board::Service::WithClass 0.32
+      Bread::Board::Service::WithDependencies 0.32
+      Bread::Board::Service::WithParameters 0.32
+      Bread::Board::SetterInjection 0.32
+      Bread::Board::Traversable 0.32
+      Bread::Board::Types 0.32
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 6.30
+      Module::Runtime 0
+      Moose 0
+      Moose::Exporter 2.1200
+      Moose::Role 0
+      Moose::Util 0
+      Moose::Util::TypeConstraints 0
+      MooseX::Clone 0.05
+      MooseX::Params::Validate 0.14
+      Scalar::Util 0
+      Try::Tiny 0
+      overload 0
+      strict 0
+      warnings 0
+  CPAN-Meta-2.143240
+    pathname: D/DA/DAGOLDEN/CPAN-Meta-2.143240.tar.gz
+    provides:
+      CPAN::Meta 2.143240
+      CPAN::Meta::Converter 2.143240
+      CPAN::Meta::Feature 2.143240
+      CPAN::Meta::History 2.143240
+      CPAN::Meta::Merge 2.143240
+      CPAN::Meta::Prereqs 2.143240
+      CPAN::Meta::Spec 2.143240
+      CPAN::Meta::Validator 2.143240
+    requirements:
+      CPAN::Meta::Requirements 2.121
+      CPAN::Meta::YAML 0.008
+      Carp 0
+      ExtUtils::MakeMaker 6.17
+      JSON::PP 2.27200
+      Parse::CPAN::Meta 1.4414
+      Scalar::Util 0
+      perl 5.008
+      strict 0
+      version 0.88
+      warnings 0
+  CPAN-Meta-Requirements-2.133
+    pathname: D/DA/DAGOLDEN/CPAN-Meta-Requirements-2.133.tar.gz
+    provides:
+      CPAN::Meta::Requirements 2.133
+    requirements:
+      B 0
+      Carp 0
+      ExtUtils::MakeMaker 6.17
+      perl 5.006
+      strict 0
+      version 0.88
+      warnings 0
+  CPAN-Meta-YAML-0.012
+    pathname: D/DA/DAGOLDEN/CPAN-Meta-YAML-0.012.tar.gz
+    provides:
+      CPAN::Meta::YAML 0.012
+    requirements:
+      B 0
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.17
+      Fcntl 0
+      Scalar::Util 0
+      strict 0
+      warnings 0
+  Capture-Tiny-0.28
+    pathname: D/DA/DAGOLDEN/Capture-Tiny-0.28.tar.gz
+    provides:
+      Capture::Tiny 0.28
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.17
+      File::Spec 0
+      File::Temp 0
+      IO::Handle 0
+      Scalar::Util 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Carp-1.3301
+    pathname: Z/ZE/ZEFRAM/Carp-1.3301.tar.gz
+    provides:
+      Carp 1.3301
+      Carp::Heavy 1.3301
+    requirements:
+      Config 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      IPC::Open3 1.0103
+      Test::More 0
+      overload 0
+      parent 0
+      strict 0
+      warnings 0
+  Class-Accessor-0.34
+    pathname: K/KA/KASEI/Class-Accessor-0.34.tar.gz
+    provides:
+      Class::Accessor 0.34
+      Class::Accessor::Fast 0.34
+      Class::Accessor::Faster 0.34
+    requirements:
+      ExtUtils::MakeMaker 0
+      base 1.01
+  Class-Accessor-Chained-0.01
+    pathname: R/RC/RCLAMP/Class-Accessor-Chained-0.01.tar.gz
+    provides:
+      Class::Accessor::Chained 0.01
+      Class::Accessor::Chained::Fast undef
+    requirements:
+      Class::Accessor 0
+      Test::More 0
+  Class-Accessor-Grouped-0.10012
+    pathname: R/RI/RIBASUSHI/Class-Accessor-Grouped-0.10012.tar.gz
+    provides:
+      Class::Accessor::Grouped 0.10012
+    requirements:
+      Carp 0
+      Class::XSAccessor 1.19
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 6.59
+      Module::Runtime 0.012
+      Scalar::Util 0
+      Sub::Name 0.05
+      Test::Exception 0.31
+      Test::More 0.88
+      perl 5.006
+  Class-Accessor-Lite-0.06
+    pathname: K/KA/KAZUHO/Class-Accessor-Lite-0.06.tar.gz
+    provides:
+      Class::Accessor::Lite 0.06
+    requirements:
+      ExtUtils::MakeMaker 6.42
+  Class-C3-0.27
+    pathname: H/HA/HAARG/Class-C3-0.27.tar.gz
+    provides:
+      Class::C3 0.27
+    requirements:
+      Algorithm::C3 0.07
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 0
+      Scalar::Util 0
+      perl 5.006
+  Class-C3-Componentised-1.001000
+    pathname: F/FR/FREW/Class-C3-Componentised-1.001000.tar.gz
+    provides:
+      Class::C3::Componentised 1.001000
+      Class::C3::Componentised::ApplyHooks undef
+    requirements:
+      Carp 0
+      Class::C3 0.20
+      Class::Inspector 0
+      ExtUtils::MakeMaker 6.42
+      MRO::Compat 0
+      Test::Exception 0
+      perl 5.006002
+  Class-Data-Inheritable-0.08
+    pathname: T/TM/TMTM/Class-Data-Inheritable-0.08.tar.gz
+    provides:
+      Class::Data::Inheritable 0.08
+    requirements:
+      ExtUtils::MakeMaker 0
+  Class-Inspector-1.28
+    pathname: A/AD/ADAMK/Class-Inspector-1.28.tar.gz
+    provides:
+      Class::Inspector 1.28
+      Class::Inspector::Functions 1.28
+    requirements:
+      ExtUtils::MakeMaker 6.59
+      File::Spec 0.80
+      Test::More 0.47
+      perl 5.006
+  Class-Load-0.22
+    pathname: E/ET/ETHER/Class-Load-0.22.tar.gz
+    provides:
+      Class::Load 0.22
+      Class::Load::PP 0.22
+    requirements:
+      Carp 0
+      Data::OptList 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Module::Build::Tiny 0.037
+      Module::Implementation 0.04
+      Module::Runtime 0.012
+      Package::Stash 0.14
+      Scalar::Util 0
+      Try::Tiny 0
+      base 0
+      namespace::clean 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Class-Load-XS-0.09
+    pathname: E/ET/ETHER/Class-Load-XS-0.09.tar.gz
+    provides:
+      Class::Load::XS 0.09
+    requirements:
+      Class::Load 0.20
+      ExtUtils::MakeMaker 0
+      XSLoader 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Class-Method-Modifiers-2.11
+    pathname: E/ET/ETHER/Class-Method-Modifiers-2.11.tar.gz
+    provides:
+      Class::Method::Modifiers 2.11
+    requirements:
+      B 0
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      base 0
+      strict 0
+      warnings 0
+  Class-XSAccessor-1.19
+    pathname: S/SM/SMUELLER/Class-XSAccessor-1.19.tar.gz
+    provides:
+      Class::XSAccessor 1.19
+      Class::XSAccessor::Array 1.19
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+      Time::HiRes 0
+      XSLoader 0
+      perl 5.008
+  Clone-0.38
+    pathname: G/GA/GARU/Clone-0.38.tar.gz
+    provides:
+      Clone 0.38
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  Config-Any-0.24
+    pathname: B/BR/BRICAS/Config-Any-0.24.tar.gz
+    provides:
+      Config::Any 0.24
+      Config::Any::Base undef
+      Config::Any::General undef
+      Config::Any::INI undef
+      Config::Any::JSON undef
+      Config::Any::Perl undef
+      Config::Any::XML undef
+      Config::Any::YAML undef
+    requirements:
+      ExtUtils::MakeMaker 6.59
+      Module::Pluggable 3.01
+      Test::More 0
+      perl 5.006
+  Context-Preserve-0.01
+    pathname: J/JR/JROCKWAY/Context-Preserve-0.01.tar.gz
+    provides:
+      Context::Preserve 0.01
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Test::Exception 0
+      Test::More 0
+      ok 0
+  DBD-SQLite-1.46
+    pathname: I/IS/ISHIGAKI/DBD-SQLite-1.46.tar.gz
+    provides:
+      DBD::SQLite 1.46
+      DBD::SQLite::VirtualTable 1.46
+      DBD::SQLite::VirtualTable::Cursor 1.46
+      DBD::SQLite::VirtualTable::FileContent undef
+      DBD::SQLite::VirtualTable::FileContent::Cursor undef
+      DBD::SQLite::VirtualTable::PerlData undef
+      DBD::SQLite::VirtualTable::PerlData::Cursor undef
+      DBD::SQLite::_WriteOnceHash 1.46
+      DBD::SQLite::db 1.46
+      DBD::SQLite::dr 1.46
+    requirements:
+      DBI 1.57
+      ExtUtils::MakeMaker 0
+      File::Spec 0.82
+      Test::Builder 0.86
+      Test::More 0.47
+      Tie::Hash 0
+      perl 5.006
+  DBI-1.633
+    pathname: T/TI/TIMB/DBI-1.633.tar.gz
+    provides:
+      Bundle::DBI 12.008696
+      DBD::DBM 0.08
+      DBD::DBM::Statement 0.08
+      DBD::DBM::Table 0.08
+      DBD::DBM::db 0.08
+      DBD::DBM::dr 0.08
+      DBD::DBM::st 0.08
+      DBD::ExampleP 12.014311
+      DBD::ExampleP::db 12.014311
+      DBD::ExampleP::dr 12.014311
+      DBD::ExampleP::st 12.014311
+      DBD::File 0.44
+      DBD::File::DataSource::File 0.44
+      DBD::File::DataSource::Stream 0.44
+      DBD::File::Statement 0.44
+      DBD::File::Table 0.44
+      DBD::File::TableSource::FileSystem 0.44
+      DBD::File::db 0.44
+      DBD::File::dr 0.44
+      DBD::File::st 0.44
+      DBD::Gofer 0.015327
+      DBD::Gofer::Policy::Base 0.010088
+      DBD::Gofer::Policy::classic 0.010088
+      DBD::Gofer::Policy::pedantic 0.010088
+      DBD::Gofer::Policy::rush 0.010088
+      DBD::Gofer::Transport::Base 0.014121
+      DBD::Gofer::Transport::corostream undef
+      DBD::Gofer::Transport::null 0.010088
+      DBD::Gofer::Transport::pipeone 0.010088
+      DBD::Gofer::Transport::stream 0.014599
+      DBD::Gofer::db 0.015327
+      DBD::Gofer::dr 0.015327
+      DBD::Gofer::st 0.015327
+      DBD::NullP 12.014715
+      DBD::NullP::db 12.014715
+      DBD::NullP::dr 12.014715
+      DBD::NullP::st 12.014715
+      DBD::Proxy 0.2004
+      DBD::Proxy::RPC::PlClient 0.2004
+      DBD::Proxy::db 0.2004
+      DBD::Proxy::dr 0.2004
+      DBD::Proxy::st 0.2004
+      DBD::Sponge 12.010003
+      DBD::Sponge::db 12.010003
+      DBD::Sponge::dr 12.010003
+      DBD::Sponge::st 12.010003
+      DBDI 12.015129
+      DBI 1.633
+      DBI::Const::GetInfo::ANSI 2.008697
+      DBI::Const::GetInfo::ODBC 2.011374
+      DBI::Const::GetInfoReturn 2.008697
+      DBI::Const::GetInfoType 2.008697
+      DBI::DBD 12.015129
+      DBI::DBD::Metadata 2.014214
+      DBI::DBD::SqlEngine 0.06
+      DBI::DBD::SqlEngine::DataSource 0.06
+      DBI::DBD::SqlEngine::Statement 0.06
+      DBI::DBD::SqlEngine::Table 0.06
+      DBI::DBD::SqlEngine::TableSource 0.06
+      DBI::DBD::SqlEngine::TieMeta 0.06
+      DBI::DBD::SqlEngine::TieTables 0.06
+      DBI::DBD::SqlEngine::db 0.06
+      DBI::DBD::SqlEngine::dr 0.06
+      DBI::DBD::SqlEngine::st 0.06
+      DBI::FAQ 1.014935
+      DBI::Gofer::Execute 0.014283
+      DBI::Gofer::Request 0.012537
+      DBI::Gofer::Response 0.011566
+      DBI::Gofer::Serializer::Base 0.009950
+      DBI::Gofer::Serializer::DataDumper 0.009950
+      DBI::Gofer::Serializer::Storable 0.015586
+      DBI::Gofer::Transport::Base 0.012537
+      DBI::Gofer::Transport::pipeone 0.012537
+      DBI::Gofer::Transport::stream 0.012537
+      DBI::Profile 2.015065
+      DBI::ProfileData 2.010008
+      DBI::ProfileDumper 2.015325
+      DBI::ProfileDumper::Apache 2.014121
+      DBI::ProfileSubs 0.009396
+      DBI::ProxyServer 0.3005
+      DBI::ProxyServer::db 0.3005
+      DBI::ProxyServer::dr 0.3005
+      DBI::ProxyServer::st 0.3005
+      DBI::SQL::Nano 1.015544
+      DBI::SQL::Nano::Statement_ 1.015544
+      DBI::SQL::Nano::Table_ 1.015544
+      DBI::Util::CacheMemory 0.010315
+      DBI::Util::_accessor 0.009479
+      DBI::common 1.633
+    requirements:
+      ExtUtils::MakeMaker 6.48
+      Test::Simple 0.90
+      perl 5.008
+  DBIx-Class-0.082810
+    pathname: R/RI/RIBASUSHI/DBIx-Class-0.082810.tar.gz
+    provides:
+      DBIx::Class 0.082810
+      DBIx::Class::AccessorGroup undef
+      DBIx::Class::Admin undef
+      DBIx::Class::CDBICompat undef
+      DBIx::Class::Core undef
+      DBIx::Class::Cursor undef
+      DBIx::Class::DB undef
+      DBIx::Class::Exception undef
+      DBIx::Class::FilterColumn undef
+      DBIx::Class::InflateColumn undef
+      DBIx::Class::InflateColumn::DateTime undef
+      DBIx::Class::InflateColumn::File undef
+      DBIx::Class::Optional::Dependencies undef
+      DBIx::Class::Ordered undef
+      DBIx::Class::PK undef
+      DBIx::Class::PK::Auto undef
+      DBIx::Class::Relationship undef
+      DBIx::Class::Relationship::Base undef
+      DBIx::Class::ResultClass::HashRefInflator undef
+      DBIx::Class::ResultSet undef
+      DBIx::Class::ResultSetColumn undef
+      DBIx::Class::ResultSetManager undef
+      DBIx::Class::ResultSource undef
+      DBIx::Class::ResultSource::Table undef
+      DBIx::Class::ResultSource::View undef
+      DBIx::Class::ResultSourceHandle undef
+      DBIx::Class::ResultSourceProxy::Table undef
+      DBIx::Class::Row undef
+      DBIx::Class::SQLMaker undef
+      DBIx::Class::SQLMaker::LimitDialects undef
+      DBIx::Class::SQLMaker::OracleJoins undef
+      DBIx::Class::Schema undef
+      DBIx::Class::Schema::Versioned undef
+      DBIx::Class::Serialize::Storable undef
+      DBIx::Class::StartupCheck undef
+      DBIx::Class::Storage undef
+      DBIx::Class::Storage::DBI undef
+      DBIx::Class::Storage::DBI::ACCESS undef
+      DBIx::Class::Storage::DBI::ADO undef
+      DBIx::Class::Storage::DBI::ADO::MS_Jet undef
+      DBIx::Class::Storage::DBI::ADO::MS_Jet::Cursor undef
+      DBIx::Class::Storage::DBI::ADO::Microsoft_SQL_Server undef
+      DBIx::Class::Storage::DBI::ADO::Microsoft_SQL_Server::Cursor undef
+      DBIx::Class::Storage::DBI::AutoCast undef
+      DBIx::Class::Storage::DBI::Cursor undef
+      DBIx::Class::Storage::DBI::DB2 undef
+      DBIx::Class::Storage::DBI::Firebird undef
+      DBIx::Class::Storage::DBI::Firebird::Common undef
+      DBIx::Class::Storage::DBI::IdentityInsert undef
+      DBIx::Class::Storage::DBI::Informix undef
+      DBIx::Class::Storage::DBI::InterBase undef
+      DBIx::Class::Storage::DBI::MSSQL undef
+      DBIx::Class::Storage::DBI::NoBindVars undef
+      DBIx::Class::Storage::DBI::ODBC undef
+      DBIx::Class::Storage::DBI::ODBC::ACCESS undef
+      DBIx::Class::Storage::DBI::ODBC::DB2_400_SQL undef
+      DBIx::Class::Storage::DBI::ODBC::Firebird undef
+      DBIx::Class::Storage::DBI::ODBC::Microsoft_SQL_Server undef
+      DBIx::Class::Storage::DBI::ODBC::SQL_Anywhere undef
+      DBIx::Class::Storage::DBI::Oracle undef
+      DBIx::Class::Storage::DBI::Oracle::Generic undef
+      DBIx::Class::Storage::DBI::Oracle::WhereJoins undef
+      DBIx::Class::Storage::DBI::Pg undef
+      DBIx::Class::Storage::DBI::Replicated undef
+      DBIx::Class::Storage::DBI::Replicated::Balancer undef
+      DBIx::Class::Storage::DBI::Replicated::Balancer::First undef
+      DBIx::Class::Storage::DBI::Replicated::Balancer::Random undef
+      DBIx::Class::Storage::DBI::Replicated::Pool undef
+      DBIx::Class::Storage::DBI::Replicated::Replicant undef
+      DBIx::Class::Storage::DBI::Replicated::WithDSN undef
+      DBIx::Class::Storage::DBI::SQLAnywhere undef
+      DBIx::Class::Storage::DBI::SQLAnywhere::Cursor undef
+      DBIx::Class::Storage::DBI::SQLite undef
+      DBIx::Class::Storage::DBI::Sybase undef
+      DBIx::Class::Storage::DBI::Sybase::ASE undef
+      DBIx::Class::Storage::DBI::Sybase::ASE::NoBindVars undef
+      DBIx::Class::Storage::DBI::Sybase::FreeTDS undef
+      DBIx::Class::Storage::DBI::Sybase::MSSQL undef
+      DBIx::Class::Storage::DBI::Sybase::Microsoft_SQL_Server undef
+      DBIx::Class::Storage::DBI::Sybase::Microsoft_SQL_Server::NoBindVars undef
+      DBIx::Class::Storage::DBI::UniqueIdentifier undef
+      DBIx::Class::Storage::DBI::mysql undef
+      DBIx::Class::Storage::Statistics undef
+      DBIx::Class::Storage::TxnScopeGuard undef
+      DBIx::Class::UTF8Columns undef
+      SQL::Translator::Parser::DBIx::Class 1.10
+      SQL::Translator::Producer::DBIx::Class::File 0.1
+    requirements:
+      Class::Accessor::Grouped 0.10012
+      Class::C3::Componentised 1.0009
+      Class::Inspector 1.24
+      Config::Any 0.20
+      Context::Preserve 0.01
+      DBD::SQLite 1.29
+      DBI 1.57
+      Data::Dumper::Concise 2.020
+      Data::Page 2.00
+      Devel::GlobalDestruction 0.09
+      ExtUtils::MakeMaker 6.59
+      File::Temp 0.22
+      Hash::Merge 0.12
+      List::Util 1.16
+      MRO::Compat 0.12
+      Module::Find 0.07
+      Moo 1.006001
+      Package::Stash 0.28
+      Path::Class 0.18
+      SQL::Abstract 1.81
+      Scope::Guard 0.03
+      Sub::Name 0.04
+      Test::Deep 0.101
+      Test::Exception 0.31
+      Test::More 0.94
+      Test::Warn 0.21
+      Text::Balanced 2.00
+      Try::Tiny 0.07
+      namespace::clean 0.24
+      perl 5.008001
+  Data-Compare-1.25
+    pathname: D/DC/DCANTRELL/Data-Compare-1.25.tar.gz
+    provides:
+      Data::Compare 1.25
+      Data::Compare::Plugins::Scalar::Properties 1
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find::Rule 0.1
+      Scalar::Util 0
+  Data-Dumper-Concise-2.022
+    pathname: F/FR/FREW/Data-Dumper-Concise-2.022.tar.gz
+    provides:
+      Data::Dumper::Concise 2.022
+      Data::Dumper::Concise::Sugar undef
+      Devel::Dwarn undef
+    requirements:
+      ExtUtils::MakeMaker 6.59
+      perl 5.006
+  Data-OptList-0.109
+    pathname: R/RJ/RJBS/Data-OptList-0.109.tar.gz
+    provides:
+      Data::OptList 0.109
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      List::Util 0
+      Params::Util 0
+      Sub::Install 0.921
+      strict 0
+      warnings 0
+  Data-Page-2.02
+    pathname: L/LB/LBROCARD/Data-Page-2.02.tar.gz
+    provides:
+      Data::Page 2.02
+    requirements:
+      Class::Accessor::Chained::Fast 0
+      Test::Exception 0
+      Test::More 0
+  Data-Stag-0.14
+    pathname: C/CM/CMUNGALL/Data-Stag-0.14.tar.gz
+    provides:
+      Data undef
+      Data::Stag 0.14
+      Data::Stag::Arr2HTML 0.14
+      Data::Stag::Base 0.14
+      Data::Stag::BaseGenerator undef
+      Data::Stag::BaseHandler 0.14
+      Data::Stag::ChainHandler 0.14
+      Data::Stag::DTDWriter 0.14
+      Data::Stag::GraphHandler 0.14
+      Data::Stag::HashDB 0.14
+      Data::Stag::ITextParser 0.14
+      Data::Stag::ITextWriter 0.14
+      Data::Stag::IndentParser 0.14
+      Data::Stag::IndentWriter 0.14
+      Data::Stag::JSONWriter 0.14
+      Data::Stag::PerlWriter 0.14
+      Data::Stag::PodParser 0.14
+      Data::Stag::SAX2Stag 0.14
+      Data::Stag::Simple 0.14
+      Data::Stag::StagDB 0.14
+      Data::Stag::StagI undef
+      Data::Stag::StagImpl 0.14
+      Data::Stag::SxprParser 0.14
+      Data::Stag::SxprWriter 0.14
+      Data::Stag::Util 0.14
+      Data::Stag::Writer 0.14
+      Data::Stag::XMLParser 0.14
+      Data::Stag::XMLWriter 0.14
+      Data::Stag::XSLHandler undef
+      Data::Stag::XSLTHandler undef
+      Data::Stag::null 0.14
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::String 0
+  Data-Visitor-0.30
+    pathname: D/DO/DOY/Data-Visitor-0.30.tar.gz
+    provides:
+      Data::Visitor 0.30
+      Data::Visitor::Callback 0.30
+    requirements:
+      Class::Load 0.06
+      ExtUtils::MakeMaker 6.30
+      Moose 0.89
+      Task::Weaken 0
+      Tie::ToObject 0.01
+      namespace::clean 0.19
+  Devel-Caller-2.06
+    pathname: R/RC/RCLAMP/Devel-Caller-2.06.tar.gz
+    provides:
+      Devel::Caller 2.06
+    requirements:
+      ExtUtils::MakeMaker 0
+      PadWalker 0.08
+      Test::More 0
+  Devel-GlobalDestruction-0.13
+    pathname: H/HA/HAARG/Devel-GlobalDestruction-0.13.tar.gz
+    provides:
+      Devel::GlobalDestruction 0.13
+    requirements:
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 0
+      Sub::Exporter::Progressive 0.001011
+      perl 5.006
+  Devel-OverloadInfo-0.002
+    pathname: I/IL/ILMARI/Devel-OverloadInfo-0.002.tar.gz
+    provides:
+      Devel::OverloadInfo 0.002
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.30
+      MRO::Compat 0
+      Package::Stash 0.14
+      Scalar::Util 0
+      Sub::Identify 0
+      overload 0
+      strict 0
+      warnings 0
+  Devel-StackTrace-2.00
+    pathname: D/DR/DROLSKY/Devel-StackTrace-2.00.tar.gz
+    provides:
+      Devel::StackTrace 2.00
+      Devel::StackTrace::Frame 2.00
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      Scalar::Util 0
+      overload 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Dist-CheckConflicts-0.11
+    pathname: D/DO/DOY/Dist-CheckConflicts-0.11.tar.gz
+    provides:
+      Dist::CheckConflicts 0.11
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.30
+      Module::Runtime 0.009
+      base 0
+      strict 0
+      warnings 0
+  Encode-Locale-1.04
+    pathname: G/GA/GAAS/Encode-Locale-1.04.tar.gz
+    provides:
+      Encode::Locale 1.04
+    requirements:
+      Encode 2
+      Encode::Alias 0
+      ExtUtils::MakeMaker 0
+      perl 5.008
+  Eval-Closure-0.12
+    pathname: D/DO/DOY/Eval-Closure-0.12.tar.gz
+    provides:
+      Eval::Closure 0.12
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Scalar::Util 0
+      Try::Tiny 0
+      constant 0
+      overload 0
+      strict 0
+      warnings 0
+  Exception-Class-1.39
+    pathname: D/DR/DROLSKY/Exception-Class-1.39.tar.gz
+    provides:
+      Exception::Class 1.39
+      Exception::Class::Base 1.39
+    requirements:
+      Class::Data::Inheritable 0.02
+      Devel::StackTrace 2.00
+      ExtUtils::MakeMaker 0
+      Scalar::Util 0
+      base 0
+      overload 0
+      perl 5.008001
+      strict 0
+      warnings 0
+  Exporter-Tiny-0.042
+    pathname: T/TO/TOBYINK/Exporter-Tiny-0.042.tar.gz
+    provides:
+      Exporter::Shiny 0.042
+      Exporter::Tiny 0.042
+    requirements:
+      ExtUtils::MakeMaker 6.17
+      perl 5.006001
+  ExtUtils-Config-0.008
+    pathname: L/LE/LEONT/ExtUtils-Config-0.008.tar.gz
+    provides:
+      ExtUtils::Config 0.008
+    requirements:
+      Data::Dumper 0
+      ExtUtils::MakeMaker 6.30
+      strict 0
+      warnings 0
+  ExtUtils-Depends-0.404
+    pathname: X/XA/XAOC/ExtUtils-Depends-0.404.tar.gz
+    provides:
+      ExtUtils::Depends 0.404
+    requirements:
+      Data::Dumper 0
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      IO::File 0
+      perl 5.006
+  ExtUtils-Helpers-0.022
+    pathname: L/LE/LEONT/ExtUtils-Helpers-0.022.tar.gz
+    provides:
+      ExtUtils::Helpers 0.022
+      ExtUtils::Helpers::Unix 0.022
+      ExtUtils::Helpers::VMS 0.022
+      ExtUtils::Helpers::Windows 0.022
+    requirements:
+      Carp 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.30
+      File::Basename 0
+      File::Copy 0
+      File::Spec::Functions 0
+      Module::Load 0
+      Text::ParseWords 3.24
+      strict 0
+      warnings 0
+  ExtUtils-InstallPaths-0.011
+    pathname: L/LE/LEONT/ExtUtils-InstallPaths-0.011.tar.gz
+    provides:
+      ExtUtils::InstallPaths 0.011
+    requirements:
+      Carp 0
+      ExtUtils::Config 0.002
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      perl 5.006
+      strict 0
+      warnings 0
+  ExtUtils-MakeMaker-7.04
+    pathname: B/BI/BINGOS/ExtUtils-MakeMaker-7.04.tar.gz
+    provides:
+      ExtUtils::Command::MM 7.04
+      ExtUtils::Liblist 7.04
+      ExtUtils::Liblist::Kid 7.04
+      ExtUtils::MM 7.04
+      ExtUtils::MM_AIX 7.04
+      ExtUtils::MM_Any 7.04
+      ExtUtils::MM_BeOS 7.04
+      ExtUtils::MM_Cygwin 7.04
+      ExtUtils::MM_DOS 7.04
+      ExtUtils::MM_Darwin 7.04
+      ExtUtils::MM_MacOS 7.04
+      ExtUtils::MM_NW5 7.04
+      ExtUtils::MM_OS2 7.04
+      ExtUtils::MM_QNX 7.04
+      ExtUtils::MM_UWIN 7.04
+      ExtUtils::MM_Unix 7.04
+      ExtUtils::MM_VMS 7.04
+      ExtUtils::MM_VOS 7.04
+      ExtUtils::MM_Win32 7.04
+      ExtUtils::MM_Win95 7.04
+      ExtUtils::MY 7.04
+      ExtUtils::MakeMaker 7.04
+      ExtUtils::MakeMaker::Config 7.04
+      ExtUtils::MakeMaker::Locale 7.04
+      ExtUtils::MakeMaker::_version 7.04
+      ExtUtils::MakeMaker::charstar 7.04
+      ExtUtils::MakeMaker::version 7.04
+      ExtUtils::MakeMaker::version::regex 7.04
+      ExtUtils::MakeMaker::version::vpp 7.04
+      ExtUtils::Mkbootstrap 7.04
+      ExtUtils::Mksymlists 7.04
+      ExtUtils::testlib 7.04
+      MM 7.04
+      MY 7.04
+    requirements:
+      Data::Dumper 0
+      DirHandle 0
+      Encode 0
+      File::Basename 0
+      File::Spec 0.8
+      Pod::Man 0
+      perl 5.006
+  File-Find-Rule-0.33
+    pathname: R/RC/RCLAMP/File-Find-Rule-0.33.tar.gz
+    provides:
+      File::Find::Rule 0.33
+      File::Find::Rule::Test::ATeam undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find 0
+      File::Spec 0
+      Number::Compare 0
+      Test::More 0
+      Text::Glob 0.07
+  File-Listing-6.04
+    pathname: G/GA/GAAS/File-Listing-6.04.tar.gz
+    provides:
+      File::Listing 6.04
+      File::Listing::apache 6.04
+      File::Listing::dosftp 6.04
+      File::Listing::netware 6.04
+      File::Listing::unix 6.04
+      File::Listing::vms 6.04
+    requirements:
+      ExtUtils::MakeMaker 0
+      HTTP::Date 6
+      perl 5.006002
+  HTML-Parser-3.71
+    pathname: G/GA/GAAS/HTML-Parser-3.71.tar.gz
+    provides:
+      HTML::Entities 3.69
+      HTML::Filter 3.57
+      HTML::HeadParser 3.71
+      HTML::LinkExtor 3.69
+      HTML::Parser 3.71
+      HTML::PullParser 3.57
+      HTML::TokeParser 3.69
+    requirements:
+      ExtUtils::MakeMaker 0
+      HTML::Tagset 3
+      XSLoader 0
+      perl 5.008
+  HTML-Tagset-3.20
+    pathname: P/PE/PETDANCE/HTML-Tagset-3.20.tar.gz
+    provides:
+      HTML::Tagset 3.20
+    requirements:
+      ExtUtils::MakeMaker 0
+  HTTP-Cookies-6.01
+    pathname: G/GA/GAAS/HTTP-Cookies-6.01.tar.gz
+    provides:
+      HTTP::Cookies 6.01
+      HTTP::Cookies::Microsoft 6.00
+      HTTP::Cookies::Netscape 6.00
+    requirements:
+      ExtUtils::MakeMaker 0
+      HTTP::Date 6
+      HTTP::Headers::Util 6
+      Time::Local 0
+      perl 5.008001
+  HTTP-Daemon-6.01
+    pathname: G/GA/GAAS/HTTP-Daemon-6.01.tar.gz
+    provides:
+      HTTP::Daemon 6.01
+      HTTP::Daemon::ClientConn 6.01
+    requirements:
+      ExtUtils::MakeMaker 0
+      HTTP::Date 6
+      HTTP::Request 6
+      HTTP::Response 6
+      HTTP::Status 6
+      IO::Socket 0
+      LWP::MediaTypes 6
+      Sys::Hostname 0
+      perl 5.008001
+  HTTP-Date-6.02
+    pathname: G/GA/GAAS/HTTP-Date-6.02.tar.gz
+    provides:
+      HTTP::Date 6.02
+    requirements:
+      ExtUtils::MakeMaker 0
+      Time::Local 0
+      perl 5.006002
+  HTTP-Message-6.06
+    pathname: G/GA/GAAS/HTTP-Message-6.06.tar.gz
+    provides:
+      HTTP::Config 6.00
+      HTTP::Headers 6.05
+      HTTP::Headers::Auth 6.00
+      HTTP::Headers::ETag 6.00
+      HTTP::Headers::Util 6.03
+      HTTP::Message 6.06
+      HTTP::Request 6.00
+      HTTP::Request::Common 6.04
+      HTTP::Response 6.04
+      HTTP::Status 6.03
+    requirements:
+      Compress::Raw::Zlib 0
+      Encode 2.21
+      Encode::Locale 1
+      ExtUtils::MakeMaker 0
+      HTTP::Date 6
+      IO::Compress::Bzip2 2.021
+      IO::Compress::Deflate 0
+      IO::Compress::Gzip 0
+      IO::HTML 0
+      IO::Uncompress::Bunzip2 2.021
+      IO::Uncompress::Gunzip 0
+      IO::Uncompress::Inflate 0
+      IO::Uncompress::RawInflate 0
+      LWP::MediaTypes 6
+      MIME::Base64 2.1
+      MIME::QuotedPrint 0
+      URI 1.10
+      perl 5.008001
+  HTTP-Negotiate-6.01
+    pathname: G/GA/GAAS/HTTP-Negotiate-6.01.tar.gz
+    provides:
+      HTTP::Negotiate 6.01
+    requirements:
+      ExtUtils::MakeMaker 0
+      HTTP::Headers 6
+      perl 5.008001
+  Hash-Merge-0.200
+    pathname: R/RE/REHSACK/Hash-Merge-0.200.tar.gz
+    provides:
+      Hash::Merge 0.200
+    requirements:
+      Clone 0
+      ExtUtils::MakeMaker 0
+      perl 5.008001
+  Hash-Util-FieldHash-Compat-0.08
+    pathname: E/ET/ETHER/Hash-Util-FieldHash-Compat-0.08.tar.gz
+    provides:
+      Hash::Util::FieldHash::Compat 0.08
+      Hash::Util::FieldHash::Compat::Heavy 0.08
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 6.30
+      constant 0
+      parent 0
+      strict 0
+      warnings 0
+  IO-HTML-1.001
+    pathname: C/CJ/CJM/IO-HTML-1.001.tar.gz
+    provides:
+      IO::HTML 1.001
+    requirements:
+      Carp 0
+      Encode 2.10
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.30
+  IO-Socket-IP-0.36
+    pathname: P/PE/PEVANS/IO-Socket-IP-0.36.tar.gz
+    provides:
+      IO::Socket::IP 0.36
+    requirements:
+      IO::Socket 0
+      Socket 1.97
+      Test::More 0.88
+  IO-Socket-SSL-2.012
+    pathname: S/SU/SULLR/IO-Socket-SSL-2.012.tar.gz
+    provides:
+      IO::Socket::SSL 2.012
+      IO::Socket::SSL::Intercept 1.93
+      IO::Socket::SSL::OCSP_Cache 2.012
+      IO::Socket::SSL::OCSP_Resolver 2.012
+      IO::Socket::SSL::PublicSuffix undef
+      IO::Socket::SSL::SSL_Context 2.012
+      IO::Socket::SSL::SSL_HANDLE 2.012
+      IO::Socket::SSL::Session_Cache 2.012
+      IO::Socket::SSL::Utils 0.031
+    requirements:
+      ExtUtils::MakeMaker 0
+      Mozilla::CA 0
+      Net::SSLeay 1.46
+      Scalar::Util 0
+  IO-String-1.08
+    pathname: G/GA/GAAS/IO-String-1.08.tar.gz
+    provides:
+      IO::String 1.08
+    requirements:
+      ExtUtils::MakeMaker 0
+  Import-Into-1.002004
+    pathname: E/ET/ETHER/Import-Into-1.002004.tar.gz
+    provides:
+      Import::Into 1.002004
+    requirements:
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0
+      perl 5.006
+      strict 0
+      warnings 0
+  JSON-2.90
+    pathname: M/MA/MAKAMAKA/JSON-2.90.tar.gz
+    provides:
+      JSON 2.90
+      JSON::Backend::PP 2.90
+      JSON::Boolean 2.90
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  JSON-PP-2.27300
+    pathname: M/MA/MAKAMAKA/JSON-PP-2.27300.tar.gz
+    provides:
+      JSON::PP 2.27300
+      JSON::PP::Boolean 2.27300
+      JSON::PP::IncrParser 2.27300
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  JSON-XS-3.01
+    pathname: M/ML/MLEHMANN/JSON-XS-3.01.tar.gz
+    provides:
+      JSON::XS 3.01
+    requirements:
+      ExtUtils::MakeMaker 0
+      Types::Serialiser 0
+      common::sense 0
+  LWP-MediaTypes-6.02
+    pathname: G/GA/GAAS/LWP-MediaTypes-6.02.tar.gz
+    provides:
+      LWP::MediaTypes 6.02
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.006002
+  LWP-Protocol-https-6.06
+    pathname: M/MS/MSCHILLI/LWP-Protocol-https-6.06.tar.gz
+    provides:
+      LWP::Protocol::https 6.06
+      LWP::Protocol::https::Socket 6.06
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::Socket::SSL 1.54
+      LWP::UserAgent 6.06
+      Mozilla::CA 20110101
+      Net::HTTPS 6
+      perl 5.008001
+  Lexical-SealRequireHints-0.007
+    pathname: Z/ZE/ZEFRAM/Lexical-SealRequireHints-0.007.tar.gz
+    provides:
+      Lexical::SealRequireHints 0.007
+    requirements:
+      Module::Build 0
+      Test::More 0
+      perl 5.006
+      strict 0
+      warnings 0
+  List-MoreUtils-0.405
+    pathname: R/RE/REHSACK/List-MoreUtils-0.405.tar.gz
+    provides:
+      List::MoreUtils 0.405
+      List::MoreUtils::PP 0.405
+      List::MoreUtils::XS 0.405
+    requirements:
+      Carp 0
+      Exporter::Tiny 0.038
+      ExtUtils::MakeMaker 0
+      File::Basename 0
+      File::Copy 0
+      File::Path 0
+      File::Spec 0
+      IPC::Cmd 0
+      XSLoader 0
+      base 0
+  MRO-Compat-0.12
+    pathname: B/BO/BOBTFISH/MRO-Compat-0.12.tar.gz
+    provides:
+      MRO::Compat 0.12
+    requirements:
+      ExtUtils::MakeMaker 6.59
+      Test::More 0.47
+      perl 5.006
+  Module-Build-0.4211
+    pathname: L/LE/LEONT/Module-Build-0.4211.tar.gz
+    provides:
+      Module::Build 0.4211
+      Module::Build::Base 0.4211
+      Module::Build::Compat 0.4211
+      Module::Build::Config 0.4211
+      Module::Build::Cookbook 0.4211
+      Module::Build::Dumper 0.4211
+      Module::Build::Notes 0.4211
+      Module::Build::PPMMaker 0.4211
+      Module::Build::Platform::Default 0.4211
+      Module::Build::Platform::MacOS 0.4211
+      Module::Build::Platform::Unix 0.4211
+      Module::Build::Platform::VMS 0.4211
+      Module::Build::Platform::VOS 0.4211
+      Module::Build::Platform::Windows 0.4211
+      Module::Build::Platform::aix 0.4211
+      Module::Build::Platform::cygwin 0.4211
+      Module::Build::Platform::darwin 0.4211
+      Module::Build::Platform::os2 0.4211
+      Module::Build::PodParser 0.4211
+    requirements:
+      CPAN::Meta 2.142060
+      CPAN::Meta::YAML 0.003
+      Cwd 0
+      Data::Dumper 0
+      ExtUtils::CBuilder 0.27
+      ExtUtils::Install 0
+      ExtUtils::Manifest 0
+      ExtUtils::Mkbootstrap 0
+      ExtUtils::ParseXS 2.21
+      File::Basename 0
+      File::Compare 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.82
+      File::Temp 0.15
+      Getopt::Long 0
+      Module::Metadata 1.000002
+      Parse::CPAN::Meta 1.4401
+      Perl::OSType 1
+      Pod::Man 2.17
+      Test::Harness 3.16
+      Test::More 0.49
+      Text::Abbrev 0
+      Text::ParseWords 0
+      perl 5.008000
+      version 0.87
+  Module-Build-Pluggable-0.10
+    pathname: T/TO/TOKUHIROM/Module-Build-Pluggable-0.10.tar.gz
+    provides:
+      Module::Build::Pluggable 0.10
+      Module::Build::Pluggable::Base undef
+      Module::Build::Pluggable::GithubMeta undef
+      Module::Build::Pluggable::Repository 0.10
+      Module::Build::Pluggable::Util undef
+      Test::Module::Build::Pluggable undef
+    requirements:
+      CPAN::Meta 0
+      CPAN::Meta::Prereqs 0
+      Class::Accessor::Lite 0
+      Class::Method::Modifiers 0
+      Data::OptList 0
+      File::Basename 0
+      File::Path 0
+      File::Temp 0
+      Module::Build 0.38
+      Module::Load 0
+      Test::SharedFork 0
+      parent 0
+      perl 5.008001
+  Module-Build-Pluggable-CPANfile-0.05
+    pathname: K/KA/KAZEBURO/Module-Build-Pluggable-CPANfile-0.05.tar.gz
+    provides:
+      Module::Build::Pluggable::CPANfile 0.05
+    requirements:
+      CPAN::Meta 0
+      CPAN::Meta::Prereqs 0
+      ExtUtils::CBuilder 0
+      List::Util 1.14
+      Module::Build 0.38
+      Module::Build::Pluggable 0.05
+      Module::CPANfile 0.9010
+      parent 0
+      perl 5.008005
+      version 0.99
+  Module-Build-Tiny-0.039
+    pathname: L/LE/LEONT/Module-Build-Tiny-0.039.tar.gz
+    provides:
+      Module::Build::Tiny 0.039
+    requirements:
+      CPAN::Meta 0
+      DynaLoader 0
+      Exporter 5.57
+      ExtUtils::CBuilder 0
+      ExtUtils::Config 0.003
+      ExtUtils::Helpers 0.020
+      ExtUtils::Install 0
+      ExtUtils::InstallPaths 0.002
+      ExtUtils::ParseXS 0
+      File::Basename 0
+      File::Find 0
+      File::Path 0
+      File::Spec::Functions 0
+      Getopt::Long 2.36
+      JSON::PP 2
+      Pod::Man 0
+      TAP::Harness::Env 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Module-CPANfile-1.1000
+    pathname: M/MI/MIYAGAWA/Module-CPANfile-1.1000.tar.gz
+    provides:
+      Module::CPANfile 1.1000
+      Module::CPANfile::Environment undef
+      Module::CPANfile::Prereq undef
+      Module::CPANfile::Prereqs undef
+      Module::CPANfile::Requirement undef
+    requirements:
+      CPAN::Meta 2.12091
+      CPAN::Meta::Prereqs 2.12091
+      ExtUtils::MakeMaker 0
+      parent 0
+  Module-Find-0.12
+    pathname: C/CR/CRENZ/Module-Find-0.12.tar.gz
+    provides:
+      Module::Find 0.12
+      ModuleFindTest undef
+      ModuleFindTest::SubMod undef
+      ModuleFindTest::SubMod::SubSubMod undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find 0
+      File::Spec 0
+      Test::More 0
+      perl 5.006001
+  Module-Implementation-0.09
+    pathname: D/DR/DROLSKY/Module-Implementation-0.09.tar.gz
+    provides:
+      Module::Implementation 0.09
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0.012
+      Try::Tiny 0
+      strict 0
+      warnings 0
+  Module-Runtime-0.014
+    pathname: Z/ZE/ZEFRAM/Module-Runtime-0.014.tar.gz
+    provides:
+      Module::Runtime 0.014
+    requirements:
+      Module::Build 0
+      Test::More 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Module-Runtime-Conflicts-0.001
+    pathname: E/ET/ETHER/Module-Runtime-Conflicts-0.001.tar.gz
+    provides:
+      Module::Runtime::Conflicts 0.001
+    requirements:
+      Dist::CheckConflicts 0
+      ExtUtils::MakeMaker 0
+      Module::Build::Tiny 0.038
+      Module::Runtime 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Mojolicious-5.82
+    pathname: S/SR/SRI/Mojolicious-5.82.tar.gz
+    provides:
+      Mojo undef
+      Mojo::Asset undef
+      Mojo::Asset::File undef
+      Mojo::Asset::Memory undef
+      Mojo::Base undef
+      Mojo::ByteStream undef
+      Mojo::Cache undef
+      Mojo::Collection undef
+      Mojo::Content undef
+      Mojo::Content::MultiPart undef
+      Mojo::Content::Single undef
+      Mojo::Cookie undef
+      Mojo::Cookie::Request undef
+      Mojo::Cookie::Response undef
+      Mojo::DOM undef
+      Mojo::DOM::CSS undef
+      Mojo::DOM::HTML undef
+      Mojo::Date undef
+      Mojo::EventEmitter undef
+      Mojo::Exception undef
+      Mojo::Headers undef
+      Mojo::HelloWorld undef
+      Mojo::Home undef
+      Mojo::IOLoop undef
+      Mojo::IOLoop::Client undef
+      Mojo::IOLoop::Delay undef
+      Mojo::IOLoop::Server undef
+      Mojo::IOLoop::Stream undef
+      Mojo::JSON undef
+      Mojo::JSON::Pointer undef
+      Mojo::JSON::_Bool undef
+      Mojo::Loader undef
+      Mojo::Log undef
+      Mojo::Message undef
+      Mojo::Message::Request undef
+      Mojo::Message::Response undef
+      Mojo::Parameters undef
+      Mojo::Path undef
+      Mojo::Reactor undef
+      Mojo::Reactor::EV undef
+      Mojo::Reactor::Poll undef
+      Mojo::Server undef
+      Mojo::Server::CGI undef
+      Mojo::Server::Daemon undef
+      Mojo::Server::Hypnotoad undef
+      Mojo::Server::Morbo undef
+      Mojo::Server::PSGI undef
+      Mojo::Server::PSGI::_IO undef
+      Mojo::Server::Prefork undef
+      Mojo::Template undef
+      Mojo::Transaction undef
+      Mojo::Transaction::HTTP undef
+      Mojo::Transaction::WebSocket undef
+      Mojo::URL undef
+      Mojo::Upload undef
+      Mojo::UserAgent undef
+      Mojo::UserAgent::CookieJar undef
+      Mojo::UserAgent::Proxy undef
+      Mojo::UserAgent::Server undef
+      Mojo::UserAgent::Transactor undef
+      Mojo::Util undef
+      Mojolicious 5.82
+      Mojolicious::Command undef
+      Mojolicious::Command::cgi undef
+      Mojolicious::Command::cpanify undef
+      Mojolicious::Command::daemon undef
+      Mojolicious::Command::eval undef
+      Mojolicious::Command::generate undef
+      Mojolicious::Command::generate::app undef
+      Mojolicious::Command::generate::lite_app undef
+      Mojolicious::Command::generate::makefile undef
+      Mojolicious::Command::generate::plugin undef
+      Mojolicious::Command::get undef
+      Mojolicious::Command::inflate undef
+      Mojolicious::Command::prefork undef
+      Mojolicious::Command::psgi undef
+      Mojolicious::Command::routes undef
+      Mojolicious::Command::test undef
+      Mojolicious::Command::version undef
+      Mojolicious::Commands undef
+      Mojolicious::Controller undef
+      Mojolicious::Lite undef
+      Mojolicious::Plugin undef
+      Mojolicious::Plugin::Charset undef
+      Mojolicious::Plugin::Config undef
+      Mojolicious::Plugin::Config::Sandbox undef
+      Mojolicious::Plugin::DefaultHelpers undef
+      Mojolicious::Plugin::EPLRenderer undef
+      Mojolicious::Plugin::EPRenderer undef
+      Mojolicious::Plugin::HeaderCondition undef
+      Mojolicious::Plugin::JSONConfig undef
+      Mojolicious::Plugin::Mount undef
+      Mojolicious::Plugin::PODRenderer undef
+      Mojolicious::Plugin::TagHelpers undef
+      Mojolicious::Plugins undef
+      Mojolicious::Renderer undef
+      Mojolicious::Routes undef
+      Mojolicious::Routes::Match undef
+      Mojolicious::Routes::Pattern undef
+      Mojolicious::Routes::Route undef
+      Mojolicious::Sessions undef
+      Mojolicious::Static undef
+      Mojolicious::Types undef
+      Mojolicious::Validator undef
+      Mojolicious::Validator::Validation undef
+      Test::Mojo undef
+      ojo undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::Socket::IP 0.26
+      Pod::Simple 3.09
+      Time::Local 1.2
+      perl 5.010001
+  Moo-1.007000
+    pathname: H/HA/HAARG/Moo-1.007000.tar.gz
+    provides:
+      Method::Generate::Accessor undef
+      Method::Generate::BuildAll undef
+      Method::Generate::Constructor undef
+      Method::Generate::DemolishAll undef
+      Method::Inliner undef
+      Moo 1.007000
+      Moo::HandleMoose undef
+      Moo::HandleMoose::FakeConstructor undef
+      Moo::HandleMoose::FakeMetaClass undef
+      Moo::HandleMoose::_TypeMap undef
+      Moo::Object undef
+      Moo::Role 1.007000
+      Moo::_Utils undef
+      Moo::_mro undef
+      Moo::sification undef
+      Sub::Defer 1.007000
+      Sub::Quote 1.007000
+      oo undef
+    requirements:
+      Class::Method::Modifiers 1.1
+      Devel::GlobalDestruction 0.11
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Import::Into 1.002
+      Module::Runtime 0.014
+      Role::Tiny 1.003004
+      Scalar::Util 0
+      perl 5.006
+      strictures 1.004003
+  Moose-2.1403
+    pathname: E/ET/ETHER/Moose-2.1403.tar.gz
+    provides:
+      Class::MOP 2.1403
+      Class::MOP::Attribute 2.1403
+      Class::MOP::Class 2.1403
+      Class::MOP::Instance 2.1403
+      Class::MOP::Method 2.1403
+      Class::MOP::Method::Accessor 2.1403
+      Class::MOP::Method::Constructor 2.1403
+      Class::MOP::Method::Generated 2.1403
+      Class::MOP::Method::Inlined 2.1403
+      Class::MOP::Method::Meta 2.1403
+      Class::MOP::Method::Wrapped 2.1403
+      Class::MOP::Module 2.1403
+      Class::MOP::Object 2.1403
+      Class::MOP::Overload 2.1403
+      Class::MOP::Package 2.1403
+      Moose 2.1403
+      Moose::Cookbook 2.1403
+      Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing 2.1403
+      Moose::Cookbook::Basics::BinaryTree_AttributeFeatures 2.1403
+      Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild 2.1403
+      Moose::Cookbook::Basics::Company_Subtypes 2.1403
+      Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent 2.1403
+      Moose::Cookbook::Basics::Document_AugmentAndInner 2.1403
+      Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion 2.1403
+      Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion 2.1403
+      Moose::Cookbook::Basics::Immutable 2.1403
+      Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD 2.1403
+      Moose::Cookbook::Basics::Point_AttributesAndSubclassing 2.1403
+      Moose::Cookbook::Extending::Debugging_BaseClassRole 2.1403
+      Moose::Cookbook::Extending::ExtensionOverview 2.1403
+      Moose::Cookbook::Extending::Mooseish_MooseSugar 2.1403
+      Moose::Cookbook::Legacy::Debugging_BaseClassReplacement 2.1403
+      Moose::Cookbook::Legacy::Labeled_AttributeMetaclass 2.1403
+      Moose::Cookbook::Legacy::Table_ClassMetaclass 2.1403
+      Moose::Cookbook::Meta::GlobRef_InstanceMetaclass 2.1403
+      Moose::Cookbook::Meta::Labeled_AttributeTrait 2.1403
+      Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass 2.1403
+      Moose::Cookbook::Meta::Table_MetaclassTrait 2.1403
+      Moose::Cookbook::Meta::WhyMeta 2.1403
+      Moose::Cookbook::Roles::ApplicationToInstance 2.1403
+      Moose::Cookbook::Roles::Comparable_CodeReuse 2.1403
+      Moose::Cookbook::Roles::Restartable_AdvancedComposition 2.1403
+      Moose::Cookbook::Snack::Keywords 2.1403
+      Moose::Cookbook::Snack::Types 2.1403
+      Moose::Cookbook::Style 2.1403
+      Moose::Exception 2.1403
+      Moose::Exception::AccessorMustReadWrite 2.1403
+      Moose::Exception::AddParameterizableTypeTakesParameterizableType 2.1403
+      Moose::Exception::AddRoleTakesAMooseMetaRoleInstance 2.1403
+      Moose::Exception::AddRoleToARoleTakesAMooseMetaRole 2.1403
+      Moose::Exception::ApplyTakesABlessedInstance 2.1403
+      Moose::Exception::AttachToClassNeedsAClassMOPClassInstanceOrASubclass 2.1403
+      Moose::Exception::AttributeConflictInRoles 2.1403
+      Moose::Exception::AttributeConflictInSummation 2.1403
+      Moose::Exception::AttributeExtensionIsNotSupportedInRoles 2.1403
+      Moose::Exception::AttributeIsRequired 2.1403
+      Moose::Exception::AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass 2.1403
+      Moose::Exception::AttributeNamesDoNotMatch 2.1403
+      Moose::Exception::AttributeValueIsNotAnObject 2.1403
+      Moose::Exception::AttributeValueIsNotDefined 2.1403
+      Moose::Exception::AutoDeRefNeedsArrayRefOrHashRef 2.1403
+      Moose::Exception::BadOptionFormat 2.1403
+      Moose::Exception::BothBuilderAndDefaultAreNotAllowed 2.1403
+      Moose::Exception::BuilderDoesNotExist 2.1403
+      Moose::Exception::BuilderMethodNotSupportedForAttribute 2.1403
+      Moose::Exception::BuilderMethodNotSupportedForInlineAttribute 2.1403
+      Moose::Exception::BuilderMustBeAMethodName 2.1403
+      Moose::Exception::CallingMethodOnAnImmutableInstance 2.1403
+      Moose::Exception::CallingReadOnlyMethodOnAnImmutableInstance 2.1403
+      Moose::Exception::CanExtendOnlyClasses 2.1403
+      Moose::Exception::CanOnlyConsumeRole 2.1403
+      Moose::Exception::CanOnlyWrapBlessedCode 2.1403
+      Moose::Exception::CanReblessOnlyIntoASubclass 2.1403
+      Moose::Exception::CanReblessOnlyIntoASuperclass 2.1403
+      Moose::Exception::CannotAddAdditionalTypeCoercionsToUnion 2.1403
+      Moose::Exception::CannotAddAsAnAttributeToARole 2.1403
+      Moose::Exception::CannotApplyBaseClassRolesToRole 2.1403
+      Moose::Exception::CannotAssignValueToReadOnlyAccessor 2.1403
+      Moose::Exception::CannotAugmentIfLocalMethodPresent 2.1403
+      Moose::Exception::CannotAugmentNoSuperMethod 2.1403
+      Moose::Exception::CannotAutoDerefWithoutIsa 2.1403
+      Moose::Exception::CannotAutoDereferenceTypeConstraint 2.1403
+      Moose::Exception::CannotCalculateNativeType 2.1403
+      Moose::Exception::CannotCallAnAbstractBaseMethod 2.1403
+      Moose::Exception::CannotCallAnAbstractMethod 2.1403
+      Moose::Exception::CannotCoerceAWeakRef 2.1403
+      Moose::Exception::CannotCoerceAttributeWhichHasNoCoercion 2.1403
+      Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter 2.1403
+      Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresent 2.1403
+      Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresentInClass 2.1403
+      Moose::Exception::CannotDelegateLocalMethodIsPresent 2.1403
+      Moose::Exception::CannotDelegateWithoutIsa 2.1403
+      Moose::Exception::CannotFindDelegateMetaclass 2.1403
+      Moose::Exception::CannotFindType 2.1403
+      Moose::Exception::CannotFindTypeGivenToMatchOnType 2.1403
+      Moose::Exception::CannotFixMetaclassCompatibility 2.1403
+      Moose::Exception::CannotGenerateInlineConstraint 2.1403
+      Moose::Exception::CannotInitializeMooseMetaRoleComposite 2.1403
+      Moose::Exception::CannotInlineTypeConstraintCheck 2.1403
+      Moose::Exception::CannotLocatePackageInINC 2.1403
+      Moose::Exception::CannotMakeMetaclassCompatible 2.1403
+      Moose::Exception::CannotOverrideALocalMethod 2.1403
+      Moose::Exception::CannotOverrideBodyOfMetaMethods 2.1403
+      Moose::Exception::CannotOverrideLocalMethodIsPresent 2.1403
+      Moose::Exception::CannotOverrideNoSuperMethod 2.1403
+      Moose::Exception::CannotRegisterUnnamedTypeConstraint 2.1403
+      Moose::Exception::CannotUseLazyBuildAndDefaultSimultaneously 2.1403
+      Moose::Exception::CircularReferenceInAlso 2.1403
+      Moose::Exception::ClassDoesNotHaveInitMeta 2.1403
+      Moose::Exception::ClassDoesTheExcludedRole 2.1403
+      Moose::Exception::ClassNamesDoNotMatch 2.1403
+      Moose::Exception::CloneObjectExpectsAnInstanceOfMetaclass 2.1403
+      Moose::Exception::CodeBlockMustBeACodeRef 2.1403
+      Moose::Exception::CoercingWithoutCoercions 2.1403
+      Moose::Exception::CoercionAlreadyExists 2.1403
+      Moose::Exception::CoercionNeedsTypeConstraint 2.1403
+      Moose::Exception::ConflictDetectedInCheckRoleExclusions 2.1403
+      Moose::Exception::ConflictDetectedInCheckRoleExclusionsInToClass 2.1403
+      Moose::Exception::ConstructClassInstanceTakesPackageName 2.1403
+      Moose::Exception::CouldNotCreateMethod 2.1403
+      Moose::Exception::CouldNotCreateWriter 2.1403
+      Moose::Exception::CouldNotEvalConstructor 2.1403
+      Moose::Exception::CouldNotEvalDestructor 2.1403
+      Moose::Exception::CouldNotFindTypeConstraintToCoerceFrom 2.1403
+      Moose::Exception::CouldNotGenerateInlineAttributeMethod 2.1403
+      Moose::Exception::CouldNotLocateTypeConstraintForUnion 2.1403
+      Moose::Exception::CouldNotParseType 2.1403
+      Moose::Exception::CreateMOPClassTakesArrayRefOfAttributes 2.1403
+      Moose::Exception::CreateMOPClassTakesArrayRefOfSuperclasses 2.1403
+      Moose::Exception::CreateMOPClassTakesHashRefOfMethods 2.1403
+      Moose::Exception::CreateTakesArrayRefOfRoles 2.1403
+      Moose::Exception::CreateTakesHashRefOfAttributes 2.1403
+      Moose::Exception::CreateTakesHashRefOfMethods 2.1403
+      Moose::Exception::DefaultToMatchOnTypeMustBeCodeRef 2.1403
+      Moose::Exception::DelegationToAClassWhichIsNotLoaded 2.1403
+      Moose::Exception::DelegationToARoleWhichIsNotLoaded 2.1403
+      Moose::Exception::DelegationToATypeWhichIsNotAClass 2.1403
+      Moose::Exception::DoesRequiresRoleName 2.1403
+      Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs 2.1403
+      Moose::Exception::EnumValuesMustBeString 2.1403
+      Moose::Exception::ExtendsMissingArgs 2.1403
+      Moose::Exception::HandlesMustBeAHashRef 2.1403
+      Moose::Exception::IllegalInheritedOptions 2.1403
+      Moose::Exception::IllegalMethodTypeToAddMethodModifier 2.1403
+      Moose::Exception::IncompatibleMetaclassOfSuperclass 2.1403
+      Moose::Exception::InitMetaRequiresClass 2.1403
+      Moose::Exception::InitializeTakesUnBlessedPackageName 2.1403
+      Moose::Exception::InstanceBlessedIntoWrongClass 2.1403
+      Moose::Exception::InstanceMustBeABlessedReference 2.1403
+      Moose::Exception::InvalidArgPassedToMooseUtilMetaRole 2.1403
+      Moose::Exception::InvalidArgumentToMethod 2.1403
+      Moose::Exception::InvalidArgumentsToTraitAliases 2.1403
+      Moose::Exception::InvalidBaseTypeGivenToCreateParameterizedTypeConstraint 2.1403
+      Moose::Exception::InvalidHandleValue 2.1403
+      Moose::Exception::InvalidHasProvidedInARole 2.1403
+      Moose::Exception::InvalidNameForType 2.1403
+      Moose::Exception::InvalidOverloadOperator 2.1403
+      Moose::Exception::InvalidRoleApplication 2.1403
+      Moose::Exception::InvalidTypeConstraint 2.1403
+      Moose::Exception::InvalidTypeGivenToCreateParameterizedTypeConstraint 2.1403
+      Moose::Exception::InvalidValueForIs 2.1403
+      Moose::Exception::IsaDoesNotDoTheRole 2.1403
+      Moose::Exception::IsaLacksDoesMethod 2.1403
+      Moose::Exception::LazyAttributeNeedsADefault 2.1403
+      Moose::Exception::Legacy 2.1403
+      Moose::Exception::MOPAttributeNewNeedsAttributeName 2.1403
+      Moose::Exception::MatchActionMustBeACodeRef 2.1403
+      Moose::Exception::MessageParameterMustBeCodeRef 2.1403
+      Moose::Exception::MetaclassIsAClassNotASubclassOfGivenMetaclass 2.1403
+      Moose::Exception::MetaclassIsARoleNotASubclassOfGivenMetaclass 2.1403
+      Moose::Exception::MetaclassIsNotASubclassOfGivenMetaclass 2.1403
+      Moose::Exception::MetaclassMustBeASubclassOfMooseMetaClass 2.1403
+      Moose::Exception::MetaclassMustBeASubclassOfMooseMetaRole 2.1403
+      Moose::Exception::MetaclassMustBeDerivedFromClassMOPClass 2.1403
+      Moose::Exception::MetaclassNotLoaded 2.1403
+      Moose::Exception::MetaclassTypeIncompatible 2.1403
+      Moose::Exception::MethodExpectedAMetaclassObject 2.1403
+      Moose::Exception::MethodExpectsFewerArgs 2.1403
+      Moose::Exception::MethodExpectsMoreArgs 2.1403
+      Moose::Exception::MethodModifierNeedsMethodName 2.1403
+      Moose::Exception::MethodNameConflictInRoles 2.1403
+      Moose::Exception::MethodNameNotFoundInInheritanceHierarchy 2.1403
+      Moose::Exception::MethodNameNotGiven 2.1403
+      Moose::Exception::MustDefineAMethodName 2.1403
+      Moose::Exception::MustDefineAnAttributeName 2.1403
+      Moose::Exception::MustDefineAnOverloadOperator 2.1403
+      Moose::Exception::MustHaveAtLeastOneValueToEnumerate 2.1403
+      Moose::Exception::MustPassAHashOfOptions 2.1403
+      Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass 2.1403
+      Moose::Exception::MustPassAPackageNameOrAnExistingClassMOPPackageInstance 2.1403
+      Moose::Exception::MustPassEvenNumberOfArguments 2.1403
+      Moose::Exception::MustPassEvenNumberOfAttributeOptions 2.1403
+      Moose::Exception::MustProvideANameForTheAttribute 2.1403
+      Moose::Exception::MustSpecifyAtleastOneMethod 2.1403
+      Moose::Exception::MustSpecifyAtleastOneRole 2.1403
+      Moose::Exception::MustSpecifyAtleastOneRoleToApplicant 2.1403
+      Moose::Exception::MustSupplyAClassMOPAttributeInstance 2.1403
+      Moose::Exception::MustSupplyADelegateToMethod 2.1403
+      Moose::Exception::MustSupplyAMetaclass 2.1403
+      Moose::Exception::MustSupplyAMooseMetaAttributeInstance 2.1403
+      Moose::Exception::MustSupplyAnAccessorTypeToConstructWith 2.1403
+      Moose::Exception::MustSupplyAnAttributeToConstructWith 2.1403
+      Moose::Exception::MustSupplyArrayRefAsCurriedArguments 2.1403
+      Moose::Exception::MustSupplyPackageNameAndName 2.1403
+      Moose::Exception::NeedsTypeConstraintUnionForTypeCoercionUnion 2.1403
+      Moose::Exception::NeitherAttributeNorAttributeNameIsGiven 2.1403
+      Moose::Exception::NeitherClassNorClassNameIsGiven 2.1403
+      Moose::Exception::NeitherRoleNorRoleNameIsGiven 2.1403
+      Moose::Exception::NeitherTypeNorTypeNameIsGiven 2.1403
+      Moose::Exception::NoAttributeFoundInSuperClass 2.1403
+      Moose::Exception::NoBodyToInitializeInAnAbstractBaseClass 2.1403
+      Moose::Exception::NoCasesMatched 2.1403
+      Moose::Exception::NoConstraintCheckForTypeConstraint 2.1403
+      Moose::Exception::NoDestructorClassSpecified 2.1403
+      Moose::Exception::NoImmutableTraitSpecifiedForClass 2.1403
+      Moose::Exception::NoParentGivenToSubtype 2.1403
+      Moose::Exception::OnlyInstancesCanBeCloned 2.1403
+      Moose::Exception::OperatorIsRequired 2.1403
+      Moose::Exception::OverloadConflictInSummation 2.1403
+      Moose::Exception::OverloadRequiresAMetaClass 2.1403
+      Moose::Exception::OverloadRequiresAMetaMethod 2.1403
+      Moose::Exception::OverloadRequiresAMetaOverload 2.1403
+      Moose::Exception::OverloadRequiresAMethodNameOrCoderef 2.1403
+      Moose::Exception::OverloadRequiresAnOperator 2.1403
+      Moose::Exception::OverloadRequiresNamesForCoderef 2.1403
+      Moose::Exception::OverrideConflictInComposition 2.1403
+      Moose::Exception::OverrideConflictInSummation 2.1403
+      Moose::Exception::PackageDoesNotUseMooseExporter 2.1403
+      Moose::Exception::PackageNameAndNameParamsNotGivenToWrap 2.1403
+      Moose::Exception::PackagesAndModulesAreNotCachable 2.1403
+      Moose::Exception::ParameterIsNotSubtypeOfParent 2.1403
+      Moose::Exception::ReferencesAreNotAllowedAsDefault 2.1403
+      Moose::Exception::RequiredAttributeLacksInitialization 2.1403
+      Moose::Exception::RequiredAttributeNeedsADefault 2.1403
+      Moose::Exception::RequiredMethodsImportedByClass 2.1403
+      Moose::Exception::RequiredMethodsNotImplementedByClass 2.1403
+      Moose::Exception::Role::Attribute 2.1403
+      Moose::Exception::Role::AttributeName 2.1403
+      Moose::Exception::Role::Class 2.1403
+      Moose::Exception::Role::EitherAttributeOrAttributeName 2.1403
+      Moose::Exception::Role::Instance 2.1403
+      Moose::Exception::Role::InstanceClass 2.1403
+      Moose::Exception::Role::InvalidAttributeOptions 2.1403
+      Moose::Exception::Role::Method 2.1403
+      Moose::Exception::Role::ParamsHash 2.1403
+      Moose::Exception::Role::Role 2.1403
+      Moose::Exception::Role::RoleForCreate 2.1403
+      Moose::Exception::Role::RoleForCreateMOPClass 2.1403
+      Moose::Exception::Role::TypeConstraint 2.1403
+      Moose::Exception::RoleDoesTheExcludedRole 2.1403
+      Moose::Exception::RoleExclusionConflict 2.1403
+      Moose::Exception::RoleNameRequired 2.1403
+      Moose::Exception::RoleNameRequiredForMooseMetaRole 2.1403
+      Moose::Exception::RolesDoNotSupportAugment 2.1403
+      Moose::Exception::RolesDoNotSupportExtends 2.1403
+      Moose::Exception::RolesDoNotSupportInner 2.1403
+      Moose::Exception::RolesDoNotSupportRegexReferencesForMethodModifiers 2.1403
+      Moose::Exception::RolesInCreateTakesAnArrayRef 2.1403
+      Moose::Exception::RolesListMustBeInstancesOfMooseMetaRole 2.1403
+      Moose::Exception::SingleParamsToNewMustBeHashRef 2.1403
+      Moose::Exception::TriggerMustBeACodeRef 2.1403
+      Moose::Exception::TypeConstraintCannotBeUsedForAParameterizableType 2.1403
+      Moose::Exception::TypeConstraintIsAlreadyCreated 2.1403
+      Moose::Exception::TypeParameterMustBeMooseMetaType 2.1403
+      Moose::Exception::UnableToCanonicalizeHandles 2.1403
+      Moose::Exception::UnableToCanonicalizeNonRolePackage 2.1403
+      Moose::Exception::UnableToRecognizeDelegateMetaclass 2.1403
+      Moose::Exception::UndefinedHashKeysPassedToMethod 2.1403
+      Moose::Exception::UnionCalledWithAnArrayRefAndAdditionalArgs 2.1403
+      Moose::Exception::UnionTakesAtleastTwoTypeNames 2.1403
+      Moose::Exception::ValidationFailedForInlineTypeConstraint 2.1403
+      Moose::Exception::ValidationFailedForTypeConstraint 2.1403
+      Moose::Exception::WrapTakesACodeRefToBless 2.1403
+      Moose::Exception::WrongTypeConstraintGiven 2.1403
+      Moose::Exporter 2.1403
+      Moose::Intro 2.1403
+      Moose::Manual 2.1403
+      Moose::Manual::Attributes 2.1403
+      Moose::Manual::BestPractices 2.1403
+      Moose::Manual::Classes 2.1403
+      Moose::Manual::Concepts 2.1403
+      Moose::Manual::Construction 2.1403
+      Moose::Manual::Contributing 2.1403
+      Moose::Manual::Delegation 2.1403
+      Moose::Manual::Delta 2.1403
+      Moose::Manual::Exceptions 2.1403
+      Moose::Manual::Exceptions::Manifest 2.1403
+      Moose::Manual::FAQ 2.1403
+      Moose::Manual::MOP 2.1403
+      Moose::Manual::MethodModifiers 2.1403
+      Moose::Manual::MooseX 2.1403
+      Moose::Manual::Roles 2.1403
+      Moose::Manual::Support 2.1403
+      Moose::Manual::Types 2.1403
+      Moose::Manual::Unsweetened 2.1403
+      Moose::Meta::Attribute 2.1403
+      Moose::Meta::Attribute::Custom::Moose 2.1403
+      Moose::Meta::Attribute::Native 2.1403
+      Moose::Meta::Attribute::Native::Trait::Array 2.1403
+      Moose::Meta::Attribute::Native::Trait::Bool 2.1403
+      Moose::Meta::Attribute::Native::Trait::Code 2.1403
+      Moose::Meta::Attribute::Native::Trait::Counter 2.1403
+      Moose::Meta::Attribute::Native::Trait::Hash 2.1403
+      Moose::Meta::Attribute::Native::Trait::Number 2.1403
+      Moose::Meta::Attribute::Native::Trait::String 2.1403
+      Moose::Meta::Class 2.1403
+      Moose::Meta::Instance 2.1403
+      Moose::Meta::Method 2.1403
+      Moose::Meta::Method::Accessor 2.1403
+      Moose::Meta::Method::Augmented 2.1403
+      Moose::Meta::Method::Constructor 2.1403
+      Moose::Meta::Method::Delegation 2.1403
+      Moose::Meta::Method::Destructor 2.1403
+      Moose::Meta::Method::Meta 2.1403
+      Moose::Meta::Method::Overridden 2.1403
+      Moose::Meta::Role 2.1403
+      Moose::Meta::Role::Application 2.1403
+      Moose::Meta::Role::Application::RoleSummation 2.1403
+      Moose::Meta::Role::Application::ToClass 2.1403
+      Moose::Meta::Role::Application::ToInstance 2.1403
+      Moose::Meta::Role::Application::ToRole 2.1403
+      Moose::Meta::Role::Attribute 2.1403
+      Moose::Meta::Role::Composite 2.1403
+      Moose::Meta::Role::Method 2.1403
+      Moose::Meta::Role::Method::Conflicting 2.1403
+      Moose::Meta::Role::Method::Required 2.1403
+      Moose::Meta::TypeCoercion 2.1403
+      Moose::Meta::TypeCoercion::Union 2.1403
+      Moose::Meta::TypeConstraint 2.1403
+      Moose::Meta::TypeConstraint::Class 2.1403
+      Moose::Meta::TypeConstraint::DuckType 2.1403
+      Moose::Meta::TypeConstraint::Enum 2.1403
+      Moose::Meta::TypeConstraint::Parameterizable 2.1403
+      Moose::Meta::TypeConstraint::Parameterized 2.1403
+      Moose::Meta::TypeConstraint::Registry 2.1403
+      Moose::Meta::TypeConstraint::Role 2.1403
+      Moose::Meta::TypeConstraint::Union 2.1403
+      Moose::Object 2.1403
+      Moose::Role 2.1403
+      Moose::Spec::Role 2.1403
+      Moose::Unsweetened 2.1403
+      Moose::Util 2.1403
+      Moose::Util::MetaRole 2.1403
+      Moose::Util::TypeConstraints 2.1403
+      Test::Moose 2.1403
+      metaclass 2.1403
+      oose 2.1403
+    requirements:
+      Carp 1.22
+      Class::Load 0.09
+      Class::Load::XS 0.01
+      Data::OptList 0.107
+      Devel::GlobalDestruction 0
+      Devel::OverloadInfo 0.002
+      Devel::StackTrace 1.33
+      Dist::CheckConflicts 0.02
+      Eval::Closure 0.04
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      List::MoreUtils 0.28
+      List::Util 1.33
+      MRO::Compat 0.05
+      Module::Runtime 0.014
+      Module::Runtime::Conflicts 0
+      Package::DeprecationManager 0.11
+      Package::Stash 0.32
+      Package::Stash::XS 0.24
+      Params::Util 1.00
+      Scalar::Util 1.19
+      Sub::Exporter 0.980
+      Sub::Name 0.05
+      Task::Weaken 0
+      Try::Tiny 0.17
+      parent 0.223
+      strict 1.03
+      warnings 1.03
+  MooseX-Clone-0.05
+    pathname: N/NU/NUFFIN/MooseX-Clone-0.05.tar.gz
+    provides:
+      MooseX::Clone 0.05
+      MooseX::Clone::Meta::Attribute::Trait::Clone undef
+      MooseX::Clone::Meta::Attribute::Trait::Clone::Base undef
+      MooseX::Clone::Meta::Attribute::Trait::Clone::Std undef
+      MooseX::Clone::Meta::Attribute::Trait::Copy undef
+      MooseX::Clone::Meta::Attribute::Trait::NoClone undef
+      MooseX::Clone::Meta::Attribute::Trait::StrableClone undef
+    requirements:
+      Data::Visitor 0.24
+      ExtUtils::MakeMaker 0
+      Hash::Util::FieldHash::Compat 0
+      Moose 0.74
+      Test::use::ok 0
+      namespace::clean 0.08
+  MooseX-Params-Validate-0.21
+    pathname: D/DR/DROLSKY/MooseX-Params-Validate-0.21.tar.gz
+    provides:
+      MooseX::Params::Validate 0.21
+      MooseX::Params::Validate::Exception::ValidationFailedForTypeConstraint 0.21
+    requirements:
+      Carp 0
+      Devel::Caller 0
+      ExtUtils::MakeMaker 0
+      Moose 2.1200
+      Moose::Exception 0
+      Moose::Util 0
+      Moose::Util::TypeConstraints 0
+      Params::Validate 1.15
+      Scalar::Util 0
+      Sub::Exporter 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Mozilla-CA-20141217
+    pathname: A/AB/ABH/Mozilla-CA-20141217.tar.gz
+    provides:
+      Mozilla::CA 20141217
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test 0
+      perl 5.006
+  Net-HTTP-6.07
+    pathname: M/MS/MSCHILLI/Net-HTTP-6.07.tar.gz
+    provides:
+      Net::HTTP 6.07
+      Net::HTTP::Methods 6.07
+      Net::HTTP::NB 6.04
+      Net::HTTPS 6.04
+    requirements:
+      Compress::Raw::Zlib 0
+      ExtUtils::MakeMaker 0
+      IO::Compress::Gzip 0
+      IO::Select 0
+      IO::Socket::INET 0
+      URI 0
+      perl 5.006002
+  Net-SSLeay-1.68
+    pathname: M/MI/MIKEM/Net-SSLeay-1.68.tar.gz
+    provides:
+      Net::SSLeay 1.68
+      Net::SSLeay::Handle 0.61
+    requirements:
+      ExtUtils::MakeMaker 6.36
+      MIME::Base64 0
+      Test::More 0.60_01
+      perl 5.005
+  Number-Compare-0.03
+    pathname: R/RC/RCLAMP/Number-Compare-0.03.tar.gz
+    provides:
+      Number::Compare 0.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  Package-DeprecationManager-0.13
+    pathname: D/DR/DROLSKY/Package-DeprecationManager-0.13.tar.gz
+    provides:
+      Package::DeprecationManager 0.13
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 6.30
+      List::MoreUtils 0
+      Params::Util 0
+      Sub::Install 0
+      Test::Fatal 0
+      Test::More 0.88
+      Test::Requires 0
+      strict 0
+      warnings 0
+  Package-Stash-0.37
+    pathname: D/DO/DOY/Package-Stash-0.37.tar.gz
+    provides:
+      Package::Stash 0.37
+      Package::Stash::PP 0.37
+    requirements:
+      B 0
+      Carp 0
+      Config 0
+      Dist::CheckConflicts 0.02
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      Getopt::Long 0
+      Module::Implementation 0.06
+      Package::Stash::XS 0.26
+      Scalar::Util 0
+      Symbol 0
+      Text::ParseWords 0
+      constant 0
+      strict 0
+      warnings 0
+  Package-Stash-XS-0.28
+    pathname: D/DO/DOY/Package-Stash-XS-0.28.tar.gz
+    provides:
+      Package::Stash::XS 0.28
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      XSLoader 0
+      strict 0
+      warnings 0
+  PadWalker-2.0
+    pathname: R/RO/ROBIN/PadWalker-2.0.tar.gz
+    provides:
+      PadWalker 2.0
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.008001
+  Params-Util-1.07
+    pathname: A/AD/ADAMK/Params-Util-1.07.tar.gz
+    provides:
+      Params::Util 1.07
+    requirements:
+      ExtUtils::CBuilder 0.27
+      ExtUtils::MakeMaker 6.52
+      File::Spec 0.80
+      Scalar::Util 1.18
+      Test::More 0.42
+      perl 5.00503
+  Params-Validate-1.18
+    pathname: D/DR/DROLSKY/Params-Validate-1.18.tar.gz
+    provides:
+      Attribute::Params::Validate 1.18
+      Params::Validate 1.18
+      Params::Validate::Constants 1.18
+      Params::Validate::PP 1.18
+      Params::Validate::XS 1.18
+    requirements:
+      Attribute::Handlers 0.79
+      Carp 0
+      Exporter 0
+      ExtUtils::CBuilder 0
+      Module::Build 0.28
+      Module::Implementation 0
+      Scalar::Util 1.10
+      XSLoader 0
+      attributes 0
+      perl 5.008001
+      strict 0
+      vars 0
+      warnings 0
+  Parse-CPAN-Meta-1.4414
+    pathname: D/DA/DAGOLDEN/Parse-CPAN-Meta-1.4414.tar.gz
+    provides:
+      Parse::CPAN::Meta 1.4414
+    requirements:
+      CPAN::Meta::YAML 0.011
+      Carp 0
+      Encode 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.30
+      File::Spec 0.80
+      JSON::PP 2.27200
+      strict 0
+  Path-Class-0.35
+    pathname: K/KW/KWILLIAMS/Path-Class-0.35.tar.gz
+    provides:
+      Path::Class 0.35
+      Path::Class::Dir 0.35
+      Path::Class::Entity 0.35
+      Path::Class::File 0.35
+    requirements:
+      Carp 0
+      Cwd 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.30
+      File::Copy 0
+      File::Path 0
+      File::Spec 3.26
+      File::Temp 0
+      File::stat 0
+      IO::Dir 0
+      IO::File 0
+      Module::Build 0.3601
+      Perl::OSType 0
+      Scalar::Util 0
+      overload 0
+      parent 0
+      strict 0
+  Role-Tiny-1.003004
+    pathname: H/HA/HAARG/Role-Tiny-1.003004.tar.gz
+    provides:
+      Role::Tiny 1.003004
+      Role::Tiny::With 1.003004
+    requirements:
+      Exporter 5.57
+      perl 5.006
+  SQL-Abstract-1.81
+    pathname: R/RI/RIBASUSHI/SQL-Abstract-1.81.tar.gz
+    provides:
+      SQL::Abstract 1.81
+      SQL::Abstract::Test undef
+      SQL::Abstract::Tree undef
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.59
+      Hash::Merge 0.12
+      List::Util 0
+      MRO::Compat 0.12
+      Moo 1.004002
+      Scalar::Util 0
+      Storable 0
+      Test::Deep 0.101
+      Test::Exception 0.31
+      Test::More 0.88
+      Test::Warn 0
+      Text::Balanced 2.00
+      perl 5.006
+  Scalar-List-Utils-1.41
+    pathname: P/PE/PEVANS/Scalar-List-Utils-1.41.tar.gz
+    provides:
+      List::Util 1.41
+      List::Util::XS 1.41
+      Scalar::Util 1.41
+      Sub::Util 1.41
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  Scope-Guard-0.20
+    pathname: C/CH/CHOCOLATE/Scope-Guard-0.20.tar.gz
+    provides:
+      Scope::Guard 0.20
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+      perl 5.006001
+  Socket-2.018
+    pathname: P/PE/PEVANS/Socket-2.018.tar.gz
+    provides:
+      Socket 2.018
+    requirements:
+      ExtUtils::CBuilder 0
+      ExtUtils::Constant 0.23
+      ExtUtils::MakeMaker 0
+      perl 5.006001
+  Sub-Exporter-0.987
+    pathname: R/RJ/RJBS/Sub-Exporter-0.987.tar.gz
+    provides:
+      Sub::Exporter 0.987
+      Sub::Exporter::Util 0.987
+    requirements:
+      Carp 0
+      Data::OptList 0.100
+      ExtUtils::MakeMaker 6.30
+      Params::Util 0.14
+      Sub::Install 0.92
+      strict 0
+      warnings 0
+  Sub-Exporter-Progressive-0.001011
+    pathname: F/FR/FREW/Sub-Exporter-Progressive-0.001011.tar.gz
+    provides:
+      Sub::Exporter::Progressive 0.001011
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0.88
+  Sub-Identify-0.10
+    pathname: R/RG/RGARCIA/Sub-Identify-0.10.tar.gz
+    provides:
+      Sub::Identify 0.10
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  Sub-Install-0.928
+    pathname: R/RJ/RJBS/Sub-Install-0.928.tar.gz
+    provides:
+      Sub::Install 0.928
+    requirements:
+      B 0
+      Carp 0
+      ExtUtils::MakeMaker 6.30
+      Scalar::Util 0
+      strict 0
+      warnings 0
+  Sub-Name-0.12
+    pathname: E/ET/ETHER/Sub-Name-0.12.tar.gz
+    provides:
+      Sub::Name 0.12
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      XSLoader 0
+      strict 0
+      warnings 0
+  Sub-Uplevel-0.25
+    pathname: D/DA/DAGOLDEN/Sub-Uplevel-0.25.tar.gz
+    provides:
+      Sub::Uplevel 0.25
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 6.17
+      constant 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Task-Weaken-1.04
+    pathname: A/AD/ADAMK/Task-Weaken-1.04.tar.gz
+    provides:
+      Task::Weaken 1.04
+    requirements:
+      ExtUtils::MakeMaker 6.42
+      File::Spec 0.80
+      Scalar::Util 1.14
+      Test::More 0.42
+      perl 5.005
+  Test-Deep-0.115
+    pathname: R/RJ/RJBS/Test-Deep-0.115.tar.gz
+    provides:
+      Test::Deep 0.115
+      Test::Deep::All undef
+      Test::Deep::Any undef
+      Test::Deep::Array undef
+      Test::Deep::ArrayEach undef
+      Test::Deep::ArrayElementsOnly undef
+      Test::Deep::ArrayLength undef
+      Test::Deep::ArrayLengthOnly undef
+      Test::Deep::Blessed undef
+      Test::Deep::Boolean undef
+      Test::Deep::Cache undef
+      Test::Deep::Cache::Simple undef
+      Test::Deep::Class undef
+      Test::Deep::Cmp undef
+      Test::Deep::Code undef
+      Test::Deep::Hash undef
+      Test::Deep::HashEach undef
+      Test::Deep::HashElements undef
+      Test::Deep::HashKeys undef
+      Test::Deep::HashKeysOnly undef
+      Test::Deep::Ignore undef
+      Test::Deep::Isa undef
+      Test::Deep::ListMethods undef
+      Test::Deep::MM undef
+      Test::Deep::Methods undef
+      Test::Deep::NoTest undef
+      Test::Deep::Number undef
+      Test::Deep::Obj undef
+      Test::Deep::Ref undef
+      Test::Deep::RefType undef
+      Test::Deep::Regexp undef
+      Test::Deep::RegexpMatches undef
+      Test::Deep::RegexpOnly undef
+      Test::Deep::RegexpRef undef
+      Test::Deep::RegexpRefOnly undef
+      Test::Deep::RegexpVersion undef
+      Test::Deep::ScalarRef undef
+      Test::Deep::ScalarRefOnly undef
+      Test::Deep::Set undef
+      Test::Deep::Shallow undef
+      Test::Deep::Stack undef
+      Test::Deep::String undef
+      Test::Deep::SubHash undef
+      Test::Deep::SubHashElements undef
+      Test::Deep::SubHashKeys undef
+      Test::Deep::SubHashKeysOnly undef
+      Test::Deep::SuperHash undef
+      Test::Deep::SuperHashElements undef
+      Test::Deep::SuperHashKeys undef
+      Test::Deep::SuperHashKeysOnly undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      List::Util 1.09
+      Scalar::Util 1.09
+      Test::Builder 0
+  Test-Differences-0.63
+    pathname: D/DC/DCANTRELL/Test-Differences-0.63.tar.gz
+    provides:
+      Test::Differences 0.63
+    requirements:
+      Capture::Tiny 0.24
+      Data::Dumper 2.126
+      Test::More 0
+      Text::Diff 0.35
+  Test-Exception-0.36
+    pathname: E/EX/EXODIST/Test-Exception-0.36.tar.gz
+    provides:
+      Test::Exception 0.36
+    requirements:
+      Sub::Uplevel 0.18
+      Test::Builder 0.7
+      Test::Builder::Tester 1.07
+      Test::Harness 2.03
+      Test::More 0.7
+      Test::Simple 0.7
+  Test-Fatal-0.014
+    pathname: R/RJ/RJBS/Test-Fatal-0.014.tar.gz
+    provides:
+      Test::Fatal 0.014
+    requirements:
+      Carp 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Test::Builder 0
+      Try::Tiny 0.07
+      strict 0
+      warnings 0
+  Test-Harness-3.35
+    pathname: L/LE/LEONT/Test-Harness-3.35.tar.gz
+    provides:
+      App::Prove 3.35
+      App::Prove::State 3.35
+      App::Prove::State::Result 3.35
+      App::Prove::State::Result::Test 3.35
+      Harness::Hook undef
+      TAP::Base 3.35
+      TAP::Formatter::Base 3.35
+      TAP::Formatter::Color 3.35
+      TAP::Formatter::Console 3.35
+      TAP::Formatter::Console::ParallelSession 3.35
+      TAP::Formatter::Console::Session 3.35
+      TAP::Formatter::File 3.35
+      TAP::Formatter::File::Session 3.35
+      TAP::Formatter::Session 3.35
+      TAP::Harness 3.35
+      TAP::Harness::Env 3.35
+      TAP::Object 3.35
+      TAP::Parser 3.35
+      TAP::Parser::Aggregator 3.35
+      TAP::Parser::Grammar 3.35
+      TAP::Parser::Iterator 3.35
+      TAP::Parser::Iterator::Array 3.35
+      TAP::Parser::Iterator::Process 3.35
+      TAP::Parser::Iterator::Stream 3.35
+      TAP::Parser::IteratorFactory 3.35
+      TAP::Parser::Multiplexer 3.35
+      TAP::Parser::Result 3.35
+      TAP::Parser::Result::Bailout 3.35
+      TAP::Parser::Result::Comment 3.35
+      TAP::Parser::Result::Plan 3.35
+      TAP::Parser::Result::Pragma 3.35
+      TAP::Parser::Result::Test 3.35
+      TAP::Parser::Result::Unknown 3.35
+      TAP::Parser::Result::Version 3.35
+      TAP::Parser::Result::YAML 3.35
+      TAP::Parser::ResultFactory 3.35
+      TAP::Parser::Scheduler 3.35
+      TAP::Parser::Scheduler::Job 3.35
+      TAP::Parser::Scheduler::Spinner 3.35
+      TAP::Parser::Source 3.35
+      TAP::Parser::SourceHandler 3.35
+      TAP::Parser::SourceHandler::Executable 3.35
+      TAP::Parser::SourceHandler::File 3.35
+      TAP::Parser::SourceHandler::Handle 3.35
+      TAP::Parser::SourceHandler::Perl 3.35
+      TAP::Parser::SourceHandler::RawTAP 3.35
+      TAP::Parser::YAMLish::Reader 3.35
+      TAP::Parser::YAMLish::Writer 3.35
+      Test::Harness 3.35
+    requirements:
+      ExtUtils::MakeMaker 0
+  Test-MockObject-1.20140408
+    pathname: C/CH/CHROMATIC/Test-MockObject-1.20140408.tar.gz
+    provides:
+      Test::MockObject 1.20140408
+      Test::MockObject::Extends 1.20140408
+    requirements:
+      CGI 0
+      Carp 0
+      Devel::Peek 0
+      ExtUtils::MakeMaker 6.30
+      Scalar::Util 0
+      Test::Builder 0
+      Test::Exception 0.31
+      Test::More 0.98
+      Test::Warn 0.23
+      UNIVERSAL::can 1.20110617
+      UNIVERSAL::isa 1.20110614
+      constant 0
+      strict 0
+      warnings 0
+  Test-Most-0.34
+    pathname: O/OV/OVID/Test-Most-0.34.tar.gz
+    provides:
+      Test::Most 0.34
+      Test::Most::Exception 0.34
+    requirements:
+      Exception::Class 1.14
+      ExtUtils::MakeMaker 0
+      Test::Deep 0.106
+      Test::Differences 0.61
+      Test::Exception 0.31
+      Test::Harness 3.21
+      Test::More 0.88
+      Test::Warn 0.23
+  Test-Requires-0.08
+    pathname: T/TO/TOKUHIROM/Test-Requires-0.08.tar.gz
+    provides:
+      Test::Requires 0.08
+    requirements:
+      ExtUtils::MakeMaker 6.64
+      Test::Builder::Module 0
+      Test::More 0.61
+      perl 5.008_001
+  Test-SharedFork-0.29
+    pathname: E/EX/EXODIST/Test-SharedFork-0.29.tar.gz
+    provides:
+      Test::SharedFork 0.29
+      Test::SharedFork::Array undef
+      Test::SharedFork::Scalar undef
+      Test::SharedFork::Store undef
+    requirements:
+      ExtUtils::MakeMaker 6.64
+      File::Temp 0
+      Test::Builder 0.32
+      Test::Builder::Module 0
+      Test::More 0.88
+      perl 5.008_001
+  Test-Simple-1.001014
+    pathname: E/EX/EXODIST/Test-Simple-1.001014.tar.gz
+    provides:
+      Test::Builder 1.001014
+      Test::Builder::IO::Scalar 2.113
+      Test::Builder::Module 1.001014
+      Test::Builder::Tester 1.28
+      Test::Builder::Tester::Color 1.290001
+      Test::Builder::Tester::Tie 1.28
+      Test::More 1.001014
+      Test::Simple 1.001014
+      Test::Tester 0.114
+      Test::Tester::Capture undef
+      Test::Tester::CaptureRunner undef
+      Test::Tester::Delegate undef
+      Test::use::ok 0.16
+      ok 0.16
+    requirements:
+      ExtUtils::MakeMaker 0
+      Scalar::Util 1.13
+      Test::Harness 2.03
+      perl 5.006
+  Test-Warn-0.30
+    pathname: C/CH/CHORNY/Test-Warn-0.30.tar.gz
+    provides:
+      Test::Warn 0.30
+      Test::Warn::Categorization 0.30
+    requirements:
+      Carp 1.22
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      Sub::Uplevel 0.12
+      Test::Builder 0.13
+      Test::Builder::Tester 1.02
+      Test::More 0
+      perl 5.006
+  Text-Diff-1.41
+    pathname: O/OV/OVID/Text-Diff-1.41.tar.gz
+    provides:
+      Text::Diff 1.41
+      Text::Diff::Base 1.41
+      Text::Diff::Config 1.41
+      Text::Diff::Table 1.41
+    requirements:
+      Algorithm::Diff 1.19
+      Exporter 0
+      ExtUtils::MakeMaker 0
+  Text-Glob-0.09
+    pathname: R/RC/RCLAMP/Text-Glob-0.09.tar.gz
+    provides:
+      Text::Glob 0.09
+    requirements:
+      Test::More 0
+  Tie-ToObject-0.03
+    pathname: N/NU/NUFFIN/Tie-ToObject-0.03.tar.gz
+    provides:
+      Tie::ToObject 0.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      Scalar::Util 0
+      Test::More 0
+      Test::use::ok 0
+      Tie::RefHash 0
+  Try-Tiny-0.22
+    pathname: D/DO/DOY/Try-Tiny-0.22.tar.gz
+    provides:
+      Try::Tiny 0.22
+    requirements:
+      Carp 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.30
+      constant 0
+      strict 0
+      warnings 0
+  Types-Serialiser-1.0
+    pathname: M/ML/MLEHMANN/Types-Serialiser-1.0.tar.gz
+    provides:
+      JSON::PP::Boolean 1.0
+      Types::Serialiser 1.0
+      Types::Serialiser::BooleanBase 1.0
+      Types::Serialiser::Error 1.0
+    requirements:
+      ExtUtils::MakeMaker 0
+      common::sense 0
+  UNIVERSAL-can-1.20140328
+    pathname: C/CH/CHROMATIC/UNIVERSAL-can-1.20140328.tar.gz
+    provides:
+      UNIVERSAL::can 1.20140328
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      Scalar::Util 0
+      strict 0
+      vars 0
+      warnings 0
+      warnings::register 0
+  UNIVERSAL-isa-1.20140927
+    pathname: E/ET/ETHER/UNIVERSAL-isa-1.20140927.tar.gz
+    provides:
+      UNIVERSAL::isa 1.20140927
+    requirements:
+      ExtUtils::MakeMaker 0
+      Module::Build::Tiny 0.038
+      Scalar::Util 0
+      UNIVERSAL 0
+      perl v5.6.2
+      strict 0
+      warnings 0
+      warnings::register 0
+  URI-1.65
+    pathname: E/ET/ETHER/URI-1.65.tar.gz
+    provides:
+      URI 1.65
+      URI::Escape 3.31
+      URI::Heuristic 4.20
+      URI::IRI undef
+      URI::QueryParam undef
+      URI::Split undef
+      URI::URL 5.04
+      URI::WithBase 2.20
+      URI::_foreign undef
+      URI::_generic undef
+      URI::_idna undef
+      URI::_ldap 1.65
+      URI::_login undef
+      URI::_punycode 1.65
+      URI::_query undef
+      URI::_segment undef
+      URI::_server undef
+      URI::_userpass undef
+      URI::data 1.65
+      URI::file 4.21
+      URI::file::Base undef
+      URI::file::FAT undef
+      URI::file::Mac undef
+      URI::file::OS2 undef
+      URI::file::QNX undef
+      URI::file::Unix undef
+      URI::file::Win32 undef
+      URI::ftp undef
+      URI::gopher undef
+      URI::http undef
+      URI::https undef
+      URI::ldap 1.65
+      URI::ldapi undef
+      URI::ldaps undef
+      URI::mailto undef
+      URI::mms undef
+      URI::news undef
+      URI::nntp undef
+      URI::pop undef
+      URI::rlogin undef
+      URI::rsync undef
+      URI::rtsp undef
+      URI::rtspu undef
+      URI::sip 1.65
+      URI::sips undef
+      URI::snews undef
+      URI::ssh undef
+      URI::telnet undef
+      URI::tn3270 undef
+      URI::urn undef
+      URI::urn::isbn undef
+      URI::urn::oid undef
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      MIME::Base64 2
+      Scalar::Util 0
+      parent 0
+      perl 5.008001
+      utf8 0
+  URI-Encode-v1.0.1
+    pathname: M/MI/MITHUN/URI-Encode-v1.0.1.tar.gz
+    provides:
+      URI::Encode v1.0.1
+    requirements:
+      Encode 2.12
+      Module::Build 0.38
+      Test::More 0
+      perl v5.8.1
+      version 0
+  Variable-Magic-0.55
+    pathname: V/VP/VPIT/Variable-Magic-0.55.tar.gz
+    provides:
+      Variable::Magic 0.55
+    requirements:
+      Carp 0
+      Config 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      Test::More 0
+      XSLoader 0
+      base 0
+      perl 5.008
+  WWW-RobotRules-6.02
+    pathname: G/GA/GAAS/WWW-RobotRules-6.02.tar.gz
+    provides:
+      WWW::RobotRules 6.02
+      WWW::RobotRules::AnyDBM_File 6.00
+      WWW::RobotRules::InCore 6.02
+    requirements:
+      AnyDBM_File 0
+      ExtUtils::MakeMaker 0
+      Fcntl 0
+      URI 1.10
+      perl 5.008001
+  XML-NamespaceSupport-1.11
+    pathname: P/PE/PERIGRIN/XML-NamespaceSupport-1.11.tar.gz
+    provides:
+      XML::NamespaceSupport 1.11
+    requirements:
+      ExtUtils::MakeMaker 6.42
+      Test::More 0.47
+  XML-Parser-2.44
+    pathname: T/TO/TODDR/XML-Parser-2.44.tar.gz
+    provides:
+      XML::Parser 2.44
+      XML::Parser::Expat 2.44
+      XML::Parser::Style::Debug undef
+      XML::Parser::Style::Objects undef
+      XML::Parser::Style::Stream undef
+      XML::Parser::Style::Subs undef
+      XML::Parser::Style::Tree undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      LWP::UserAgent 0
+      Test::More 0
+      perl 5.00405
+  XML-SAX-0.99
+    pathname: G/GR/GRANTM/XML-SAX-0.99.tar.gz
+    provides:
+      XML::SAX 0.99
+      XML::SAX::DocumentLocator undef
+      XML::SAX::ParserFactory 1.01
+      XML::SAX::PurePerl 0.99
+      XML::SAX::PurePerl::DebugHandler undef
+      XML::SAX::PurePerl::Exception undef
+      XML::SAX::PurePerl::Productions undef
+      XML::SAX::PurePerl::Reader undef
+      XML::SAX::PurePerl::Reader::Stream undef
+      XML::SAX::PurePerl::Reader::String undef
+      XML::SAX::PurePerl::Reader::URI undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Temp 0
+      XML::NamespaceSupport 0.03
+      XML::SAX::Base 1.05
+  XML-SAX-Base-1.08
+    pathname: G/GR/GRANTM/XML-SAX-Base-1.08.tar.gz
+    provides:
+      XML::SAX::Base 1.08
+      XML::SAX::Base::NoHandler 1.08
+      XML::SAX::Exception 1.08
+    requirements:
+      ExtUtils::MakeMaker 6.31
+      Test::More 0.88
+  XML-SAX-Expat-0.51
+    pathname: B/BJ/BJOERN/XML-SAX-Expat-0.51.tar.gz
+    provides:
+      XML::SAX::Expat 0.51
+    requirements:
+      ExtUtils::MakeMaker 0
+      XML::NamespaceSupport 0.03
+      XML::Parser 2.27
+      XML::SAX 0.03
+      XML::SAX::Base 1.00
+  XML-Simple-2.20
+    pathname: G/GR/GRANTM/XML-Simple-2.20.tar.gz
+    provides:
+      XML::Simple 2.20
+    requirements:
+      ExtUtils::MakeMaker 6.31
+      Test::More 0.88
+      XML::NamespaceSupport 1.04
+      XML::SAX 0.15
+      XML::SAX::Expat 0
+  XML-Twig-3.48
+    pathname: M/MI/MIROD/XML-Twig-3.48.tar.gz
+    provides:
+      XML::Twig 3.48
+      XML::Twig::Elt 3.48
+      XML::Twig::Entity 3.48
+      XML::Twig::Entity_list 3.48
+      XML::Twig::XPath 0.02
+      XML::Twig::XPath::Attribute 0.02
+      XML::Twig::XPath::Elt 0.02
+      XML::Twig::XPath::Namespace 0.02
+      XML::XPath::NodeSet 0.02
+      XML::XPathEngine::NodeSet 0.02
+    requirements:
+      ExtUtils::MakeMaker 0
+      XML::Parser 2.23
+  bareword-filehandles-0.003
+    pathname: I/IL/ILMARI/bareword-filehandles-0.003.tar.gz
+    provides:
+      bareword::filehandles 0.003
+    requirements:
+      B::Hooks::OP::Check 0
+      ExtUtils::Depends 0
+      ExtUtils::MakeMaker 6.31
+      Lexical::SealRequireHints 0
+      Test::More 0.88
+      XSLoader 0
+  common-sense-3.73
+    pathname: M/ML/MLEHMANN/common-sense-3.73.tar.gz
+    provides:
+      common::sense 3.73
+    requirements:
+      ExtUtils::MakeMaker 0
+  indirect-0.33
+    pathname: V/VP/VPIT/indirect-0.33.tar.gz
+    provides:
+      indirect 0.33
+    requirements:
+      Carp 0
+      Config 0
+      ExtUtils::MakeMaker 0
+      Test::More 0
+      XSLoader 0
+      perl 5.008001
+  libwww-perl-6.13
+    pathname: E/ET/ETHER/libwww-perl-6.13.tar.gz
+    provides:
+      LWP 6.13
+      LWP::Authen::Basic undef
+      LWP::Authen::Digest undef
+      LWP::Authen::Ntlm 6.13
+      LWP::ConnCache 6.13
+      LWP::Debug undef
+      LWP::DebugFile undef
+      LWP::MemberMixin undef
+      LWP::Protocol 6.13
+      LWP::Protocol::GHTTP undef
+      LWP::Protocol::MyFTP undef
+      LWP::Protocol::cpan undef
+      LWP::Protocol::data undef
+      LWP::Protocol::file undef
+      LWP::Protocol::ftp undef
+      LWP::Protocol::gopher undef
+      LWP::Protocol::http undef
+      LWP::Protocol::http::Socket undef
+      LWP::Protocol::http::SocketMethods undef
+      LWP::Protocol::loopback undef
+      LWP::Protocol::mailto undef
+      LWP::Protocol::nntp undef
+      LWP::Protocol::nogo undef
+      LWP::RobotUA 6.13
+      LWP::Simple 6.13
+      LWP::UserAgent 6.13
+    requirements:
+      Digest::MD5 0
+      Encode 2.12
+      Encode::Locale 0
+      ExtUtils::MakeMaker 0
+      File::Listing 6
+      HTML::Entities 0
+      HTML::HeadParser 0
+      HTTP::Cookies 6
+      HTTP::Daemon 6
+      HTTP::Date 6
+      HTTP::Negotiate 6
+      HTTP::Request 6
+      HTTP::Request::Common 6
+      HTTP::Response 6
+      HTTP::Status 6
+      IO::Select 0
+      IO::Socket 0
+      LWP::MediaTypes 6
+      MIME::Base64 2.1
+      Net::FTP 2.58
+      Net::HTTP 6.07
+      URI 1.10
+      URI::Escape 0
+      WWW::RobotRules 6
+      perl 5.008001
+  multidimensional-0.011
+    pathname: I/IL/ILMARI/multidimensional-0.011.tar.gz
+    provides:
+      multidimensional 0.011
+    requirements:
+      B::Hooks::OP::Check 0.19
+      CPAN::Meta 2.112580
+      ExtUtils::Depends 0
+      ExtUtils::MakeMaker 6.30
+      Lexical::SealRequireHints 0.005
+      Test::More 0.88
+      XSLoader 0
+      strict 0
+      warnings 0
+  namespace-clean-0.25
+    pathname: R/RI/RIBASUSHI/namespace-clean-0.25.tar.gz
+    provides:
+      namespace::clean 0.25
+    requirements:
+      B::Hooks::EndOfScope 0.12
+      ExtUtils::CBuilder 0.27
+      Package::Stash 0.23
+      Test::More 0.88
+  strictures-1.005006
+    pathname: H/HA/HAARG/strictures-1.005006.tar.gz
+    provides:
+      strictures 1.005006
+    requirements:
+      bareword::filehandles 0
+      indirect 0
+      multidimensional 0
+      perl 5.006
+  version-0.9912
+    pathname: J/JP/JPEACOCK/version-0.9912.tar.gz
+    provides:
+      charstar 0.9912
+      version 0.9912
+      version::regex 0.9912
+      version::vpp 0.9912
+      version::vxs 0.9912
+    requirements:
+      ExtUtils::MakeMaker 6.17
+      File::Temp 0.13
+      Test::More 0.45
+      parent 0.221
+      perl 5.006002
