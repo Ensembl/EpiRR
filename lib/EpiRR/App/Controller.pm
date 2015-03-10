@@ -23,7 +23,6 @@ has 'output_service' => (
 );
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
-
 sub fetch_current {
     my ($self) = @_;
 
@@ -32,80 +31,30 @@ sub fetch_current {
         { is_current => 1 },
         {
             prefetch => {
-                dataset => ['project'],
-                type    => [],
-                status  => [],
-                raw_datas => ['archive'],
-                meta_datas => [],
+                dataset    => ['project'],
+                type       => [],
+                status     => [],
             },
             collapse => 1,
         }
     );
-    my @dsv = map { $os->db_to_user($_) } @current_data_sets;
+    my @dsv = map { $os->db_to_user_summary($_) } @current_data_sets;
     return \@dsv;
 }
 
-sub fetch_decorated_current {
-    my ($self) = @_;
-
-    my $datasets = $self->fetch_current();
-
-    my @d_datasets = map { _decorate($_) } @$datasets;
-
-    return \@d_datasets;
-}
-
-sub _decorate {
-    my ($dataset) = @_;
-    my $decorated = $dataset->to_hash();
-
-    delete $decorated->{meta_data};
-    delete $decorated->{raw_data};
-
-    my @desc_keys = qw(
-      disease   biomaterial_type line
-      donor_id  pool_id
-      cell_type tissue_type
-    );
-    my @tags =
-      grep { $_ && lc($_) ne 'na' && lc($_) ne 'none' }
-      $dataset->get_meta_data(@desc_keys);
-
-    $decorated->{auto_desc} = join( ',', @tags );
-
-    for my $kv ( $dataset->meta_data_kv() ) {
-        my $k = 'md_' . $kv->[0];
-        $decorated->{$k} = $kv->[1];
-    }
-
-    for my $rd ( $dataset->all_raw_data ) {
-        my $url_key;
-
-        if ( $rd->assay_type eq 'ChIP-Seq' ) {
-            $url_key = $rd->experiment_type();
-            $url_key =~ s/histone //i;
-        }
-        else {
-            $url_key = $rd->assay_type();
-        }
-
-        $url_key = lc($url_key);
-
-        $url_key =~ tr/ -/__/;
-
-        $decorated->{urls}{$url_key} = $rd->archive_url();
-    }
-
-    return $decorated;
-}
 
 sub fetch {
     my ( $self, $id ) = @_;
 
-    my $data_set_version =
-      $self->schema->dataset()->find( { accession => $id, } )
-      ->search_related( 'dataset_versions', { is_current => 1 } )->first();
+    my $data_set = $self->schema->dataset()->find( { accession => $id, } );
+    my $data_set_version;
 
+    if ($data_set) {
+        $data_set_version =
+          $data_set->search_related( 'dataset_versions', { is_current => 1 } )
+          ->first();
+    }
+    
     if ( !$data_set_version ) {
         $data_set_version =
           $self->schema->dataset_version()->find( { full_accession => $id } );

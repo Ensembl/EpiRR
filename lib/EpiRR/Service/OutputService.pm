@@ -21,6 +21,28 @@ use EpiRR::Model::RawData;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
+
+sub db_to_user_summary {
+  my ($self, $dsv) = @_;
+  
+  confess("No DatasetVersion passed") unless $dsv;
+  confess("Argument must be a DatasetVersion")
+    unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
+    
+    my $d = EpiRR::Model::DatasetSummary->new(
+        project        => $dsv->dataset()->project()->name(),
+        status         => $dsv->status()->name(),
+        full_accession => $dsv->full_accession(),
+        accession      => $dsv->dataset()->accession(),
+        version        => $dsv->version(),
+        local_name     => $dsv->dataset()->local_name(),
+        description    => $dsv->description(),
+        type           => $dsv->type()->name(),
+    );
+        
+    return $d;  
+}
+
 sub db_to_user {
     my ( $self, $dsv ) = @_;
 

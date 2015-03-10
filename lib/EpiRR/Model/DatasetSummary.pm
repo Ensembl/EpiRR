@@ -11,7 +11,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-package EpiRR::Model::Dataset;
+package EpiRR::Model::DatasetSummary;
 
 use strict;
 use warnings;
@@ -19,29 +19,35 @@ use warnings;
 use Moose;
 use namespace::autoclean;
 
-extends 'EpiRR::Model::DatasetSummary';
-with 'EpiRR::Roles::HasMetaData';
-
-has 'raw_data' => (
-    traits  => ['Array'],
-    is      => 'rw',
-    isa     => 'ArrayRef[EpiRR::Model::RawData]',
-    handles => {
-        all_raw_data   => 'elements',
-        add_raw_data   => 'push',
-        map_raw_data   => 'map',
-        raw_data_count => 'count',
-        has_raw_data   => 'count',
-        get_raw_data   => 'get',
-    },
-    default => sub { [] },
+has 'project' => (
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    default   => '',
+    predicate => 'has_project'
 );
+has 'status' => ( is => 'rw', isa => 'Str', default => '', );
+has 'type'   => ( is => 'rw', isa => 'Str', default => '', );
+
+has 'accession' => (
+    is        => 'rw',
+    isa       => 'Maybe[Str]',
+    default   => '',
+    predicate => 'has_accession'
+);
+has 'full_accession' => (
+    is  => 'rw',
+    isa => 'Maybe[Str]',
+);
+has 'version' => (
+    is  => 'rw',
+    isa => 'Maybe[Int]',
+);
+
+has 'local_name'  => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
+has 'description' => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 
 sub to_hash {
     my ($self) = @_;
-
-    my @raw_data = map { $_->to_hash() } $self->all_raw_data();
-    my %meta_data = $self->all_meta_data();
 
     return {
         project        => $self->project,
@@ -52,10 +58,12 @@ sub to_hash {
         description    => $self->description,
         full_accession => $self->full_accession,
         version        => $self->version,
-        raw_data       => \@raw_data,
-        meta_data      => \%meta_data,
     };
 }
 
+sub TO_JSON {
+    my ($self) = @_;
+    return $self->to_hash();
+}
 __PACKAGE__->meta->make_immutable;
 1;
