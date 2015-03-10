@@ -93,7 +93,10 @@ __DATA__
 @@ viewid.html.ep
 <!DOCTYPE html>
 <html>
-<head><title><%= $dataset->full_accession %></title></head>
+<head>
+<title><%= $dataset->full_accession %></title>
+<link href="../favicon.ico" rel="icon" type="image/x-icon" /> 
+</head>
 <body>
 <h1><%= $dataset->full_accession %></h1>
 <dl>
@@ -140,7 +143,10 @@ __DATA__
 @@ viewall.html.ep
 <!DOCTYPE html>
 <html>
-<head><title>EpiRR Datasets</title></head>
+<head>
+<title>EpiRR Datasets</title>
+<link href="../favicon.ico" rel="icon" type="image/x-icon" /> 
+</head>
 <body>
 <h1>EpiRR Datasets</h1>
 <table>
