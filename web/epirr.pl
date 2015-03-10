@@ -85,10 +85,41 @@ get '/view/#id' => sub {
     );
 };
 
+get '/' => sub {
+  my $self = shift;
+  $self->render(template =>  'index');
+};
+
 # Start the Mojolicious command system
 app->start;
 
 __DATA__
+
+@@ index.html.ep
+<!DOCTYPE html>
+<html>
+<head>
+<title>EpiRR Endpoints</title>
+</head>
+<body>
+<h1>EpiRR REST API</h1>
+<h2>Endpoints</h2>
+<dl>
+<dt>/view/:id</dt>
+<dd>View the detail of one reference dataset</dt>
+<dt>/view/all</dt>
+<dd>List all current datasets</dt>
+</dl>
+<h2>Response types</h2>
+<p>Append ?format=x to the end of your query to control the format<p>
+<pFormats available:</p>
+<ul>
+<li>json</li>
+<li>html</li>
+</ul>
+<p>Alternatively, use the accept header.</p>
+</body>
+</html>
 
 @@ viewid.html.ep
 <!DOCTYPE html>
