@@ -34,27 +34,140 @@ my $controller =
 
 get '/view/all' => sub {
     my $self = shift;
-    $self->render( json => $controller->fetch_current() );
+
+    my $datasets = $controller->fetch_current();
+
+    $self->respond_to(
+        json => sub {
+            my $url  = $self->req->url->to_abs;
+            my $path = $url->path;
+
+            my @hash_datasets;
+            for my $d (@$datasets) {
+                my $hd = $d->to_hash;
+                my $full_accession = $d->full_accession;
+
+                my $link_path = $path;
+                $link_path =~ s!/view/all!/view/$full_accession!;
+                $link_path =~ s/\.json$//;
+                
+                $url->path($link_path);
+                
+                $hd->{_links}{self} = "$url";
+                push @hash_datasets, $hd;
+            }
+
+            $self->render( json => \@hash_datasets );
+        },
+        html => sub {
+            $self->stash( datasets => $datasets );
+            $self->render( template => 'viewall' );
+        },
+    );
+
 };
 
-get '/view/decorated/all' => sub {
-    my $self = shift;
-    $self->render( json => $controller->fetch_decorated_current() );
-};
-
-get '/view/:id' => sub {
+get '/view/#id' => sub {
     my $self    = shift;
     my $id      = $self->param('id');
     my $dataset = $controller->fetch($id);
-    if ($dataset) {
-        $self->render( json => $dataset );
+
+    if ( !$dataset ) {
+        $self->reply->not_found;
+        return;
     }
-    else {
-        $self->res->code(404);
-        $self->res->message('Not Found');
-        $self->render();
-    }
+    $self->respond_to(
+        json => { json => $dataset },
+        html => sub {
+            $self->stash( dataset => $dataset );
+            $self->render( template => 'viewid' );
+        },
+    );
 };
 
 # Start the Mojolicious command system
 app->start;
+
+__DATA__
+
+@@ viewid.html.ep
+<!DOCTYPE html>
+<html>
+<head><title><%= $dataset->full_accession %></title></head>
+<body>
+<h1><%= $dataset->full_accession %></h1>
+<dl>
+  <dt>Type</dt><dd><%= $dataset->type %></dd>
+  <dt>Status</dt><dd><%= $dataset->status %></dd>
+  <dt>Project</dt><dd><%= $dataset->project %></dd>
+  <dt>Local name</dt><dd><%= $dataset->local_name %></dd>
+  <dt>Description</dt><dd><%= $dataset->description %></dd>
+</dl>
+<h2>Metadata</h2>
+<dl>
+% for my $kv ($dataset->meta_data_kv) {
+  <dt><%= $kv->[0] %></dt><dd><%= $kv->[1] %></dd>  
+% }
+</dl>
+<h2>Raw data</h2>
+<table>
+<thead>
+<tr>
+<th>Assay type</th>
+<th>Experiment type</th>
+<th>Archive</th>
+<th>Primary ID</th>
+<th>Secondary ID</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+% for my $rd ($dataset->all_raw_data) {
+  <tr>
+  <td><%= $rd->assay_type %></td>
+  <td><%= $rd->experiment_type %></td>
+  <td><%= $rd->archive %></td>
+  <td><%= $rd->primary_id %></td>
+  <td><%= $rd->secondary_id %></td>
+  <td><a href="<%= $rd->archive_url %>">View in archive</a></td>
+  </tr>
+% }
+</tbody>
+</table>
+</body>
+</html>
+
+@@ viewall.html.ep
+<!DOCTYPE html>
+<html>
+<head><title>EpiRR Datasets</title></head>
+<body>
+<h1>EpiRR Datasets</h1>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Type</th>
+<th>Status</th>
+<th>ID</th>
+<th>Local name</th>
+<th>Description</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+% for my $d (@$datasets) {
+  <tr>
+  <td><%= $d->project %></td>
+  <td><%= $d->type %></td>
+  <td><%= $d->status %></td>
+  <td><%= $d->full_accession %></td>
+  <td><%= $d->local_name %></td>
+  <td><%= $d->description %></td>
+  <td><a href="./<%= $d->full_accession %>">Detail</a></td>
+  </tr>
+% }
+</tbody>
+</table>
+</body>
+</html>
