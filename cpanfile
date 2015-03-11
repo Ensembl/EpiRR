@@ -12,6 +12,7 @@ requires 'Mojolicious';
 requires 'Bio::DB::EUtilities';
 requires 'Data::Compare';
 requires 'namespace::autoclean';
+requires 'Try::Tiny';
 
 on 'test' => sub {
   requires 'Test::More';

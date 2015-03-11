@@ -32,6 +32,7 @@ has 'dataset'     => (
 sub _close {
     my ($self) = @_;
     close $self->file_handle();
+    $self->file_handle(undef);
 }
 
 sub _open {
@@ -44,7 +45,7 @@ sub _open {
 sub add_error {
     my ( $self, $text ) = @_;
 
-    if ( $self->file_path() ) {
+    if ( $self->file_handle() ) {
         $text .= ' at line ';
         $text .= $.; # $. is the line number of the last accessed file handle
     }

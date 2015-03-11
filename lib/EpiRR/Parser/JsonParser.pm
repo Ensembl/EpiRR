@@ -27,7 +27,7 @@ use EpiRR::Model::RawData;
 use Moose;
 use JSON;
 use Carp;
-
+use Try::Tiny;
 with 'EpiRR::Roles::InputParser';
 
 =head1 NAME
@@ -36,24 +36,34 @@ EpiRR::Parser::JSONParser
 
 Parses JSON to produce EpiRR::Model::Dataset objects.
 
-
-
 =cut
 
 sub parse {
     my ($self) = @_;
 
-    my $json      = $self->_get_string();
-    my $perl_data = decode_json($json);
-    $self->convert_dataset($perl_data);
+    my ( $json, $perl_data );
+    try {
+        $json = $self->_get_string();
+    }
+    catch {
+        $self->add_error("Could not get JSON");
+    };
+    try {
+        $perl_data = decode_json($json) if ($json);
+    }
+    catch {
+        $self->add_error("Not a valid JSON file");
+    };
+
+    $self->convert_dataset($perl_data) if ($perl_data);
 }
 
 sub _get_string {
     my ($self) = @_;
-    
+
     my $string = $self->string();
-    
-    if (!$string) {
+
+    if ( !$string ) {
         local $/ = undef;
         $self->_open();
         my $fh = $self->file_handle();
@@ -72,6 +82,15 @@ sub convert_dataset {
 
     my $rawdata_ref = delete $dataset{raw_data};
     my $raw_data = [ map { EpiRR::Model::RawData->new(%$_) } @$rawdata_ref ];
+
+    my %rd_ids;
+    for my $rd (@$raw_data){
+      my $key = join('#',$rd->primary_id,$rd->secondary_id || '');
+      $rd_ids{$key}++;
+      if ($rd_ids{$key} > 1){
+        $self->add_error('Duplicate raw_data values detected');
+      }
+    }
 
     $dataset{raw_data} = $raw_data;
 

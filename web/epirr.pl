@@ -117,7 +117,7 @@ __DATA__
 <li>json</li>
 <li>html</li>
 </ul>
-<p>Alternatively, use the accept header.</p>
+<p>Alternatively, use the "Accept" header.</p>
 </body>
 </html>
 

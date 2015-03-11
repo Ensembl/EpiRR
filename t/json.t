@@ -44,6 +44,30 @@ use File::Basename;
 }
 
 {
+    my $parser   = parser('rm_duplicates.json');
+    $parser->parse();
+    is_deeply(
+        $parser->errors,
+        [
+            'Duplicate raw_data values detected',
+        ],
+        'Duplicate raw data values'
+    );
+}
+
+{
+    my $parser   = parser('rm_cd14.txt');
+    $parser->parse();
+    is_deeply(
+        $parser->errors,
+        [
+            'Not a valid JSON file',
+        ],
+        'Not a valid JSON file'
+    );
+}
+
+{
     my $dataset = EpiRR::Model::Dataset->new(
         project        => 'project',
         status         => 'ok',
