@@ -110,7 +110,7 @@ GEO supports array and sequence data. EpiRR supports both, although array data i
     Primary ID: Experiment ID (e.g. EGAX00001074437)
     Secondary ID: Dataset ID (e.g. EGAD00001000676)
 
-The dataset must contain data for the experiment, and must be visible on the EGA website. We require formal permission to make use of metadata from your EGA account. Please get in touch with blueprint-dcc@ebi.ac.uk if you intend to submit references to data in this archive.
+The dataset must contain RUN objects for the experiment, and must be visible on the EGA website. We require formal permission to make use of metadata from your EGA account. Please get in touch with blueprint-dcc@ebi.ac.uk if you intend to submit references to data in this archive.
 
 The code to access this archive is not included in the EpiRR github account, as it is not useful outside EBI.
 
