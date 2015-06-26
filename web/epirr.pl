@@ -38,12 +38,11 @@ get '/view/all' => sub {
     my $datasets = $controller->fetch_current();
 
     $self->respond_to(
-        json => sub {
-            my $url  = $self->req->url->to_abs;
-            my $path = $url->path;
-
+        json => sub {          
             my @hash_datasets;
             for my $d (@$datasets) {
+                my $url = $self->req->url->to_abs;
+                my $path = $url->path;
                 my $hd = $d->to_hash;
                 my $full_accession = $d->full_accession;
 
@@ -100,11 +99,17 @@ __DATA__
 <html>
 <head>
 <title>EpiRR Endpoints</title>
+<link href="../favicon.ico" rel="icon" type="image/x-icon" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
+<div class="container-fluid">
 <h1>EpiRR REST API</h1>
 <h2>Endpoints</h2>
-<dl>
+<dl class="dl-horizontal">
 <dt>/view/:id</dt>
 <dd>View the detail of one reference dataset</dt>
 <dt>/view/all</dt>
@@ -118,6 +123,10 @@ __DATA__
 <li>html</li>
 </ul>
 <p>Alternatively, use the "Accept" header.</p>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
 
@@ -126,11 +135,16 @@ __DATA__
 <html>
 <head>
 <title><%= $dataset->full_accession %></title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" /> 
+<link href="../favicon.ico" rel="icon" type="image/x-icon" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
 </head>
 <body>
+<div class="container-fluid">
 <h1><%= $dataset->full_accession %></h1>
-<dl>
+<dl class="dl-horizontal">
   <dt>Type</dt><dd><%= $dataset->type %></dd>
   <dt>Status</dt><dd><%= $dataset->status %></dd>
   <dt>Project</dt><dd><%= $dataset->project %></dd>
@@ -138,13 +152,13 @@ __DATA__
   <dt>Description</dt><dd><%= $dataset->description %></dd>
 </dl>
 <h2>Metadata</h2>
-<dl>
+<dl class="dl-horizontal">
 % for my $kv ($dataset->meta_data_kv) {
   <dt><%= $kv->[0] %></dt><dd><%= $kv->[1] %></dd>  
 % }
 </dl>
 <h2>Raw data</h2>
-<table>
+<table class="table table-hover table-condensed table-striped">
 <thead>
 <tr>
 <th>Assay type</th>
@@ -168,6 +182,10 @@ __DATA__
 % }
 </tbody>
 </table>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
 
@@ -176,11 +194,16 @@ __DATA__
 <html>
 <head>
 <title>EpiRR Datasets</title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" /> 
+<link href="../favicon.ico" rel="icon" type="image/x-icon" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
 </head>
 <body>
+<div class="container-fluid">
 <h1>EpiRR Datasets</h1>
-<table>
+<table class="table table-hover table-condensed table-striped">
 <thead>
 <tr>
 <th>Project</th>
@@ -206,5 +229,9 @@ __DATA__
 % }
 </tbody>
 </table>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
