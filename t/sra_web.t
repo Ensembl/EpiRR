@@ -64,7 +64,6 @@ my $w = EpiRR::Service::ENAWeb->new();
             'ena-base-count'       => '1537097042',
             'species'              => 'Homo sapiens',
             taxon_id               => 9606,
-            BioSampleModel         => 'Generic',
             sample_term_id         => 'EFO_0003042',
         },
     );
