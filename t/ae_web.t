@@ -74,7 +74,7 @@ my $ae = EpiRR::Service::ArrayExpress->new();
     my $errors = [];
     my $input  = EpiRR::Model::RawData->new(
         archive      => 'AE',
-        primary_id   => 'NO_DATA_HERE',
+        primary_id   => 'TESTSTRINGTHATRETURNSNODATA',
         secondary_id => 'BOB'
     );
     my ( $output_experiment, $output_sample ) =
@@ -83,7 +83,7 @@ my $ae = EpiRR::Service::ArrayExpress->new();
     is_deeply(
         $errors,
         [
-'ArrayExpress returned 0 experiments for NO_DATA_HERE, must have 1 to process'
+'ArrayExpress returned 0 experiments for TESTSTRINGTHATRETURNSNODATA, must have 1 to process'
         ]
       )
 
