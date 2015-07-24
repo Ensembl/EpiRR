@@ -1,4 +1,4 @@
-# EpiRR [![Coverage Status](https://coveralls.io/repos/EMBL-EBI-GCA/EpiRR/badge.svg)](https://coveralls.io/r/EMBL-EBI-GCA/EpiRR)
+# EpiRR [![Build Status](https://travis-ci.org/EMBL-EBI-GCA/EpiRR.svg?branch=master)](https://travis-ci.org/EMBL-EBI-GCA/EpiRR) [![Coverage Status](https://coveralls.io/repos/EMBL-EBI-GCA/EpiRR/badge.svg)](https://coveralls.io/r/EMBL-EBI-GCA/EpiRR)
 
 EpiRR is intended to act as a registry of reference epigenomes. Initial work has focused on storing references to archived raw data.
 
