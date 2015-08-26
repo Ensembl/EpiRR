@@ -97,6 +97,7 @@ sub accession {
         $parser = $container->resolve( service => 'text_file_parser' );
     }
 
+    
     $parser->file_path($in_file);
     $parser->parse();
 
@@ -117,7 +118,8 @@ sub accession {
         print $efh $_ . $/ for (@$errors);
         return;
     }
-
+    
+    my $output_service = $container->resolve( service => 'output_service' );
     my $full_dataset = $output_service->db_to_user($db_dataset);
 
     print $ofh $json->pretty()->encode( $full_dataset->to_hash() );
