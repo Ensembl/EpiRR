@@ -8,7 +8,7 @@ EpiRR records the raw data that forms the basis of reference epigenomes, across 
 
 ## Submission
 
-IHEC projects with epigenomes to register should mail blueprint-dcc@ebi.ac.uk to arrange submission. Submissions are accepted as text or JSON files via private FTP site. One file must be used per reference epigenome.
+IHEC projects with epigenomes to register should mail blueprint-dcc@ebi.ac.uk to arrange submission. Submissions are accepted as JSON files or a custom text format, via private FTP site. One file must be used per reference epigenome.
 
 The minimal requirements for submission are
  - a valid project name
@@ -23,6 +23,20 @@ Optionally, you can include any of the following:
 The requirements for raw data vary depending on the archive, but in each case the archive name and experiment ID are required. For some archives, a secondary ID is also required. The requirements are listed in detail below.
 
 Updates to a reference epigenome can be made by resubmission, including either the project local name, or the reference epigenome accession. Modifications result in an increase in the version number for the reference epigenome.
+
+### JSON format
+
+JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file should contain a single reference epigenome.
+
+    {"project": "Example project",
+    "local_name": "ep_ref_1",
+    "description": "classical monocytes from a male donor", 
+    "raw_data": [
+     {"archive": "GEO", "primary_id": "GSM000001"},
+     {"archive": "SRA", "primary_id": "SRX000001"},
+     {"archive": "ERA", "primary_id": "ERX000001"},
+     {"archive": "EGA", "primary_id": "EGAX00000000001", "secondary_id", "EGAD00000000001"}
+    ]} 
 
 ### Text format
 
@@ -46,23 +60,9 @@ If you need to update a submission, add the EpiRR accession to the file:
     RAW_DATA	ENA	ERX000001
     RAW_DATA	EGA	EGAX00000000001	EGAD00000000001
 
-### JSON format
-
-JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file should contain a single reference epigenome.
-
-    {"project": "Example project",
-    "local_name": "ep_ref_1",
-    "description": "classical monocytes from a male donor", 
-    "raw_data": [
-     {"archive": "GEO", "primary_id": "GSM000001"},
-     {"archive": "SRA", "primary_id": "SRX000001"},
-     {"archive": "ERA", "primary_id": "ERX000001"},
-     {"archive": "EGA", "primary_id": "EGAX00000000001", "secondary_id", "EGAD00000000001"}
-    ]} 
-
 ###Attributes
 
-The attributes required are common between both submission formats. The attribute name should be lower case for JSON file submission and upper case for 
+The attributes required are common between both submission formats. The attribute name should be lower case for JSON file submission and upper case for the text format.
 
  * PROJECT: Project name (required)
  * ACCESSION: EpiRR accession for the reference epigenome. Weither this or LOCAL\_NAME must be present for updates, must not be present in initial submission.
