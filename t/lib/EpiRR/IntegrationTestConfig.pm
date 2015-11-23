@@ -16,23 +16,31 @@ package EpiRR::IntegrationTestConfig;
 use Bread::Board;
 
 sub c {
-    return $EpiRR::Config::container;
+    return $EpiRR::IntegrationTestConfig::container;
 }
 
 our $container = container 'EpiRR' => as {
-    service 'metaDataBuilder' => (
-        class    => 'EpiRR::Service::CommonMetaDataBuilder',
-        lifecyle => 'Singleton',
+
+    service 'controller' => (
+        class        => 'EpiRR::App::Controller',
+        dependencies => {
+            conversion_service => depends_on('conversion_service'),
+            schema             => depends_on( 'database/dbic_schema', )
+        }
     );
 
-    service 'conversionService' => (
+    service 'conversion_service' => (
         class        => 'EpiRR::Service::ConversionService',
-        lifecyle     => 'Singleton',
         dependencies => {
-            meta_data_builder  => depends_on('metaDataBuilder'),
-            dataset_classifier => depends_on('datasetClassifier'),
-            schema             => depends_on('Database/dbic_schema'),
-            ena_accessor       => depends_on('enaWebAccessor'),
+            meta_data_builder      => depends_on('meta_data_builder'),
+            dataset_classifier     => depends_on('dataset_classifier'),
+            eutils                 => depends_on('ncbi_eutils'),
+            schema                 => depends_on('database/dbic_schema'),
+            ena_accessor           => depends_on('ena_web_accessor'),
+            array_express_accessor => depends_on('array_express_accessor'),
+            geo_accessor           => depends_on('geo_accessor'),
+            sra_accessor           => depends_on('sra_accessor'),
+            output_service         => depends_on('output_service'),
         },
         block => sub {
             my ($s) = @_;
@@ -40,35 +48,90 @@ our $container = container 'EpiRR' => as {
                 meta_data_builder  => $s->param('meta_data_builder'),
                 dataset_classifier => $s->param('dataset_classifier'),
                 schema             => $s->param('schema'),
+                eutils             => $s->param('eutils'),
                 archive_services   => {
                     ENA  => $s->param('ena_accessor'),
-                    SRA  => $s->param('ena_accessor'),
+                    SRA  => $s->param('sra_accessor'),
                     DDBJ => $s->param('ena_accessor'),
+                    AE   => $s->param('array_express_accessor'),
+                    GEO  => $s->param('geo_accessor'),
                 }
             );
-            $c;
+            return $c;
         }
     );
 
-    service 'datasetClassifier' => (
+    service 'dataset_classifier' => (
         class     => 'EpiRR::Service::IhecDatasetClassifier',
         lifecycle => 'Singleton',
     );
 
-    service 'enaWebAccessor' => (
-        class        => 'EpiRR::Service::ENAWeb',
-        lifecycle    => 'Singleton',
-        dependencies => { xml_parser => depends_on('sraXmlParser'), }
+    service 'meta_data_builder' => (
+        class    => 'EpiRR::Service::CommonMetaDataBuilder',
+        lifecyle => 'Singleton',
     );
 
-    service 'sraXmlParser' => (
+    service 'ena_web_accessor' => (
+        class        => 'EpiRR::Service::ENAWeb',
+        lifecycle    => 'Singleton',
+        dependencies => { xml_parser => depends_on('sra_xml_parser'), }
+    );
+
+    service 'array_express_accessor' => (
+        class     => 'EpiRR::Service::ArrayExpress',
+        lifecycle => 'Singleton',
+    );
+
+    service 'sra_xml_parser' => (
         class     => 'EpiRR::Parser::SRAXMLParser',
         lifecycle => 'Singleton',
     );
 
-    service 'textFileParser' => ( class => 'EpiRR::Parser::TextFileParser', );
+    service 'geo_accessor' => (
+        class     => 'EpiRR::Service::GeoWeb',
+        lifecycle => 'Singleton',
+    );
 
-    container 'Database' => as {
+    service 'sra_accessor' => (
+        class        => 'EpiRR::Service::SRAEUtils',
+        lifecycle    => 'Singleton',
+        dependencies => {
+            sra_xml_parser => depends_on('sra_xml_parser'),
+            eutils         => depends_on('ncbi_eutils'),
+        }
+    );
+
+    service 'json_file_parser' => ( class => 'EpiRR::Parser::JsonParser' );
+
+    service 'contact_email' => 'VALID_EMAIL';
+
+    service 'ncbi_eutils' => (
+        class        => 'EpiRR::Service::NcbiEUtils',
+        lifecycle    => 'Singleton',
+        dependencies => { email => depends_on('contact_email'), }
+
+    );
+
+    service 'text_file_parser' => ( class => 'EpiRR::Parser::TextFileParser' );
+
+    service 'output_service' => (
+        class        => 'EpiRR::Service::OutputService',
+        lifecycle    => 'Singleton',
+        dependencies => { schema => depends_on( 'database/dbic_schema', ) }
+    );
+
+    service 'accession_service' => (
+        class        => 'EpiRR::Service::AccessionService',
+        lifecycle    => 'Singleton',
+        dependencies => {
+            output_service     => depends_on('output_service'),
+            conversion_service => depends_on('conversion_service'),
+            text_parser        => depends_on('text_file_parser'),
+            json_parser        => depends_on('json_file_parser'),
+        }
+    );
+
+    container 'database' => as {
         service 'dsn'      => "dbi:SQLite:dbname=:memory:";
         service 'username' => "";
         service 'password' => "";

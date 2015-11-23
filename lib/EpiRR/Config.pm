@@ -40,6 +40,7 @@ our $container = container 'EpiRR' => as {
             array_express_accessor => depends_on('array_express_accessor'),
             geo_accessor           => depends_on('geo_accessor'),
             sra_accessor           => depends_on('sra_accessor'),
+            output_service         => depends_on('output_service'),
         },
         block => sub {
             my ($s) = @_;
@@ -48,6 +49,7 @@ our $container = container 'EpiRR' => as {
                 dataset_classifier => $s->param('dataset_classifier'),
                 schema             => $s->param('schema'),
                 eutils             => $s->param('eutils'),
+                output_service     => $s->param('output_service'),
                 archive_services   => {
                     ENA  => $s->param('ena_accessor'),
                     SRA  => $s->param('sra_accessor'),
@@ -112,6 +114,23 @@ our $container = container 'EpiRR' => as {
     );
 
     service 'text_file_parser' => ( class => 'EpiRR::Parser::TextFileParser' );
+
+    service 'output_service' => (
+        class        => 'EpiRR::Service::OutputService',
+        lifecycle    => 'Singleton',
+        dependencies => { schema => depends_on( 'database/dbic_schema', ) }
+    );
+
+    service 'accession_service' => (
+        class        => 'EpiRR::Service::AccessionService',
+        lifecycle    => 'Singleton',
+        dependencies => {
+            output_service     => depends_on('output_service'),
+            conversion_service => depends_on('conversion_service'),
+            text_parser        => depends_on('text_file_parser'),
+            json_parser        => depends_on('json_file_parser'),
+        }
+    );
 
     container 'database' => as {
         service 'dsn'      => "dbi:SQLite:dbname=epirr.db";
