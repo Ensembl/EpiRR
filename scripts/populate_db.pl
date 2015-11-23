@@ -91,7 +91,8 @@ my %projects = (
     'EPP'                     => 'IHECRE',
     'NIH Roadmap Epigenomics' => 'IHECRE',
     'CREST'                   => 'IHECRE',
-    'CEMT'                    => 'IHECRE'
+    'CEEHRC (CEMT)'           => 'IHECRE',
+    'CEEHRC (McGill)'         => 'IHECRE',
 );
 
 while ( my ( $name, $id_prefix ) = each %projects ) {
