@@ -21,6 +21,7 @@ use Carp;
 use JSON;
 use File::Find;
 use File::stat;
+use autodie;
 
 my $config_module = 'EpiRR::Config';
 my $dir;
@@ -40,29 +41,38 @@ eval("require $config_module")
   or croak "cannot load module $config_module $@";
 
 my $container = $config_module->c();
+my $accession_service = $container->resolve( service => 'text_file_parser' );
 
-# check container for dependencies
-{
-  my $text_file_parser = $container->resolve( service => 'text_file_parser' );
-  croak("Cannot find text_file_parser") unless ($text_file_parser);
-
-  my $json_file_parser = $container->resolve( service => 'json_file_parser' );
-  croak("Cannot find json_file_parser") unless ($json_file_parser);
-
-  my $conversion_service = $container->resolve( service => 'conversion_service' );
-  croak("Cannot find conversion_service") unless ($conversion_service);
-
-  my $output_service = $container->resolve( service => 'output_service' );
-  croak("Cannot find output_service") unless ($output_service);
-}
-my $json = JSON->new();
+my $report_file_name = "$dir/summary." . time . ".tsv";
+open my $r_fh, '>', $report_file_name;
+print $r_fh
+  join( "\t", qw( File Project Local_name Description Status EpiRR_ID Errors ) )
+  . $/;
 
 find( \&wanted, $dir );
 
+close $r_fh;
+
+sub report {
+    my ( $file_name, $errors, $ds ) = @_;
+
+    my @cols = qw(file project local_name description status);
+    my %vals = (
+        file        => $file_name,
+        project     => $ds->project || '',
+        local_name  => $ds->local_name || '',
+        description => $ds->description || '',
+        status      => $ds->status || '',
+    );
+
+    print $r_fh join( "\t", @vals{@cols}, @errors );
+
+}
+
 sub wanted {
-    if ( (m/\.refepi.json$/ || m/\.refepi$/) && ! m/^\./) {
-        my $in_file  = $File::Find::name;
-        
+    if ( ( m/\.refepi.json$/ || m/\.refepi$/ ) && !m/^\./ ) {
+        my $in_file = $File::Find::name;
+
         my $out_file = $File::Find::name;
         $out_file =~ s/\.json$//;
         $out_file .= '.out.json';
@@ -71,10 +81,13 @@ sub wanted {
         my $i_mod_time = stat($in_file)->mtime;
         my $o_mod_time = ( ( -e $out_file ) ? stat($out_file)->mtime : 0 );
         my $e_mod_time = ( ( -e $err_file ) ? stat($err_file)->mtime : 0 );
-        
+
         if ( $i_mod_time > $o_mod_time && $i_mod_time > $e_mod_time ) {
             print STDERR "Accessioning $in_file$/" unless $quiet;
-            accession( $in_file, $out_file, $err_file );
+            my ( $errors, $refepi ) =
+              $accession_service->accession( $in_file, $out_file, $err_file,
+                $quiet );
+            report( $in_file, $errors, $refepi );
         }
         else {
             print STDERR "Skipping $in_file$/" unless $quiet;
@@ -97,28 +110,30 @@ sub accession {
         $parser = $container->resolve( service => 'text_file_parser' );
     }
 
-    
     $parser->file_path($in_file);
     $parser->parse();
 
     if ( $parser->error_count() ) {
-        print $efh "Error(s) when parsing file, accessioning will not proceed.$/";
+        print $efh
+          "Error(s) when parsing file, accessioning will not proceed.$/";
         print $efh $_ . $/ for ( $parser->all_errors() );
         return;
     }
-    
-    my $conversion_service = $container->resolve( service => 'conversion_service' );
+
+    my $conversion_service =
+      $container->resolve( service => 'conversion_service' );
     my $user_dataset = $parser->dataset();
     my $errors       = [];
     my $db_dataset = $conversion_service->user_to_db( $user_dataset, $errors );
 
     if (@$errors) {
         print $efh
-          "Error(s) when checking and storing data set, accessioning will not proceed." . $/;
+"Error(s) when checking and storing data set, accessioning will not proceed."
+          . $/;
         print $efh $_ . $/ for (@$errors);
         return;
     }
-    
+
     my $output_service = $container->resolve( service => 'output_service' );
     my $full_dataset = $output_service->db_to_user($db_dataset);
 

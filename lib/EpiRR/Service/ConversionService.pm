@@ -36,22 +36,27 @@ has 'archive_services' => (
 );
 
 has 'meta_data_builder' => (
-    is       => 'rw',
-    isa      => 'MetaDataBuilder',
-    required => 1,
+    is  => 'rw',
+    isa => 'MetaDataBuilder',
+
 );
 has 'dataset_classifier' => (
-    is       => 'rw',
-    isa      => 'DatasetClassifier',
-    required => 1,
+    is  => 'rw',
+    isa => 'DatasetClassifier',
+
 );
 has 'eutils' => (
-    is       => 'rw',
-    isa      => 'EpiRR::Service::NcbiEUtils',
-    required => 1,
+    is  => 'rw',
+    isa => 'EpiRR::Service::NcbiEUtils',
+
+);
+has 'output_service' => (
+    is  => 'rw',
+    isa => 'EpiRR::Service::OutputService',
+
 );
 
-has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
+has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 
 sub user_to_db {
     my ( $self, $simple_dataset, $errors ) = @_;
@@ -96,8 +101,10 @@ sub user_to_db {
     }
 
     if ( !@$errors && $existing_dsv ) {
-        my $existing_dataset = $self->db_to_user($existing_dsv)->to_hash();
-        my $new_dataset      = $self->db_to_user($dataset_version)->to_hash();
+        my $existing_dataset =
+          $self->output_service->db_to_user($existing_dsv)->to_hash();
+        my $new_dataset =
+          $self->output_service->db_to_user($dataset_version)->to_hash();
 
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
@@ -218,7 +225,7 @@ sub _dataset {
     push @$errors, "No project found for $project_name" if ( !$project );
 
     return if @$errors;
-    
+
     my $dataset;
     if ( $user_dataset->accession() ) {
         $dataset = $self->_retrieve_and_check_dataset( $user_dataset, $errors );
@@ -228,6 +235,7 @@ sub _dataset {
           $project->search_related( 'datasets',
             { local_name => $user_dataset->local_name() } )->single();
     }
+
     #else not looking for an existing dataset
 
     my $existing_dataset_version;
@@ -252,8 +260,8 @@ sub _dataset_version {
 
     my $dataset_version = $self->schema->dataset_version()->create(
         {
-            status => $self->schema()->status()->find({ name => 'DEFAULT' }),
-            type   => $self->schema()->type()->find({ name => 'DEFAULT' }),
+            status => $self->schema()->status()->find( { name => 'DEFAULT' } ),
+            type   => $self->schema()->type()->find(   { name => 'DEFAULT' } ),
             description => $user_dataset->description(),
             dataset     => $dataset,
         }
@@ -305,7 +313,7 @@ sub _raw_data {
                     archive             => $archive,
                     archive_url         => $rd->archive_url(),
                     experiment_type     => $rd->experiment_type(),
-                    assay_type           => $rd->assay_type(),
+                    assay_type          => $rd->assay_type(),
                 }
             ) if ( !@$rd_errors );
 

@@ -23,72 +23,40 @@ use JSON;
 my $config_module = 'EpiRR::Config';
 my $file;
 my $outfile;
+my $errfile;
 my $overwrite = 0;
 
 GetOptions(
-    "config=s"  => \$config_module,
-    "file=s"    => \$file,
-    "outfile=s" => \$outfile,
+    "config=s"   => \$config_module,
+    "file=s"     => \$file,
+    "outfile=s"  => \$outfile,
+    "errfile=s"  => \$errfile,
     "overwrite!" => \$overwrite,
 ) or croak("Error with options: $!");
 
-croak("Missing option: -file") unless $file; 
+croak("Missing option: -file") unless $file;
 
 eval("require $config_module") or croak "cannot load module $config_module $@";
 
 my $container = $config_module->c();
 
-my $text_file_parser = $container->resolve( service => 'text_file_parser' );
-croak("Cannot find text_file_parser") unless ($text_file_parser);
-
-my $json_file_parser = $container->resolve( service => 'json_file_parser' );
-croak("Cannot find json_file_parser") unless ($json_file_parser);
-
-my $conversion_service = $container->resolve( service => 'conversion_service' );
-croak("Cannot find conversion_service") unless ($conversion_service);
+my $accession_service = $container->resolve( service => 'accession_service' );
+croak("Cannot find accession_service") unless ($accession_service);
 
 if ( !$outfile ) {
-    $outfile = $file . '.out';
+    $outfile = $file . '.out.json';
 }
 
-
-my $parser;
-
-if ($file =~ m/\.json$/){
-  $parser = $json_file_parser;
-}
-else {
-  $parser = $text_file_parser;
+if ( !$errfile ) {
+    $errfile = $file . '.err';
 }
 
-croak("Output would overwrite existing file $outfile") if (!$overwrite && -e $outfile);
-open my $fh, '>', $outfile or croak("Could not open $outfile: $!");
-
-$parser->file_path($file);
-$parser->parse();
-
-if ( $parser->error_count() ) {
-    print STDERR "Error(s) when parsing text file, will not proceed." . $/;
-    print $fh $_.$/ for ( $parser->all_errors() );
-    exit 1;
-}
-
-my $user_dataset = $parser->dataset();
-my $errors       = [];
-my $db_dataset   = $conversion_service->user_to_db( $user_dataset, $errors );
+my ( $errors, $dataset, ) =
+  $accession_service->accession( $file, $outfile, $errfile, 0 );
 
 if (@$errors) {
     print STDERR
       "Error(s) when checking and storing data set, will not proceed." . $/;
-    print $fh $_.$/ for ( @$errors );
     exit 2;
 }
-
-my $json = JSON->new();
-
-my $full_dataset = $conversion_service->db_to_user($db_dataset);
-
-print $fh $json->pretty()->encode($full_dataset->to_hash());
-
-close $fh;
 exit 0;
