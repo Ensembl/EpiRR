@@ -86,28 +86,29 @@ get '/view/#id' => sub {
     my $id      = $self->param('id');
     my $dataset = $controller->fetch($id);
 
-    my $url  = $self->req->url->to_abs;
-    my $acc = $dataset->accession;
+    my $url          = $self->req->url->to_abs;
+    my $acc          = $dataset->accession;
     my $this_version = $dataset->full_accession;
-    my $path = $url->path;
+    my $path         = $url->path;
 
-    my $links = { self => {href => $url},  };
+    my $links = { self => { href => $url }, };
 
     if ( $dataset->version > 1 ) {
         my $prev_url = $url;
-        my $prev_version = $dataset->accession . '.' . ($dataset->version - 1 );
-        
-        if ($prev_url !~ s/$this_version/$prev_version/){
-          $prev_url =~ s/$acc/$prev_version/
-        }        
-        
+        my $prev_version =
+          $dataset->accession . '.' . ( $dataset->version - 1 );
+
+        if ( $prev_url !~ s/$this_version/$prev_version/ ) {
+            $prev_url =~ s/$acc/$prev_version/;
+        }
+
         $links->{previous_version} = $prev_url;
     }
 
-    if ( ! $dataset->is_current ){
-      my $curr_url = $url;
-      $curr_url =~ s/$this_version/$acc/;
-      $links->{current_version} = {href => $curr_url}; 
+    if ( !$dataset->is_current ) {
+        my $curr_url = $url;
+        $curr_url =~ s/$this_version/$acc/;
+        $links->{current_version} = { href => $curr_url };
     }
 
     if ( !$dataset ) {
@@ -122,10 +123,10 @@ get '/view/#id' => sub {
         },
         html => sub {
             $self->stash(
-                dataset => $dataset,
-                current_url   => $links->{current_version}{href},
-                previous_url   => $links->{previous_version}{href},
-                title   => 'dataset ' . $dataset->full_accession,
+                dataset      => $dataset,
+                current_url  => $links->{current_version}{href},
+                previous_url => $links->{previous_version}{href},
+                title        => 'dataset ' . $dataset->full_accession,
             );
             $self->render( template => 'viewid' );
         },
@@ -134,7 +135,8 @@ get '/view/#id' => sub {
 
 get '/' => sub {
     my $self = shift;
-    my $url            = $self->req->url->to_abs;
+    my $url  = $self->req->url->to_abs->to_string;
+    $url =~ s/\/$//;
     $self->render( template => 'index', title => '', url => $url );
 };
 
@@ -169,9 +171,9 @@ __DATA__
 <h1>EpiRR REST API</h1>
 <h2>Endpoints</h2>
 <dl class="dl-horizontal">
-<dt><a href="<%= $url %>summary">/summary</a></dt>
+<dt><a href="<%= $url %>/summary">/summary</a></dt>
 <dd>Report summary stats</dd>
-<dt><a href="<%= $url %>view/all">/view/all</a></dt>
+<dt><a href="<%= $url %>/view/all">/view/all</a></dt>
 <dd>List all current datasets</dt>
 <dt>/view/:id</dt>
 <dd>View the detail of one reference dataset</dt>
