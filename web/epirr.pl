@@ -102,7 +102,7 @@ get '/view/#id' => sub {
             $prev_url =~ s/$acc/$prev_version/;
         }
 
-        $links->{previous_version} = $prev_url;
+        $links->{previous_version} = {href => $prev_url};
     }
 
     if ( !$dataset->is_current ) {
@@ -123,10 +123,9 @@ get '/view/#id' => sub {
         },
         html => sub {
             $self->stash(
-                dataset      => $dataset,
-                current_url  => $links->{current_version}{href},
-                previous_url => $links->{previous_version}{href},
-                title        => 'dataset ' . $dataset->full_accession,
+                dataset => $dataset,
+                links   => $links,
+                title   => 'dataset ' . $dataset->full_accession,
             );
             $self->render( template => 'viewid' );
         },
@@ -197,13 +196,13 @@ __DATA__
   <dt>Local name</dt><dd><%= $dataset->local_name %></dd>
   <dt>Description</dt><dd><%= $dataset->description %></dd>
   <dt>Is live version?</dt><dd><%= $dataset->is_current ? 'yes' : 'no' %></dd>
-% if ($current_url || $previous_url) {
+% if ($links->{current_version} || $links->{previous_version}) {
   <dt>Other versions</dt>
-% if ($current_url) {
-  <dd><a href="<%= $current_url%>">live</a></dd>
+% if ($links->{current_version}) {
+  <dd><a href="<%= $links->{current_version}{href}%>">live</a></dd>
 %}
-% if ($previous_url) {
-  <dd><a href="<%= $previous_url%>">previous</a></dd>
+% if ($links->{previous_version}) {
+  <dd><a href="<%= $links->{previous_version}{href}%>">previous</a></dd>
 %}
 %}
 </dl>
