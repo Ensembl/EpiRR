@@ -44,25 +44,21 @@ use File::Basename;
 }
 
 {
-    my $parser   = parser('rm_duplicates.json');
+    my $parser = parser('rm_duplicates.json');
     $parser->parse();
     is_deeply(
         $parser->errors,
-        [
-            'Duplicate raw_data values detected',
-        ],
+        [ 'Duplicate raw_data values detected', ],
         'Duplicate raw data values'
     );
 }
 
 {
-    my $parser   = parser('rm_cd14.txt');
+    my $parser = parser('rm_cd14.txt');
     $parser->parse();
     is_deeply(
         $parser->errors,
-        [
-            'Not a valid JSON file',
-        ],
+        [ 'Not a valid JSON file', ],
         'Not a valid JSON file'
     );
 }
@@ -70,6 +66,7 @@ use File::Basename;
 {
     my $dataset = EpiRR::Model::Dataset->new(
         project        => 'project',
+        is_current => 0,
         status         => 'ok',
         type           => 'finished',
         accession      => 'foo1',
@@ -84,7 +81,7 @@ use File::Basename;
                 secondary_id    => 's1',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'rna-seq',
-                assay_type       => 'rna',
+                assay_type      => 'rna',
             ),
             EpiRR::Model::RawData->new(
                 archive         => 'myarchive',
@@ -92,7 +89,7 @@ use File::Basename;
                 secondary_id    => 's2',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'chip-seq',
-                assay_type       => 'chip',
+                assay_type      => 'chip',
             )
         ],
         meta_data => { tag => 'value' },
@@ -101,6 +98,7 @@ use File::Basename;
     my $actual        = $dataset->to_hash();
     my $expected_hash = {
         project        => 'project',
+                is_current => 0,
         status         => 'ok',
         type           => 'finished',
         accession      => 'foo1',
@@ -115,7 +113,7 @@ use File::Basename;
                 secondary_id    => 's1',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'rna-seq',
-                assay_type       => 'rna',
+                assay_type      => 'rna',
             },
             {
                 archive         => 'myarchive',
@@ -123,7 +121,7 @@ use File::Basename;
                 secondary_id    => 's2',
                 archive_url     => 'www.foo.bar',
                 experiment_type => 'chip-seq',
-                assay_type       => 'chip',
+                assay_type      => 'chip',
             }
         ],
         meta_data => { tag => 'value' },
