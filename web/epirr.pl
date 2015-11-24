@@ -86,15 +86,45 @@ get '/view/#id' => sub {
     my $id      = $self->param('id');
     my $dataset = $controller->fetch($id);
 
+    my $url  = $self->req->url->to_abs;
+    my $acc = $dataset->accession;
+    my $this_version = $dataset->full_accession;
+    my $path = $url->path;
+
+    my $links = { self => {href => $url},  };
+
+    if ( $dataset->version > 1 ) {
+        my $prev_url = $url;
+        my $prev_version = $dataset->accession . '.' . ($dataset->version - 1 );
+        
+        if ($prev_url !~ s/$this_version/$prev_version/){
+          $prev_url =~ s/$acc/$prev_version/
+        }        
+        
+        $links->{previous_version} = $prev_url;
+    }
+
+    if ( ! $dataset->is_current ){
+      my $curr_url = $url;
+      $curr_url =~ s/$this_version/$acc/;
+      $links->{current_version} = {href => $curr_url}; 
+    }
+
     if ( !$dataset ) {
         $self->reply->not_found;
         return;
     }
     $self->respond_to(
-        json => { json => $dataset },
+        json => sub {
+            my $hd = $dataset->to_hash;
+            $hd->{_links} = $links;
+            $self->render( json => $hd );
+        },
         html => sub {
             $self->stash(
                 dataset => $dataset,
+                current_url   => $links->{current_version}{href},
+                previous_url   => $links->{previous_version}{href},
                 title   => 'dataset ' . $dataset->full_accession,
             );
             $self->render( template => 'viewid' );
@@ -152,9 +182,7 @@ __DATA__
 <li>json</li>
 <li>html</li>
 </ul>
-<p>Alternatively, use the "Accept" header.</p>
-
-
+<p>Alternatively, use the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">"Accept"</a> header in your HTTP request.</p>
 
 @@ viewid.html.ep
 % layout 'layout';
@@ -165,6 +193,16 @@ __DATA__
   <dt>Project</dt><dd><%= $dataset->project %></dd>
   <dt>Local name</dt><dd><%= $dataset->local_name %></dd>
   <dt>Description</dt><dd><%= $dataset->description %></dd>
+  <dt>Is live version?</dt><dd><%= $dataset->is_current ? 'yes' : 'no' %></dd>
+% if ($current_url || $previous_url) {
+  <dt>Other versions</dt>
+% if ($current_url) {
+  <dd><a href="<%= $current_url%>">live</a></dd>
+%}
+% if ($previous_url) {
+  <dd><a href="<%= $previous_url%>">previous</a></dd>
+%}
+%}
 </dl>
 <h2>Metadata</h2>
 <dl class="dl-horizontal">
