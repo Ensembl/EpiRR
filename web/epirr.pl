@@ -41,7 +41,7 @@ get '/summary' => sub {
     $self->respond_to(
         json => sub { $self->render( json => $summary ); },
         html => sub {
-            $self->stash( summary => $summary );
+            $self->stash( summary => $summary, title => 'dataset summary', );
             $self->render( template => 'summary' );
         }
     );
@@ -74,7 +74,7 @@ get '/view/all' => sub {
             $self->render( json => \@hash_datasets );
         },
         html => sub {
-            $self->stash( datasets => $datasets );
+            $self->stash( datasets => $datasets, title => 'datasets', );
             $self->render( template => 'viewall' );
         },
     );
@@ -93,7 +93,10 @@ get '/view/#id' => sub {
     $self->respond_to(
         json => { json => $dataset },
         html => sub {
-            $self->stash( dataset => $dataset );
+            $self->stash(
+                dataset => $dataset,
+                title   => 'dataset ' . $dataset->full_accession,
+            );
             $self->render( template => 'viewid' );
         },
     );
@@ -101,19 +104,18 @@ get '/view/#id' => sub {
 
 get '/' => sub {
     my $self = shift;
-    $self->render( template => 'index' );
+    $self->render( template => 'index', title => '' );
 };
 
 # Start the Mojolicious command system
 app->start;
 
 __DATA__
-
-@@ index.html.ep
+@@ layouts/layout.html.ep
 <!DOCTYPE html>
 <html>
 <head>
-<title>EpiRR Endpoints</title>
+<title>EpiRR <%= $title %></title>
 <link href="../favicon.ico" rel="icon" type="image/x-icon" />
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -122,6 +124,17 @@ __DATA__
 </head>
 <body>
 <div class="container-fluid">
+<%= content %>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+@@ index.html.ep
+% layout 'layout';
 <h1>EpiRR REST API</h1>
 <h2>Endpoints</h2>
 <dl class="dl-horizontal">
@@ -140,26 +153,11 @@ __DATA__
 <li>html</li>
 </ul>
 <p>Alternatively, use the "Accept" header.</p>
-</div>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-</html>
+
+
 
 @@ viewid.html.ep
-<!DOCTYPE html>
-<html>
-<head>
-<title>EpiRR dataset <%= $dataset->full_accession %></title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" />
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
-</head>
-<body>
-<div class="container-fluid">
+% layout 'layout';
 <h1><%= $dataset->full_accession %></h1>
 <dl class="dl-horizontal">
   <dt>Type</dt><dd><%= $dataset->type %></dd>
@@ -199,26 +197,9 @@ __DATA__
 % }
 </tbody>
 </table>
-</div>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-</html>
 
 @@ viewall.html.ep
-<!DOCTYPE html>
-<html>
-<head>
-<title>EpiRR datasets</title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" />
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
-</head>
-<body>
-<div class="container-fluid">
+% layout 'layout';
 <h1>EpiRR datasets</h1>
 <table class="table table-hover table-condensed table-striped">
 <thead>
@@ -246,26 +227,9 @@ __DATA__
 % }
 </tbody>
 </table>
-</div>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-</html>
 
 @@ summary.html.ep
-<!DOCTYPE html>
-<html>
-<head>
-<title>EpiRR dataset summary</title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" />
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
-</head>
-<body>
-<div class="container-fluid">
+% layout 'layout';
 <h1>EpiRR dataset summary</h1>
 <table class="table table-hover table-condensed table-striped">
 <thead>
@@ -286,9 +250,3 @@ __DATA__
 % }
 </tbody>
 </table>
-</div>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
-</html>
