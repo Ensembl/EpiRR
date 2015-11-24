@@ -21,14 +21,13 @@ use EpiRR::Model::RawData;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
-
 sub db_to_user_summary {
-  my ($self, $dsv) = @_;
-  
-  confess("No DatasetVersion passed") unless $dsv;
-  confess("Argument must be a DatasetVersion")
-    unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
-    
+    my ( $self, $dsv ) = @_;
+
+    confess("No DatasetVersion passed") unless $dsv;
+    confess("Argument must be a DatasetVersion")
+      unless $dsv->isa("EpiRR::Schema::Result::DatasetVersion");
+
     my $d = EpiRR::Model::DatasetSummary->new(
         project        => $dsv->dataset()->project()->name(),
         status         => $dsv->status()->name(),
@@ -37,10 +36,10 @@ sub db_to_user_summary {
         version        => $dsv->version(),
         local_name     => $dsv->dataset()->local_name(),
         description    => $dsv->description(),
-        type           => $dsv->type()->name(),
+        type           => $dsv->type()->name
     );
-        
-    return $d;  
+
+    return $d;
 }
 
 sub db_to_user {
@@ -59,6 +58,7 @@ sub db_to_user {
         local_name     => $dsv->dataset()->local_name(),
         description    => $dsv->description(),
         type           => $dsv->type()->name(),
+        is_current     => $dsv->is_current,
     );
 
     for my $m ( $dsv->meta_datas ) {
@@ -72,7 +72,7 @@ sub db_to_user {
             secondary_id    => $r->secondary_accession(),
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
-            assay_type       => $r->assay_type(),
+            assay_type      => $r->assay_type(),
         );
         $d->add_raw_data($x);
     }

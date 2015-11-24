@@ -46,6 +46,7 @@ has 'version' => (
 has 'local_name'  => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 has 'description' => ( is => 'rw', isa => 'Maybe[Str]', default => '' );
 
+
 sub to_hash {
     my ($self) = @_;
 

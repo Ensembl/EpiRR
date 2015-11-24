@@ -36,6 +36,7 @@ has 'raw_data' => (
     },
     default => sub { [] },
 );
+has 'is_current' => ( is => 'rw', isa => 'Bool', default => '' );
 
 sub to_hash {
     my ($self) = @_;
@@ -54,6 +55,7 @@ sub to_hash {
         version        => $self->version,
         raw_data       => \@raw_data,
         meta_data      => \%meta_data,
+        is_current     => $self->is_current ? 1 : 0,
     };
 }
 
