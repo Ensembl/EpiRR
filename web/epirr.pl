@@ -134,7 +134,8 @@ get '/view/#id' => sub {
 
 get '/' => sub {
     my $self = shift;
-    $self->render( template => 'index', title => '' );
+    my $url            = $self->req->url->to_abs;
+    $self->render( template => 'index', title => '', url => $url );
 };
 
 # Start the Mojolicious command system
@@ -168,9 +169,9 @@ __DATA__
 <h1>EpiRR REST API</h1>
 <h2>Endpoints</h2>
 <dl class="dl-horizontal">
-<dt><a href="./summary">/summary</a></dt>
+<dt><a href="<%= $url %>summary">/summary</a></dt>
 <dd>Report summary stats</dd>
-<dt><a href="./view/all">/view/all</a></dt>
+<dt><a href="<%= $url %>view/all">/view/all</a></dt>
 <dd>List all current datasets</dt>
 <dt>/view/:id</dt>
 <dd>View the detail of one reference dataset</dt>
