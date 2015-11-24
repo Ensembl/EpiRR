@@ -52,7 +52,7 @@ my @aa_return_vals = (
             archive         => $test_db->archive_name(),
             primary_id      => $experiment_ids[0],
             experiment_type => 'Type 1',
-            assay_type       => 'dt',
+            assay_type      => 'dt',
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S1',
@@ -69,7 +69,7 @@ my @aa_return_vals = (
             archive         => $test_db->archive_name(),
             primary_id      => $experiment_ids[1],
             experiment_type => 'Type 2',
-            assay_type       => 'dt',
+            assay_type      => 'dt',
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
@@ -120,9 +120,7 @@ my $cs = EpiRR::Service::ConversionService->new(
     eutils             => $eutils,
 );
 
-my $os = EpiRR::Service::OutputService->new(
-    schema             => $schema,
-);
+my $os = EpiRR::Service::OutputService->new( schema => $schema, );
 
 my $test_input = EpiRR::Model::Dataset->new(
     project    => $test_db->project_name(),
@@ -171,6 +169,7 @@ my $user_level_output = $os->db_to_user($test_output);
 
 my $expected_user_level_output = EpiRR::Model::Dataset->new(
     project        => $test_db->project_name(),
+    is_current     => 1,
     status         => 'Complete',
     meta_data      => { foo => 'bar' },
     type           => 'Single donor',
@@ -185,7 +184,7 @@ my $expected_user_level_output = EpiRR::Model::Dataset->new(
             secondary_id    => undef,
             archive_url     => undef,
             experiment_type => 'Type 1',
-            assay_type       => 'dt',
+            assay_type      => 'dt',
         ),
         EpiRR::Model::RawData->new(
             archive         => $test_db->archive_name(),
@@ -193,7 +192,7 @@ my $expected_user_level_output = EpiRR::Model::Dataset->new(
             experiment_type => 'Type 2',
             secondary_id    => undef,
             archive_url     => undef,
-            assay_type       => 'dt',
+            assay_type      => 'dt',
         )
     ],
 );
