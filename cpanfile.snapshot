@@ -1875,10 +1875,10 @@ DISTRIBUTIONS
       Encode 2.10
       Exporter 5.57
       ExtUtils::MakeMaker 6.30
-  IO-Socket-IP-0.36
-    pathname: P/PE/PEVANS/IO-Socket-IP-0.36.tar.gz
+  IO-Socket-IP-0.37
+    pathname: P/PE/PEVANS/IO-Socket-IP-0.37.tar.gz
     provides:
-      IO::Socket::IP 0.36
+      IO::Socket::IP 0.37
     requirements:
       IO::Socket 0
       Socket 1.97
@@ -2168,8 +2168,8 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
-  Mojolicious-5.82
-    pathname: S/SR/SRI/Mojolicious-5.82.tar.gz
+  Mojolicious-6.33
+    pathname: S/SR/SRI/Mojolicious-6.33.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -2201,7 +2201,6 @@ DISTRIBUTIONS
       Mojo::IOLoop::Stream undef
       Mojo::JSON undef
       Mojo::JSON::Pointer undef
-      Mojo::JSON::_Bool undef
       Mojo::Loader undef
       Mojo::Log undef
       Mojo::Message undef
@@ -2232,7 +2231,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::Server undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 5.82
+      Mojolicious 6.33
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
@@ -2280,7 +2279,8 @@ DISTRIBUTIONS
       ojo undef
     requirements:
       ExtUtils::MakeMaker 0
-      IO::Socket::IP 0.26
+      IO::Socket::IP 0.37
+      JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
       perl 5.010001
