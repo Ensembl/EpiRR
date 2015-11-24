@@ -20,6 +20,7 @@ use Carp;
 use EpiRR::Schema;
 use EpiRR::Service::OutputService;
 use EpiRR::App::Controller;
+use utf8;
 
 plugin 'Config';
 
@@ -32,26 +33,40 @@ my $os = EpiRR::Service::OutputService->new( schema => $schema );
 my $controller =
   EpiRR::App::Controller->new( output_service => $os, schema => $schema );
 
+get '/summary' => sub {
+    my $self = shift;
+
+    my $summary = $controller->fetch_summary();
+
+    $self->respond_to(
+        json => sub { $self->render( json => $summary ); },
+        html => sub {
+            $self->stash( summary => $summary );
+            $self->render( template => 'summary' );
+        }
+    );
+};
+
 get '/view/all' => sub {
     my $self = shift;
 
     my $datasets = $controller->fetch_current();
 
     $self->respond_to(
-        json => sub {          
+        json => sub {
             my @hash_datasets;
             for my $d (@$datasets) {
-                my $url = $self->req->url->to_abs;
-                my $path = $url->path;
-                my $hd = $d->to_hash;
+                my $url            = $self->req->url->to_abs;
+                my $path           = $url->path;
+                my $hd             = $d->to_hash;
                 my $full_accession = $d->full_accession;
 
                 my $link_path = $path;
                 $link_path =~ s!/view/all!/view/$full_accession!;
                 $link_path =~ s/\.json$//;
-                
+
                 $url->path($link_path);
-                
+
                 $hd->{_links}{self} = "$url";
                 push @hash_datasets, $hd;
             }
@@ -85,8 +100,8 @@ get '/view/#id' => sub {
 };
 
 get '/' => sub {
-  my $self = shift;
-  $self->render(template =>  'index');
+    my $self = shift;
+    $self->render( template => 'index' );
 };
 
 # Start the Mojolicious command system
@@ -110,14 +125,16 @@ __DATA__
 <h1>EpiRR REST API</h1>
 <h2>Endpoints</h2>
 <dl class="dl-horizontal">
+<dt><a href="/summary">/summary</a></dt>
+<dd>Report summary stats</dd>
+<dt><a href="/view/all">/view/all</a></dt>
+<dd>List all current datasets</dt>
 <dt>/view/:id</dt>
 <dd>View the detail of one reference dataset</dt>
-<dt>/view/all</dt>
-<dd>List all current datasets</dt>
 </dl>
 <h2>Response types</h2>
-<p>Append ?format=x to the end of your query to control the format<p>
-<pFormats available:</p>
+<p>Append <code>?format=<var>x</var></code> to the end of your query to control the format.</p>
+<p>Formats available:</p>
 <ul>
 <li>json</li>
 <li>html</li>
@@ -134,7 +151,7 @@ __DATA__
 <!DOCTYPE html>
 <html>
 <head>
-<title><%= $dataset->full_accession %></title>
+<title>EpiRR dataset <%= $dataset->full_accession %></title>
 <link href="../favicon.ico" rel="icon" type="image/x-icon" />
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -193,7 +210,7 @@ __DATA__
 <!DOCTYPE html>
 <html>
 <head>
-<title>EpiRR Datasets</title>
+<title>EpiRR datasets</title>
 <link href="../favicon.ico" rel="icon" type="image/x-icon" />
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -202,7 +219,7 @@ __DATA__
 </head>
 <body>
 <div class="container-fluid">
-<h1>EpiRR Datasets</h1>
+<h1>EpiRR datasets</h1>
 <table class="table table-hover table-condensed table-striped">
 <thead>
 <tr>
@@ -225,6 +242,46 @@ __DATA__
   <td><%= $d->local_name %></td>
   <td><%= $d->description %></td>
   <td><a href="./<%= $d->full_accession %>">Detail</a></td>
+  </tr>
+% }
+</tbody>
+</table>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+@@ summary.html.ep
+<!DOCTYPE html>
+<html>
+<head>
+<title>EpiRR dataset summary</title>
+<link href="../favicon.ico" rel="icon" type="image/x-icon" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> 
+</head>
+<body>
+<div class="container-fluid">
+<h1>EpiRR dataset summary</h1>
+<table class="table table-hover table-condensed table-striped">
+<thead>
+<tr>
+<th>Project</th>
+<th>Status</th>
+<th>Dataset Count</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+% for my $s (@$summary) {
+  <tr>
+  <td><%= $s->{project} %></td>
+  <td><%= $s->{status} %></td>
+  <td><%= $s->{dataset_count} %></td>
   </tr>
 % }
 </tbody>

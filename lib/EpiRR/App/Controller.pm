@@ -31,9 +31,9 @@ sub fetch_current {
         { is_current => 1 },
         {
             prefetch => {
-                dataset    => ['project'],
-                type       => [],
-                status     => [],
+                dataset => ['project'],
+                type    => [],
+                status  => [],
             },
             collapse => 1,
         }
@@ -42,6 +42,33 @@ sub fetch_current {
     return \@dsv;
 }
 
+sub fetch_summary {
+    my ($self) = @_;
+
+    my @summary = $self->schema()->dataset_version()->search(
+        { is_current => 1 },
+        {
+            join   => [ 'status', { 'dataset' => 'project' } ],
+            select => [
+                'status.name', 'project.name',
+                { count => 'dataset_version_id' }
+            ],
+            as       => [qw(status_name project_name dataset_count)],
+            group_by => [ 'status.name', 'project.name' ],
+            order_by => [ 'project.name', 'status.name' ],
+        },
+    );
+
+    @summary = map {
+        {
+            project       => $_->get_column('project_name'),
+            status        => $_->get_column('status_name'),
+            dataset_count => $_->get_column('dataset_count')
+        }
+    } @summary;
+
+    return \@summary;
+}
 
 sub fetch {
     my ( $self, $id ) = @_;
@@ -54,7 +81,7 @@ sub fetch {
           $data_set->search_related( 'dataset_versions', { is_current => 1 } )
           ->first();
     }
-    
+
     if ( !$data_set_version ) {
         $data_set_version =
           $self->schema->dataset_version()->find( { full_accession => $id } );
