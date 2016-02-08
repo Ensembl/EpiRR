@@ -18,7 +18,6 @@ use strict;
 use EpiRR::Schema;
 use Getopt::Long;
 use Carp;
-use JSON;
 use File::Find;
 use File::stat;
 use autodie;
@@ -41,8 +40,7 @@ eval("require $config_module")
   or croak "cannot load module $config_module $@";
 
 my $container = $config_module->c();
-my $accession_service = $container->resolve( service => 'text_file_parser' );
-my $json = JSON->new;
+my $accession_service = $container->resolve( service => 'accession_service' );
 
 my $report_file_name = "$dir/summary." . time . ".tsv";
 open my $r_fh, '>', $report_file_name;
@@ -96,54 +94,4 @@ sub wanted {
     }
 }
 
-sub accession {
-    my ( $in_file, $out_file, $err_file ) = @_;
-
-    open my $ofh, '>', $out_file or croak("Could not open $out_file: $!");
-    open my $efh, '>', $err_file or croak("Could not open $err_file: $!");
-
-    my $parser;
-
-    if ( $in_file =~ m/\.json$/ ) {
-        $parser = $container->resolve( service => 'json_file_parser' );
-    }
-    else {
-        $parser = $container->resolve( service => 'text_file_parser' );
-    }
-
-    $parser->file_path($in_file);
-    $parser->parse();
-
-    if ( $parser->error_count() ) {
-        print $efh
-          "Error(s) when parsing file, accessioning will not proceed.$/";
-        print $efh $_ . $/ for ( $parser->all_errors() );
-        return;
-    }
-
-    my $conversion_service =
-      $container->resolve( service => 'conversion_service' );
-    my $user_dataset = $parser->dataset();
-    my $errors       = [];
-    my $db_dataset = $conversion_service->user_to_db( $user_dataset, $errors );
-
-    if (@$errors) {
-        print $efh
-"Error(s) when checking and storing data set, accessioning will not proceed."
-          . $/;
-        print $efh $_ . $/ for (@$errors);
-        close $ofh;
-        close $efh;
-        return;
-    }
-
-    my $output_service = $container->resolve( service => 'output_service' );
-    my $full_dataset = $output_service->db_to_user($db_dataset);
-
-    print $ofh $json->pretty()->encode( $full_dataset->to_hash() );
-
-    close $ofh;
-    close $efh;
-    return;
-}
 
