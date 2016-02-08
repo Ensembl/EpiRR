@@ -53,12 +53,12 @@ has 'json' => (
     isa      => 'JSON',
     required => 1,
     default  => sub {
-        JSON->new()
+        JSON->new();
     }
 );
 
 sub accession {
-    my ( $self,$in_file, $out_file, $err_file, $quiet ) = @_;
+    my ( $self, $in_file, $out_file, $err_file, $quiet ) = @_;
 
     open my $ofh, '>', $out_file;
     open my $efh, '>', $err_file;
@@ -98,12 +98,14 @@ sub accession {
 "Error(s) when checking and storing data set, accessioning will not proceed."
           . $/;
         print $efh $_ . $/ for (@$errors);
-        return @output;
+
     }
+    else {
+        my $full_dataset = $self->output_service->db_to_user($db_dataset);
+        $output[1] = $full_dataset;
 
-    my $full_dataset = $self->output_service->db_to_user($db_dataset);
-
-    print $ofh $self->json->pretty()->encode( $full_dataset->to_hash() );
+        print $ofh $self->json->pretty()->encode( $full_dataset->to_hash() );
+    }
 
     close $ofh;
     close $efh;

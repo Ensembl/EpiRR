@@ -20,6 +20,7 @@ use Getopt::Long;
 use Carp;
 use File::Find;
 use File::stat;
+use File::Basename;
 use autodie;
 
 my $config_module = 'EpiRR::Config';
@@ -55,16 +56,17 @@ close $r_fh;
 sub report {
     my ( $file_name, $errors, $ds ) = @_;
 
-    my @cols = qw(file project local_name description status);
+    my @cols = qw(file project local_name description status, epirr_id);
     my %vals = (
-        file        => $file_name,
+        file        => basename($file_name),
         project     => $ds->project || '',
         local_name  => $ds->local_name || '',
         description => $ds->description || '',
         status      => $ds->status || '',
+        epirr_id    => $ds->full_accession || '',
     );
 
-    print $r_fh join( "\t", @vals{@cols}, @$errors );
+    print $r_fh join( "\t", @vals{@cols}, @$errors ) . $/;
 
 }
 
@@ -93,5 +95,4 @@ sub wanted {
         }
     }
 }
-
 
