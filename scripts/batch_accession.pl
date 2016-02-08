@@ -56,7 +56,7 @@ close $r_fh;
 sub report {
     my ( $file_name, $errors, $ds ) = @_;
 
-    my @cols = qw(file project local_name description status, epirr_id);
+    my @cols = qw(file project local_name description status epirr_id);
     my %vals = (
         file        => basename($file_name),
         project     => $ds->project || '',
