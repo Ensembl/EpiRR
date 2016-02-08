@@ -42,6 +42,7 @@ eval("require $config_module")
 
 my $container = $config_module->c();
 my $accession_service = $container->resolve( service => 'text_file_parser' );
+my $json = JSON->new;
 
 my $report_file_name = "$dir/summary." . time . ".tsv";
 open my $r_fh, '>', $report_file_name;
@@ -65,7 +66,7 @@ sub report {
         status      => $ds->status || '',
     );
 
-    print $r_fh join( "\t", @vals{@cols}, @errors );
+    print $r_fh join( "\t", @vals{@cols}, @$errors );
 
 }
 
@@ -131,6 +132,8 @@ sub accession {
 "Error(s) when checking and storing data set, accessioning will not proceed."
           . $/;
         print $efh $_ . $/ for (@$errors);
+        close $ofh;
+        close $efh;
         return;
     }
 
