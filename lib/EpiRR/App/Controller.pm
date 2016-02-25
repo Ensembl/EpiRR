@@ -42,6 +42,25 @@ sub fetch_current {
     return \@dsv;
 }
 
+sub fetch_current_full {
+    my ($self) = @_;
+
+    my $os                = $self->output_service();
+    my @current_data_sets = $self->schema()->dataset_version()->search(
+        { is_current => 1 },
+        {
+            prefetch => {
+                dataset => ['project'],
+                type    => [],
+                status  => [],
+            },
+            collapse => 1,
+        }
+    );
+    my @dsv = map { $os->db_to_user($_) } @current_data_sets;
+    return \@dsv;
+}
+
 sub fetch_summary {
     my ($self) = @_;
 

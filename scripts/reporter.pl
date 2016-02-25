@@ -44,7 +44,7 @@ my @columns = (qw(Project Accession Status Type Description),@req);
 print join ("\t",@columns).$/;
 
 
-for my $d ( @{ $controller->fetch_current } ) {
+for my $d ( @{ $controller->fetch_current_full } ) {
 
   my @v = ( $d->project, $d->full_accession, $d->status, $d->type,
       $d->description );
