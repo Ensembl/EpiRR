@@ -57,7 +57,7 @@ for my $d ( @{ $controller->fetch_current_full } ) {
         ? $r->experiment_type
         : $r->assay_type;
       $rd{$k} = [] if ( !$rd{$k} );
-      push @{ $rd{$k} }, $r->primary_accession;
+      push @{ $rd{$k} }, $r->primary_id;
   }
 
   for my $req (@req) {
