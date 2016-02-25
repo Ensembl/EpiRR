@@ -25,6 +25,7 @@ our $container = container 'EpiRR' => as {
         class        => 'EpiRR::App::Controller',
         dependencies => {
             conversion_service => depends_on('conversion_service'),
+            output_service     => depends_on('output_service'),
             schema             => depends_on( 'database/dbic_schema', )
         }
     );
