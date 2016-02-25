@@ -51,7 +51,7 @@ for my $d ( @{ $controller->fetch_current } ) {
 
   my %rd;
 
-  for my $r ( $d->all_rawdata ) {
+  for my $r ( $d->all_raw_data ) {
       my $k =
         ( $r->assay_type eq 'ChIP-Seq' )
         ? $r->experiment_type
