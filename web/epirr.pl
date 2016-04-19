@@ -36,12 +36,21 @@ my $controller =
 get '/summary' => sub {
     my $self = shift;
 
-    my $summary = $controller->fetch_summary();
+    my ( $project_summary, $status_summary, $all_summary )= $controller->fetch_summary();
 
     $self->respond_to(
-        json => sub { $self->render( json => $summary ); },
+        json => sub { $self->render( json => { 'summary'         => $all_summary,
+                                               'project_summary' => $project_summary,
+                                               'status_summary'  => $status_summary,   
+                                             } 
+                                   ); 
+                    },
         html => sub {
-            $self->stash( summary => $summary, title => 'dataset summary', );
+            $self->stash( title           => 'dataset summary',
+                          project_summary => $project_summary, 
+                          status_summary  => $status_summary,
+                          all_summary     => $all_summary
+                        );
             $self->render( template => 'summary' );
         }
     );
@@ -275,18 +284,28 @@ __DATA__
 <thead>
 <tr>
 <th>Project</th>
-<th>Status</th>
-<th>Dataset Count</th>
-<th></th>
+% for my $s (keys %$status_summary) {
+<th><%= $s %></th>
+% }
+<th class=”ctotal” >Total dataset count</th>
 </tr>
 </thead>
 <tbody>
-% for my $s (@$summary) {
-  <tr>
-  <td><%= $s->{project} %></td>
-  <td><%= $s->{status} %></td>
-  <td><%= $s->{dataset_count} %></td>
-  </tr>
+% for my $sp (keys %$project_summary) {
+<tr>
+  <td><%= $sp %></td>
+  % for my $st (keys %$status_summary) {
+  <td><%=  $$all_summary{$sp}{$st} %></td>
+   %}
+   <td class=”ctotal” ><%= $$project_summary{$sp} %></td>
+   </tr>
 % }
+<tr>
+  <td class=”ttotal” >Total</td>
+  % for my $s (keys %$status_summary) {
+  <td class=”ttotal” ><%= $$status_summary{$s} %></td>
+  % }
+  <td/>
+</tr>
 </tbody>
 </table>
