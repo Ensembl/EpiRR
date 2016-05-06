@@ -294,6 +294,7 @@ sub _raw_data {
               ->lookup_raw_data( $user_rd, $rd_errors );
 
             if ( !@$rd_errors ) {
+                #no errors, should have objects 
                 confess("No raw data returned for $rd_txt") unless $rd;
                 confess("No sample returned for $rd_txt")   unless $s;
 
@@ -303,7 +304,8 @@ sub _raw_data {
                   unless ( $rd->assay_type() );
             }
 
-            push @samples, $s;
+
+            push @samples, $s if ($s);
 
             $dataset_version->create_related(
                 'raw_datas',
@@ -317,10 +319,11 @@ sub _raw_data {
                 }
             ) if ( !@$rd_errors );
 
-            $user_rd->experiment_type( $rd->experiment_type() );
-            $user_rd->assay_type( $rd->assay_type );
+            $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
+            $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
         }
-        else {
+        
+        if ( ! $self->accessor_exists($archive_name) ) {
             push @$rd_errors, "Do not know how to read raw data from archive";
         }
 
