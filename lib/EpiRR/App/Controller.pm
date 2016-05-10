@@ -94,7 +94,6 @@ sub fetch_summary {
 
         $project_summary{$project_name} += $dataset_count;
         $status_summary{$status} += $dataset_count;
-        #$status_summary{'total'} += $dataset_count;
         $all_summary{$project_name}{$status} = $dataset_count;
       }
     return \%project_summary, \%status_summary, \%all_summary;

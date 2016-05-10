@@ -162,6 +162,18 @@ __DATA__
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<style>
+#totalrow td {
+    border-top-color: #DDD;
+    border-top-width: 2px;
+    border-top-style: solid; 
+}
+.ctotal {
+  border-left-color: #DDD;
+  border-left-width: 2px;
+  border-left-style: solid; 
+}
+</style>
 </head>
 <body>
 <div class="container-fluid">
@@ -284,28 +296,28 @@ __DATA__
 <thead>
 <tr>
 <th>Project</th>
-% for my $s (keys %$status_summary) {
+% for my $s ( sort {$a cmp $b} keys %$status_summary) {
 <th><%= $s %></th>
 % }
-<th class=”ctotal” >Total dataset count</th>
+<th class="ctotal">Total dataset count</th>
 </tr>
 </thead>
 <tbody>
-% for my $sp (keys %$project_summary) {
+% for my $sp (sort {$a cmp $b} keys %$project_summary) {
 <tr>
   <td><%= $sp %></td>
-  % for my $st (keys %$status_summary) {
-  <td><%=  $$all_summary{$sp}{$st} %></td>
+  % for my $st ( sort {$a cmp $b} keys %$status_summary) {
+  <td><%=  $$all_summary{$sp}{$st} // 0%></td>
    %}
-   <td class=”ctotal” ><%= $$project_summary{$sp} %></td>
+   <td class="ctotal"><%= $$project_summary{$sp} %></td>
    </tr>
 % }
-<tr>
-  <td class=”ttotal” >Total</td>
-  % for my $s (keys %$status_summary) {
-  <td class=”ttotal” ><%= $$status_summary{$s} %></td>
+<tr id="totalrow">
+  <td>Total</td>
+  % for my $s ( sort {$a cmp $b} keys %$status_summary) {
+  <td><%= $$status_summary{$s} %></td>
   % }
-  <td/>
+  <td class="ctotal"></td>
 </tr>
 </tbody>
 </table>
