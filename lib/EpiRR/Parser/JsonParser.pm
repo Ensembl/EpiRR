@@ -85,10 +85,10 @@ sub convert_dataset {
 
     my %rd_ids;
     for my $rd (@$raw_data){
-      my $key = join('#',$rd->primary_id,$rd->secondary_id || '');
+      my $key = join(';',grep {defined $_} $rd->archive,$rd->primary_id,$rd->secondary_id);
       $rd_ids{$key}++;
       if ($rd_ids{$key} > 1){
-        $self->add_error('Duplicate raw_data values detected');
+        $self->add_error('Duplicate raw_data values detected: '.$key);
       }
     }
 

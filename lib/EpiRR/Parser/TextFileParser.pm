@@ -113,7 +113,7 @@ sub handle_project {
 sub handle_raw_data {
     my ( $self, $tokens ) = @_;
     my ( $archive, $primary_id, $secondary_id ) = @$tokens;
-
+    
     $self->check_token_count( $tokens, 3 );
 
     if ( !$archive ) {
@@ -122,9 +122,10 @@ sub handle_raw_data {
     if ( !$primary_id ) {
         $self->add_error("No primary ID given for RAW_DATA");
     }
-    my $rd_token = join( '#', @$tokens );
+    
+    my $rd_token = join( ';', grep {defined $_} @$tokens );
     if ( $self->raw_data_tokens_exists($rd_token) ) {
-        $self->add_error("Duplicate RAW_DATA declared");
+        $self->add_error("Duplicate RAW_DATA declared: $rd_token");
     }
     if ( $archive && $primary_id ) {
         my $rd = EpiRR::Model::RawData->new(

@@ -48,7 +48,7 @@ use File::Basename;
     $parser->parse();
     is_deeply(
         $parser->errors,
-        [ 'Duplicate raw_data values detected', ],
+        [ 'Duplicate raw_data values detected: GEO;GSM1220575', ],
         'Duplicate raw data values'
     );
 }

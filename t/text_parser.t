@@ -162,7 +162,7 @@ END
     $p->parse();
     is_deeply(
         $p->errors,
-        [ 'Duplicate RAW_DATA declared at line 6', ],
+        [ 'Duplicate RAW_DATA declared: ABC;FOO;Bar at line 6', ],
         'Duplicate RAW_DATA values detected'
     );
 }
