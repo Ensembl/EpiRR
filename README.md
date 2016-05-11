@@ -14,7 +14,9 @@ The minimal requirements for submission are
  - a valid project name
  - one or more pieces of raw data, available through a supported archive
  - consistent metadata attributes for samples referenced in the raw data
- - an experiment type, as per the IHEC metadata requirements 
+ - an experiment type, as per the IHEC metadata requirements
+ 
+Each piece of raw data should be referenced once, duplicate entries will be rejected. 
  
 Optionally, you can include any of the following:
  - a text description of your reference epigenome
