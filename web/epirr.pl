@@ -314,10 +314,12 @@ __DATA__
 % }
 <tr id="totalrow">
   <td>Total</td>
+  % my $total_dataset_count = 0;
   % for my $s ( sort {$a cmp $b} keys %$status_summary) {
+    % $total_dataset_count += $$status_summary{$s};
   <td><%= $$status_summary{$s} %></td>
   % }
-  <td class="ctotal"></td>
+  <td class="ctotal"><%=$total_dataset_count %></td>
 </tr>
 </tbody>
 </table>
