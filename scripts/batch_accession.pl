@@ -19,7 +19,7 @@ use EpiRR::Schema;
 use Getopt::Long;
 use Carp;
 use File::Find;
-use File::stat;
+use File::Spec;
 use File::Basename;
 use autodie;
 
@@ -29,9 +29,9 @@ my $outfile;
 my $quiet = 0;
 
 GetOptions(
-    "config=s" => \$config_module,
-    "dir=s"    => \$dir,
-    'quiet!'   => \$quiet,
+  "config=s" => \$config_module,
+  "dir=s"    => \$dir,
+  'quiet!'   => \$quiet,
 ) or croak("Error with options: $!");
 
 croak("Missing option: -dir") unless ($dir);
@@ -54,45 +54,48 @@ find( \&wanted, $dir );
 close $r_fh;
 
 sub report {
-    my ( $file_name, $errors, $ds ) = @_;
+  my ( $file_name, $errors, $ds ) = @_;
 
-    my @cols = qw(file project local_name description status epirr_id);
-    my %vals = (
-        file        => basename($file_name),
-        project     => $ds->project || '',
-        local_name  => $ds->local_name || '',
-        description => $ds->description || '',
-        status      => $ds->status || '',
-        epirr_id    => $ds->full_accession || '',
-    );
+  my @cols = qw(file project local_name description status epirr_id);
+  my %vals = (
+    file        => basename($file_name),
+    project     => ( $ds && $ds->project ) ? $ds->project : '',
+    local_name  => ( $ds && $ds->local_name ) ? $ds->local_name : '',
+    description => ( $ds && $ds->description ) ? $ds->description : '',
+    status      => ( $ds && $ds->status ) ? $ds->status : '',
+    epirr_id    => ( $ds && $ds->full_accession ) ? $ds->full_accession : '',
+  );
 
-    print $r_fh join( "\t", @vals{@cols}, @$errors ) . $/;
+  print $r_fh join( "\t", @vals{@cols}, @$errors ) . $/;
 
 }
 
 sub wanted {
-    if ( ( m/\.refepi.json$/ || m/\.refepi$/ ) && !m/^\./ ) {
-        my $in_file = $File::Find::name;
+  if ( ( m/\.refepi.json$/ || m/\.refepi$/ ) && !m/^\./ ) {
+    my $in_file = $File::Find::name;
 
-        my $out_file = $File::Find::name;
-        $out_file =~ s/\.json$//;
-        $out_file .= '.out.json';
-        my $err_file = $File::Find::name . '.err';
+    my $out_file = $File::Find::name;
+    $out_file =~ s/\.json$//;
+    $out_file .= '.out.json';
+    my $err_file   = $File::Find::name . '.err';
+    my $i_mod_time = mtime($in_file);
+    my $o_mod_time = ( ( -e $out_file ) ? mtime($out_file) : 0 );
+    my $e_mod_time = ( ( -e $err_file ) ? mtime($err_file) : 0 );
 
-        my $i_mod_time = stat($in_file)->mtime;
-        my $o_mod_time = ( ( -e $out_file ) ? stat($out_file)->mtime : 0 );
-        my $e_mod_time = ( ( -e $err_file ) ? stat($err_file)->mtime : 0 );
-
-        if ( $i_mod_time > $o_mod_time && $i_mod_time > $e_mod_time ) {
-            print STDERR "Accessioning $in_file$/" unless $quiet;
-            my ( $errors, $refepi ) =
-              $accession_service->accession( $in_file, $out_file, $err_file,
-                $quiet );
-            report( $in_file, $errors, $refepi );
-        }
-        else {
-            print STDERR "Skipping $in_file$/" unless $quiet;
-        }
+    if ( $i_mod_time > $o_mod_time && $i_mod_time > $e_mod_time ) {
+      print STDERR "Accessioning $in_file$/" unless $quiet;
+      my ( $errors, $refepi ) =
+        $accession_service->accession( $in_file, $out_file, $err_file, $quiet );
+      report( $in_file, $errors, $refepi );
     }
+    else {
+      print STDERR "Skipping $in_file$/" unless $quiet;
+    }
+  }
 }
 
+sub mtime {
+  my ($file) = @_;
+  my @file_stat = stat $file or confess "stat failed for $file: " . $!;
+  return $file_stat[9];
+}
