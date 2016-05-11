@@ -64,6 +64,7 @@ sub fetch_current_full {
 sub fetch_summary {
     my ($self) = @_;
 
+    my (%project_summary, %status_summary, %all_summary );
     my @summary = $self->schema()->dataset_version()->search(
         { is_current => 1 },
         {
@@ -86,7 +87,16 @@ sub fetch_summary {
         }
     } @summary;
 
-    return \@summary;
+      foreach my $summary_entry ( @summary ){
+        my $project_name = $summary_entry->{project};
+        my $status = $summary_entry->{status};
+        my $dataset_count = $summary_entry->{dataset_count};
+
+        $project_summary{$project_name} += $dataset_count;
+        $status_summary{$status} += $dataset_count;
+        $all_summary{$project_name}{$status} = $dataset_count;
+      }
+    return \%project_summary, \%status_summary, \%all_summary;
 }
 
 sub fetch {

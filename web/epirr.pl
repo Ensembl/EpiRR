@@ -36,12 +36,21 @@ my $controller =
 get '/summary' => sub {
     my $self = shift;
 
-    my $summary = $controller->fetch_summary();
+    my ( $project_summary, $status_summary, $all_summary )= $controller->fetch_summary();
 
     $self->respond_to(
-        json => sub { $self->render( json => $summary ); },
+        json => sub { $self->render( json => { 'summary'         => $all_summary,
+                                               'project_summary' => $project_summary,
+                                               'status_summary'  => $status_summary,   
+                                             } 
+                                   ); 
+                    },
         html => sub {
-            $self->stash( summary => $summary, title => 'dataset summary', );
+            $self->stash( title           => 'dataset summary',
+                          project_summary => $project_summary, 
+                          status_summary  => $status_summary,
+                          all_summary     => $all_summary
+                        );
             $self->render( template => 'summary' );
         }
     );
@@ -153,6 +162,18 @@ __DATA__
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<style>
+#totalrow td {
+    border-top-color: #DDD;
+    border-top-width: 2px;
+    border-top-style: solid; 
+}
+.ctotal {
+  border-left-color: #DDD;
+  border-left-width: 2px;
+  border-left-style: solid; 
+}
+</style>
 </head>
 <body>
 <div class="container-fluid">
@@ -275,18 +296,30 @@ __DATA__
 <thead>
 <tr>
 <th>Project</th>
-<th>Status</th>
-<th>Dataset Count</th>
-<th></th>
+% for my $s ( sort {$a cmp $b} keys %$status_summary) {
+<th><%= $s %></th>
+% }
+<th class="ctotal">Total dataset count</th>
 </tr>
 </thead>
 <tbody>
-% for my $s (@$summary) {
-  <tr>
-  <td><%= $s->{project} %></td>
-  <td><%= $s->{status} %></td>
-  <td><%= $s->{dataset_count} %></td>
-  </tr>
+% for my $sp (sort {$a cmp $b} keys %$project_summary) {
+<tr>
+  <td><%= $sp %></td>
+  % for my $st ( sort {$a cmp $b} keys %$status_summary) {
+  <td><%=  $$all_summary{$sp}{$st} // 0%></td>
+   %}
+   <td class="ctotal"><%= $$project_summary{$sp} %></td>
+   </tr>
 % }
+<tr id="totalrow">
+  <td>Total</td>
+  % my $total_dataset_count = 0;
+  % for my $s ( sort {$a cmp $b} keys %$status_summary) {
+    % $total_dataset_count += $$status_summary{$s};
+  <td><%= $$status_summary{$s} %></td>
+  % }
+  <td class="ctotal"><%=$total_dataset_count %></td>
+</tr>
 </tbody>
 </table>
