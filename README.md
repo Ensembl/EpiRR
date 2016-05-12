@@ -82,7 +82,8 @@ These project names are currently supported. Please get in touch if there are an
  * EPP
  * NIH Roadmap Epigenomics
  * CREST
- * CEMT
+ * CEEHRC (CEMT)
+ * CEEHRC (McGill)
 
 ## Supported Archives
 
