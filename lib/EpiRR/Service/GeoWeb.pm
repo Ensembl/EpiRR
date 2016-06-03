@@ -82,6 +82,11 @@ sub lookup_raw_data {
 sub _geo_miniml {
     my ( $self, $accession, $errors ) = @_;
 
+    if ($accession !~ m/^GSM\d+/){
+      push @$errors, "Expected Geo acession starting with GSM, got $accession";
+      return;
+    }
+
     my $main_xml = $self->_get_xml($accession);
 
     if ( $main_xml =~ m/\<!DOCTYPE HTML/ ) {
@@ -91,12 +96,18 @@ sub _geo_miniml {
     my ( $platform_id, $sample, $experiment_type, $assay_type ) =
       $self->geo_xml_parser()->parse_main( $main_xml, $errors );
 
-    if ( !$experiment_type ) {
+    if ( !$experiment_type && $platform_id) {
         my $platform_xml = $self->_get_xml($platform_id);
         $experiment_type =
           $self->geo_xml_parser()->parse_platform( $platform_xml, $errors );
         $assay_type = $experiment_type;
     }
+    
+    if ( !$experiment_type ) {
+      push @$errors, "Could not determine experiment type for $accession";
+      return;
+    }
+    
 
     return ( $experiment_type, $assay_type, $sample );
 }

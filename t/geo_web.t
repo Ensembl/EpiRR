@@ -25,7 +25,7 @@ my $geo = EpiRR::Service::GeoWeb->new();
 
 {
     my $errors    = [];
-    my $accession = 'NO_DATA_HERE';
+    my $accession = 'GSM99999999';
     my ( $raw_data, $sample ) = $geo->lookup_raw_data(
         EpiRR::Model::RawData->new(
             archive    => 'GEO',
@@ -35,8 +35,25 @@ my $geo = EpiRR::Service::GeoWeb->new();
     );
     is_deeply(
         $errors,
-        ['Geo returned no data for NO_DATA_HERE'],
+        ['Geo returned no data for GSM99999999'],
         'Handles accession error'
+    );
+}
+
+{
+    my $errors    = [];
+    my $accession = 'GSE78556';
+    my ( $raw_data, $sample ) = $geo->lookup_raw_data(
+        EpiRR::Model::RawData->new(
+            archive    => 'GEO',
+            primary_id => $accession,
+        ),
+        $errors,
+    );
+    is_deeply(
+        $errors,
+        ['Expected Geo acession starting with GSM, got GSE78556'],
+        'Handles accession of wrong type'
     );
 }
 
