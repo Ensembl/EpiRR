@@ -57,7 +57,7 @@ my $b = EpiRR::Service::CommonMetaDataBuilder->new(
         ),
         EpiRR::Model::Sample->new(
             sample_id => 'S2',
-            meta_data => { foo => 'bar', noodles => 'egg', attr => 'value' },
+            meta_data => { foo => 'barfly', noodles => 'egg', attr => 'value' },
         )
     ];
     my $errors = [];
@@ -96,6 +96,30 @@ $b->required_common_meta_data(
         ],
         'Reference epigenome metadata error message expected'
     );
+}
+
+{
+    my $input = [
+        EpiRR::Model::Sample->new(
+            sample_id => 'S1',
+            meta_data => {
+                foo              => 'bar',
+                strudel          => 'apple',
+                attr             => 'Value',
+                species          => 'hs',
+                biomaterial_type => 'bt'
+            },
+        ),
+        EpiRR::Model::Sample->new(
+            sample_id => 'S2',
+            meta_data => { foo => 'Bar', noodles => 'egg', attr => 'value' },
+        )
+    ];
+    my $errors   = [];
+    my %expected = ( foo => 'Bar', attr => 'value' );
+    my %actual   = $b->build_meta_data( $input, $errors );
+
+    is_deeply( \%actual, \%expected, 'Common meta data returned where source case was inconsistent' );
 }
 
 done_testing();
