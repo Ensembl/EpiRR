@@ -14,6 +14,7 @@ requires 'Data::Compare';
 requires 'namespace::autoclean';
 requires 'Try::Tiny';
 requires 'Mojolicious', '>= 6.33';
+requires 'DBD::mysql';
 
 on 'test' => sub {
   requires 'Test::More';
