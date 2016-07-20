@@ -37,7 +37,7 @@ JSON file submissions must have the suffix `.refepi.json`. Semantics are the sam
      {"archive": "GEO", "primary_id": "GSM000001"},
      {"archive": "SRA", "primary_id": "SRX000001"},
      {"archive": "ERA", "primary_id": "ERX000001"},
-     {"archive": "EGA", "primary_id": "EGAX00000000001", "secondary_id", "EGAD00000000001"}
+     {"archive": "EGA", "primary_id": "EGAX00000000001", "secondary_id": "EGAD00000000001"}
     ]} 
 
 ### Text format
