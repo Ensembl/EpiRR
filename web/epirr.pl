@@ -95,6 +95,10 @@ get '/view/#id' => sub {
     my $id      = $self->param('id');
     my $dataset = $controller->fetch($id);
 
+    if ( !$dataset ) {
+        return $self->reply->not_found;
+    }
+
     my $url          = $self->req->url->to_abs;
     my $acc          = $dataset->accession;
     my $this_version = $dataset->full_accession;
@@ -120,10 +124,6 @@ get '/view/#id' => sub {
         $links->{current_version} = { href => $curr_url };
     }
 
-    if ( !$dataset ) {
-        $self->reply->not_found;
-        return;
-    }
     $self->respond_to(
         json => sub {
             my $hd = $dataset->to_hash;
@@ -323,3 +323,9 @@ __DATA__
 </tr>
 </tbody>
 </table>
+
+
+@@ not_found.html.ep
+% layout 'layout', title => '404';
+<h1>Not found</h1>
+<p>We do not have any information on that. Please see the <%= link_to 'list of records' => '/view/all' %>.</p>
