@@ -24,11 +24,11 @@ Optionally, you can include any of the following:
 
 The requirements for raw data vary depending on the archive, but in each case the archive name and experiment ID are required. For some archives, a secondary ID is also required. The requirements are listed in detail below.
 
-Updates to a reference epigenome can be made by resubmission, including either the project local name, or the reference epigenome accession. Modifications result in an increase in the version number for the reference epigenome.
+Updates to a reference epigenome can be made by resubmission and must include either the local name or the reference epigenome accession. Modifications result in an increase in the version number for the reference epigenome.
 
 ### JSON format
 
-JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file should contain a single reference epigenome.
+JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file must contain a single reference epigenome.
 
     {"project": "Example project",
     "local_name": "ep_ref_1",
@@ -42,7 +42,7 @@ JSON file submissions must have the suffix `.refepi.json`. Semantics are the sam
 
 ### Text format
 
-Text file submissions must have the suffix `.refepi`. This format is intended for use by submitters preparing files by hand. Each line represents one property of the epigenome. Properties and values are tab separated. Line order is not important. Each file should contain a single reference epigenome.
+Text file submissions must have the suffix `.refepi`. This format is intended for use by submitters preparing files by hand. Each line represents one property of the epigenome. Properties and values are tab separated. Line order is not important. Each file must contain a single reference epigenome.
 
     PROJECT	Example project
     LOCAL_NAME	ep_ref_1
@@ -67,9 +67,9 @@ If you need to update a submission, add the EpiRR accession to the file:
 The attributes required are common between both submission formats. The attribute name should be lower case for JSON file submission and upper case for the text format.
 
  * PROJECT: Project name (required)
- * ACCESSION: EpiRR accession for the reference epigenome. Weither this or LOCAL\_NAME must be present for updates, must not be present in initial submission.
+ * ACCESSION: EpiRR accession for the reference epigenome. Either this or LOCAL\_NAME must be present for updates. It must not be present in initial submission.
  * LOCAL\_NAME: ID for reference epigenome used within the project. Optional, either this or ACCESSION must be present for updates.
- * DESCRIPTION: Free text description of the reference epigenome. Optional.
+ * DESCRIPTION: Free text description of the reference epigenome. Optional, but is displayed by the website.
  * RAW\_DATA: Archive name, primary ID, secondary ID. Details vary by archive. At least one required.
 
 
@@ -165,7 +165,7 @@ Species is taken from the standard archived metadata and is required.
 
 To annotate each reference epigenome, the sample metadata is compared. Attributes that are consistent across all referenced samples are used to annotate the epigenome. 'Consistent' means that the attribute names must be the same (although case can vary) and the values must be identical. 
 
-To ensure coherence, the following minimal common meta data across an epigenome are required:
+To ensure the coherence of each dataset, the following minimal common meta data across an epigenome are required:
  * Species
  * BIOMATERIAL\_TYPE
  * LINE, CELL\_TYPE, TISSUE\_TYPE or DISEASE
@@ -174,9 +174,9 @@ This is not intended to form a full validator for the IHEC metadata, rather it i
 
 ## Access
 
-We have a prototype REST interface, included in the github repo. This has not been deployed yet - this documentation will be updated when it has been done.
+We have a REST interface available, hosted at EMBL-EBI - [www.ebi.ac.uk/vg/epirr](http://www.ebi.ac.uk/vg/epirr). The code is included in the github repo under `web/`.
 
-The REST interface will support the following use cases:
+The REST interface supports the following use cases:
 
 - fetch all current reference epigenomes
 - fetch specific version of a reference epigenome, including historic versions
