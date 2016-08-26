@@ -28,7 +28,7 @@ Updates to a reference epigenome can be made by resubmission and must include ei
 
 ### JSON format
 
-JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file must contain a single reference epigenome.
+JSON file submissions must have the suffix `.refepi.json`. Semantics are the same as for the text format. Attribute names should be lower case. This format is intended for use by submitters preparing files programmatically. Each file must contain a single reference epigenome. 
 
     {"project": "Example project",
     "local_name": "ep_ref_1",
