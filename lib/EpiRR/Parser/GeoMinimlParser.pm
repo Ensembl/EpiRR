@@ -28,7 +28,7 @@ use EpiRR::Model::RawData;
 sub parse_main {
     my ( $self, $xml, $errors ) = @_;
 
-    my ( $platform_id, $experiment_type, $library_strategy );
+    my ( $platform_id, $experiment_type, $library_strategy, $contributor );
     my $s = EpiRR::Model::Sample->new();
 
     my $t = XML::Twig->new(
@@ -67,8 +67,16 @@ sub parse_main {
                 my ( $t, $element ) = @_;
                 $platform_id = $element->{'att'}->{'iid'};
               },
+              'Contributor/Person/First' => sub {
+                my ( $t, $element ) = @_;
+                $contributor = $element->trimmed_text();
+              }
         }
     );
+    if($contributor eq 'ENCODE') {
+
+    }
+
     $t->parse($xml);
     return ( $platform_id, $s, $experiment_type, $library_strategy );
 }
