@@ -24,18 +24,6 @@ use autodie;
 use EpiRR::Parser::JsonParser;
 use EpiRR::Parser::TextFileParser;
 
-has 'json_parser' => (
-    is      => 'rw',
-    isa     => 'InputParser',
-    default => sub { EpiRR::Parser::JsonParser->new() },
-);
-
-has 'text_parser' => (
-    is      => 'rw',
-    isa     => 'InputParser',
-    default => sub { EpiRR::Parser::TextFileParser->new() },
-);
-
 has 'conversion_service' => (
     is       => 'rw',
     isa      => 'EpiRR::Service::ConversionService',
@@ -56,6 +44,14 @@ has 'json' => (
         JSON->new();
     }
 );
+
+sub json_parser {
+	return EpiRR::Parser::JsonParser->new();
+}
+
+sub text_parser {
+	return EpiRR::Parser::TextFileParser->new()
+}
 
 sub accession {
     my ( $self, $in_file, $out_file, $err_file, $quiet ) = @_;
