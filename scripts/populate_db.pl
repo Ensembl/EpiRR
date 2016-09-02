@@ -54,6 +54,7 @@ my %archives = (
     'AE'    => 'ArrayExpress',
     'GEO'   => 'Gene Expression Omnibus',
     'DBGAP' => 'NCBI dbGaP',
+    'JGA'   => 'JGA',
 );
 
 while ( my ( $name, $full_name ) = each %archives ) {
@@ -90,7 +91,7 @@ my %projects = (
     'DEEP'                    => 'IHECRE',
     'EPP'                     => 'IHECRE',
     'NIH Roadmap Epigenomics' => 'IHECRE',
-    'CREST'                   => 'IHECRE',
+    'AMED-CREST'              => 'IHECRE',
     'CEEHRC (CEMT)'           => 'IHECRE',
     'CEEHRC (McGill)'         => 'IHECRE',
 );

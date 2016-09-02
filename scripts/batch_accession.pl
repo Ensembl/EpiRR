@@ -22,6 +22,7 @@ use File::Find;
 use File::Spec;
 use File::Basename;
 use autodie;
+use feature qw(say);
 
 my $config_module = 'EpiRR::Config';
 my $dir;
@@ -71,6 +72,7 @@ sub report {
 }
 
 sub wanted {
+  # TODO: refepi important?
   if ( ( m/\.refepi.json$/ || m/\.refepi$/ ) && !m/^\./ ) {
     my $in_file = $File::Find::name;
 

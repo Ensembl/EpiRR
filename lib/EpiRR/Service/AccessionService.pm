@@ -57,6 +57,11 @@ has 'json' => (
     }
 );
 
+# Process inputfiles
+# 1. Decide on Parser
+# 2. Parse
+# 3. Create RawData (from parsing JSON) and DataSet (to store in DB)
+# 4. Using ConversionService, store it in the DB
 sub accession {
     my ( $self, $in_file, $out_file, $err_file, $quiet ) = @_;
 

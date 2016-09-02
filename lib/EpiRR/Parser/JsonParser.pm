@@ -35,6 +35,16 @@ with 'EpiRR::Roles::InputParser';
 EpiRR::Parser::JSONParser
 
 Parses JSON to produce EpiRR::Model::Dataset objects.
+Input JSON:
+{"project": "ENCODE",
+  "local_name": "ENCSR888PLC",
+  "description": "Reference epigenome of Karpas-422",
+  "raw_data": [
+      {"archive": "GEO", "primary_id": "GSM2072529"},
+      {"archive": "GEO", "primary_id": "GSM2072530"},
+      {"archive": "GEO", "primary_id": "GSM2071622"},
+      {"archive": "GEO", "primary_id": "GSM2071623"}
+  ]}
 
 =cut
 
@@ -79,11 +89,13 @@ sub convert_dataset {
     my ( $self, $dataset_hashref ) = @_;
 
     my %dataset = %$dataset_hashref;
-
+    # returns deleted data
     my $rawdata_ref = delete $dataset{raw_data};
+    # Create RawData from JSON
     my $raw_data = [ map { EpiRR::Model::RawData->new(%$_) } @$rawdata_ref ];
 
     my %rd_ids;
+    # Check for duplicates in JSON file by creating a unique key
     for my $rd (@$raw_data){
       my $key = join(';',grep {defined $_} $rd->archive,$rd->primary_id,$rd->secondary_id);
       $rd_ids{$key}++;
