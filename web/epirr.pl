@@ -41,13 +41,13 @@ get '/summary' => sub {
     $self->respond_to(
         json => sub { $self->render( json => { 'summary'         => $all_summary,
                                                'project_summary' => $project_summary,
-                                               'status_summary'  => $status_summary,   
-                                             } 
-                                   ); 
+                                               'status_summary'  => $status_summary,
+                                             }
+                                   );
                     },
         html => sub {
-            $self->stash( title           => 'dataset summary',
-                          project_summary => $project_summary, 
+            $self->stash( title           => 'Epigenome Summary',
+                          project_summary => $project_summary,
                           status_summary  => $status_summary,
                           all_summary     => $all_summary
                         );
@@ -83,7 +83,7 @@ get '/view/all' => sub {
             $self->render( json => \@hash_datasets );
         },
         html => sub {
-            $self->stash( datasets => $datasets, title => 'datasets', );
+            $self->stash( datasets => $datasets, title => 'Epigenomes', );
             $self->render( template => 'viewall' );
         },
     );
@@ -134,7 +134,7 @@ get '/view/#id' => sub {
             $self->stash(
                 dataset => $dataset,
                 links   => $links,
-                title   => 'dataset ' . $dataset->full_accession,
+                title   => 'Epigenome ' . $dataset->full_accession,
             );
             $self->render( template => 'viewid' );
         },
@@ -166,12 +166,12 @@ __DATA__
 #totalrow td {
     border-top-color: #DDD;
     border-top-width: 2px;
-    border-top-style: solid; 
+    border-top-style: solid;
 }
 .ctotal {
   border-left-color: #DDD;
   border-left-width: 2px;
-  border-left-style: solid; 
+  border-left-style: solid;
 }
 </style>
 </head>
@@ -194,9 +194,9 @@ __DATA__
 <dt><a href="<%= $url %>/summary">/summary</a></dt>
 <dd>Report summary stats</dd>
 <dt><a href="<%= $url %>/view/all">/view/all</a></dt>
-<dd>List all current datasets</dt>
+<dd>List all current Epigenomes</dt>
 <dt>/view/:id</dt>
-<dd>View the detail of one reference dataset</dt>
+<dd>View the detail of one reference Epigenome</dt>
 </dl>
 <h2>Response types</h2>
 <p>Append <code>?format=<var>x</var></code> to the end of your query to control the format.</p>
@@ -230,7 +230,7 @@ __DATA__
 <h2>Metadata</h2>
 <dl class="dl-horizontal">
 % for my $kv ($dataset->meta_data_kv) {
-  <dt><%= $kv->[0] %></dt><dd><%= $kv->[1] %></dd>  
+  <dt><%= $kv->[0] %></dt><dd><%= $kv->[1] %></dd>
 % }
 </dl>
 <h2>Raw data</h2>
@@ -261,7 +261,7 @@ __DATA__
 
 @@ viewall.html.ep
 % layout 'layout';
-<h1>EpiRR datasets</h1>
+<h1>EpiRR Epigenomes</h1>
 <table class="table table-hover table-condensed table-striped">
 <thead>
 <tr>
@@ -291,7 +291,7 @@ __DATA__
 
 @@ summary.html.ep
 % layout 'layout';
-<h1>EpiRR dataset summary</h1>
+<h1>EpiRR Epigenome Summary</h1>
 <table class="table table-hover table-condensed table-striped">
 <thead>
 <tr>
@@ -299,7 +299,7 @@ __DATA__
 % for my $s ( sort {$a cmp $b} keys %$status_summary) {
 <th><%= $s %></th>
 % }
-<th class="ctotal">Total dataset count</th>
+<th class="ctotal">Total Epigenome count</th>
 </tr>
 </thead>
 <tbody>

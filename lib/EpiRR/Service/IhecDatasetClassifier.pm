@@ -18,7 +18,7 @@ use Carp;
 
 with 'EpiRR::Roles::DatasetClassifier';
 
-has '+status_names' => ( default => sub { [ 'Complete', 'Incomplete' ] }, );
+has '+status_names' => ( default => sub { [ 'Complete', 'Partial' ] }, );
 has '+type_names' =>
   ( default => sub { [ 'Composite', 'Pooled samples', 'Single donor' ] }, );
 
@@ -116,7 +116,7 @@ sub experimental_completeness {
     for my $ret ( $self->all_required_data() ) {
         my $found = $et{$ret};
         if ( !$found ) {
-            $classification = 'Incomplete';
+            $classification = 'Partial';
         }
     }
 
