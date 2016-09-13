@@ -41,7 +41,7 @@ my $ds = EpiRR::Service::IhecDatasetClassifier->new();
     ];
     my $errors = [];
 
-    my $expected = [ 'Incomplete', 'Single donor' ];
+    my $expected = [ 'Partial', 'Single donor' ];
     my @actual = $ds->determine_classification( $input_ds, $input_s, $errors );
 
     is_deeply( \@actual, $expected, "Simple case" );
