@@ -14,6 +14,7 @@
 package EpiRR::Service::CommonMetaDataBuilder;
 
 use Moose;
+use feature qw(say);
 
 with 'EpiRR::Roles::MetaDataBuilder';
 

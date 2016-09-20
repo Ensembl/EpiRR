@@ -286,8 +286,6 @@ sub _raw_data {
     return if @$errors;
 
     for my $user_rd ( @{ $user_dataset->raw_data() } ) {
-      use Data::Dumper;
-      say Dumper($user_rd);
         my $archive_name = $user_rd->archive();
 
         my $rd_errors = [];

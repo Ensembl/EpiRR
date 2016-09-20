@@ -17,7 +17,6 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 use File::Spec;
-use Data::Dumper;
 use feature qw(say);
 
 use EpiRR::Parser::JGAXMLParser;
@@ -159,25 +158,6 @@ sub _merge {
   }
 }
 
-#sub _create_sample_objects {
-#  die "Not working yet";
-#  # Create Sample Object foreach record
-#  foreach my $sample_id (sort keys %{$data}){
-#    my $s = EpiRR::Model::Sample->new();
-#    $s->sample_id($sample_id);
-#    say $sample_id;
-#
-##    say Dumper($data->{$sample_id});
-#    $s->set_meta_data( 'species',  $data->{$sample_id}->{species} );
-#    $s->set_meta_data( 'taxon_id', $data->{$sample_id}->{taxon_id} );
-#    foreach my $tag (sort keys %{$data->{$sample_id}->{sample_attribute}}){
-#      my $value = $data->{$sample_id}->{sample_attribute}->{$tag};
-#      $s->set_meta_data( $tag, $value );
-#    }
-#    $data->{$sample_id} = $s;
-#  }
-#
-#}
 
 # Construct full path for different files from JGA
 sub _get_file {

@@ -17,7 +17,6 @@ use strict;
 use warnings;
 use Carp;
 use feature qw(switch say);
-use Data::Dumper;
 
 use Moose;
 use namespace::autoclean;
@@ -59,23 +58,10 @@ sub parse_experiment {
   );
   $t->parsefile($xml_file);
   return($cache);
-#
-#    #say Dumper($data->{$experiment_id});
-#    return ($sample_id, $library_strategy, $experiment_type);
-#    push @$errors, "No experiment found" unless $e_id;
-#    if ($e_id) {
-#        push @$errors, "No experiment_type found"  unless $et;
-#        push @$errors, "No sample found"           unless $s_id;
-#        push @$errors, "No library_strategy found" unless $ls;
-#    }
-
-#    return ( $s_id, $et, $e_id, $ls );
 }
 sub _merge {
   my ($self, $tmp, $cache, $id) = @_;
 
-  say Dumper($tmp);
-  say Dumper($cache);
 
   foreach my $key (sort keys %{$tmp}){
     confess "Duplication [$id]" if(exists $cache->{$id});
@@ -137,23 +123,6 @@ sub parse_sample {
   );
   $t->parsefile($xml_file);
   return($cache);
-#
-#  foreach my $key (sort keys %{$data}){
-#    say $key;
-#    foreach my $key2 (sort keys %{$data->{$key}}){
-#      if($key2 eq 'sample_attribute'){
-#        say "\t$key2";
-#        foreach my $key3 (sort keys %{$data->{$key}->{$key2}}){
-#          say "\t\t$key3: " . $data->{$key}->{$key2}->{$key3};
-#        }
-#
-#      }
-#      else {
-#         say "\t$key2: " . $data->{$key}->{$key2};
-#      }
-#    }
-#  }
-#die;
 }
 
 __PACKAGE__->meta->make_immutable;
