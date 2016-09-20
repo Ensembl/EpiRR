@@ -108,13 +108,13 @@ sub experimental_completeness {
             $key = $rd->assay_type();
         }
 
-        $et{$key}++;
+        $et{lc $key}++;
     }
 
     my $classification = 'Complete';
 
     for my $ret ( $self->all_required_data() ) {
-        my $found = $et{$ret};
+        my $found = $et{lc $ret};
         if ( !$found ) {
             $classification = 'Partial';
         }
