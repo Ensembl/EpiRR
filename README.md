@@ -83,6 +83,7 @@ These project names are currently supported. Please get in touch if there are an
  * DEEP
  * ENCODE
  * EPP
+ * GIS
  * Korea Epigenome Project (KNIH)
  * NIH Roadmap Epigenomics
 
