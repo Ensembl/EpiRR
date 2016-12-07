@@ -55,7 +55,8 @@ our $container = container 'EpiRR' => as {
                 archive_services   => {
                     ENA   => $s->param('ena_accessor'),
                     SRA   => $s->param('sra_accessor'),
-                    DDBJ  => $s->param('ena_accessor'),
+                    DDBJ  => $s->param('sra_accessor'),
+#                    DDBJ  => $s->param('ena_accessor'),
                     AE    => $s->param('array_express_accessor'),
                     GEO   => $s->param('geo_accessor'),
                     JGA   => $s->param('jga_accessor'),
@@ -71,7 +72,8 @@ our $container = container 'EpiRR' => as {
         dependencies => { base_path => depends_on('jga_base_path') }
     );
     service 'jga_base_path' =>
-        '/homes/juettema/src/EpiRR/json/CREST/JGA_XML/'
+    #'/homes/juettema/src/EpiRR/json/CREST/JGA_XML/'
+    '/homes/juettema/src/EpiRR/json/CREST/CREST_new/JGA_XML/'
     ;
 
     service 'dataset_classifier' => (
