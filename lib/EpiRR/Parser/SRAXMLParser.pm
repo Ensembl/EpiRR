@@ -16,7 +16,7 @@ package EpiRR::Parser::SRAXMLParser;
 use strict;
 use warnings;
 use Carp;
-use feature qw(switch);
+use feature qw(switch say);
 
 use Moose;
 use namespace::autoclean;
@@ -67,6 +67,12 @@ sub parse_experiment {
         }
     );
     $t->parse($xml);
+    if(!defined $et && defined $ls){
+      $et = $ls;
+    }
+    if($et eq 'Bisulfite-Seq') {
+      $et = 'DNA Methylation';
+    }
     push @$errors, "No experiment found" unless $e_id;
     if ($e_id) {
         push @$errors, "No experiment_type found"  unless $et;
@@ -96,7 +102,6 @@ sub parse_sample {
 
                 my $tag   = ( $element->first_child_text('TAG') );
                 my $value = $element->first_child_text('VALUE');
-
                 $s->set_meta_data( $tag, $value );
             },
             'SCIENTIFIC_NAME' => sub {
@@ -116,7 +121,6 @@ sub parse_sample {
     $t->parse($xml);
 
     push @$errors, "Sample ID not found in XML" if ( !$s->sample_id() );
-
     return $s;
 }
 

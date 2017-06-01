@@ -52,6 +52,7 @@ print $r_fh
 
 find( \&wanted, $dir );
 
+
 close $r_fh;
 
 sub report {
@@ -94,6 +95,10 @@ sub wanted {
       print STDERR "Skipping $in_file$/" unless $quiet;
     }
   }
+  else {
+    die "No files found. Check if all JSON files have extension '.refepi.json or .refepi. Files beginning with a '.' are ignored' ";
+  }
+
 }
 
 sub mtime {

@@ -23,6 +23,7 @@ use JSON;
 use autodie;
 use EpiRR::Parser::JsonParser;
 use EpiRR::Parser::TextFileParser;
+use feature qw(say);
 
 has 'conversion_service' => (
     is       => 'rw',
@@ -76,7 +77,6 @@ sub accession {
         $parser = $self->text_parser();
         print STDERR "Using text parser$/" unless $quiet;
     }
-
     $parser->file_path($in_file);
     $parser->parse();
 
