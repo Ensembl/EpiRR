@@ -130,23 +130,23 @@ sub _cache_experiments_samples {
     my @groups = grep { /^JGAS/ } readdir($dh);
   closedir($dh);
 
-  my $tmp_exp = {};
-  my $tmp_sam = {};
+  my $experiments = {};
+  my $samples = {};
+  
 
   for my $g(@groups) {
     my $path = File::Spec->catdir($base_path, $g);
-    my $tmp = {};
-
+    
     my $exp_file  = $self->_get_file($path, 'Experiment');
-    $tmp = $self->xml_parser->parse_experiment($exp_file, $err );
-    $self->_merge($tmp, $tmp_exp);
+    my $e = $self->xml_parser->parse_experiment($exp_file, $err );
+    $self->_merge($experiments, $e);
 
     my $sample_file  = $self->_get_file($path, 'Sample');
-    $tmp = $self->xml_parser->parse_sample($sample_file, $err, $self->cache_samples);
-    $self->_merge($tmp, $tmp_sam);
+    my $s = $self->xml_parser->parse_sample($sample_file, $err, $self->cache_samples);
+    $self->_merge($samples, $s);
   }
-  $self->cache_samples($tmp_sam);
-  $self->cache_experiments($tmp_exp);
+  $self->cache_samples($samples);
+  $self->cache_experiments($experiments);
 }
 # Merge hashes from files (e.g. all experiment files from RNA,ChIP and Bisulfite) into one hash
 sub _merge {
@@ -165,7 +165,7 @@ sub _get_file {
 
   my @files;
   opendir(my $dh, $path) || die "Can't opendir $path: $!";
-    @files = grep { /^ykanai/ && /$type/ } readdir($dh);
+    @files = grep { /$type/ } readdir($dh);
   closedir($dh);
 
   if( scalar(@files) != 1) {
