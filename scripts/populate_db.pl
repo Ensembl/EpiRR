@@ -87,13 +87,18 @@ for my $name ( $conversion_service->all_archives() ) {
 
 #create project names
 my %projects = (
-    'BLUEPRINT'               => 'IHECRE',
-    'DEEP'                    => 'IHECRE',
-    'EPP'                     => 'IHECRE',
-    'NIH Roadmap Epigenomics' => 'IHECRE',
-    'AMED-CREST'              => 'IHECRE',
-    'CEEHRC (CEMT)'           => 'IHECRE',
-    'CEEHRC (McGill)'         => 'IHECRE',
+    'AMED-CREST'                     => 'IHECRE',
+    'BLUEPRINT'                      => 'IHECRE',
+    'DEEP'                           => 'IHECRE',
+    'ENCODE'                         => 'IHECRE',
+    'EPP'                            => 'IHECRE',
+    'Korea Epigenome Project (KNIH)' => 'IHECRE',
+    'NIH Roadmap Epigenomics'        => 'IHECRE',
+    'CREST'                          => 'IHECRE',
+    'CEEHRC'                         => 'IHECRE',
+    'CEEHRC (CEMT)'                  => 'IHECRE',
+    'CEEHRC (McGill)'                => 'IHECRE',
+    'GIS'                            => 'IHECRE',
 );
 
 while ( my ( $name, $id_prefix ) = each %projects ) {

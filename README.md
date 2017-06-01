@@ -77,13 +77,15 @@ The attributes required are common between both submission formats. The attribut
 
 These project names are currently supported. Please get in touch if there are any omissions or errors.
 
+ * AMED-CREST
  * BLUEPRINT
+ * CEEHRC
  * DEEP
+ * ENCODE
  * EPP
+ * GIS
+ * Korea Epigenome Project (KNIH)
  * NIH Roadmap Epigenomics
- * CREST
- * CEEHRC (CEMT)
- * CEEHRC (McGill)
 
 ## Supported Archives
 
