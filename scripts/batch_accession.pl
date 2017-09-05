@@ -22,7 +22,6 @@ use File::Find;
 use File::Spec;
 use File::Basename;
 use autodie;
-use feature qw(say);
 
 my $config_module = 'EpiRR::Config';
 my $dir;
@@ -52,7 +51,6 @@ print $r_fh
 
 find( \&wanted, $dir );
 
-
 close $r_fh;
 
 sub report {
@@ -73,7 +71,6 @@ sub report {
 }
 
 sub wanted {
-  # TODO: refepi important?
   if ( ( m/\.refepi.json$/ || m/\.refepi$/ ) && !m/^\./ ) {
     my $in_file = $File::Find::name;
 
@@ -95,10 +92,6 @@ sub wanted {
       print STDERR "Skipping $in_file$/" unless $quiet;
     }
   }
-  else {
-    die "No files found. Check if all JSON files have extension '.refepi.json or .refepi. Files beginning with a '.' are ignored' ";
-  }
-
 }
 
 sub mtime {
