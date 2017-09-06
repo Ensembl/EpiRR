@@ -18,6 +18,7 @@ use namespace::autoclean;
 use Carp;
 use File::Spec;
 use feature qw(say);
+use Data::Dumper;
 
 use EpiRR::Parser::JGAXMLParser;
 
@@ -124,29 +125,19 @@ sub lookup_raw_data {
 
 sub _cache_experiments_samples {
   my ($self, $err) = @_;
-  my $base_path = $self->base_path;
+  my $path = $self->base_path;
 
-  opendir(my $dh, $base_path) || die "Can't opendir $base_path: $!";
-    my @groups = grep { /^JGAS/ } readdir($dh);
-  closedir($dh);
+# Get all Experiment XML files
+  my $exp_file  = $self->_get_file($path, 'Experiment');
+  my $experiment = $self->xml_parser->parse_experiment($exp_file, $err );
 
-  my $experiments = {};
-  my $samples = {};
-  
+  my $sample_file  = $self->_get_file($path, 'Sample');
+  my $sample = $self->xml_parser->parse_sample($sample_file, $err);
 
-  for my $g(@groups) {
-    my $path = File::Spec->catdir($base_path, $g);
-    
-    my $exp_file  = $self->_get_file($path, 'Experiment');
-    my $e = $self->xml_parser->parse_experiment($exp_file, $err );
-    $self->_merge($experiments, $e);
-
-    my $sample_file  = $self->_get_file($path, 'Sample');
-    my $s = $self->xml_parser->parse_sample($sample_file, $err, $self->cache_samples);
-    $self->_merge($samples, $s);
-  }
-  $self->cache_samples($samples);
-  $self->cache_experiments($experiments);
+#ToDo: Any error check necessary?
+  # Sets the variables Moose-style
+  $self->cache_samples($sample);
+  $self->cache_experiments($experiment);
 }
 # Merge hashes from files (e.g. all experiment files from RNA,ChIP and Bisulfite) into one hash
 sub _merge {
