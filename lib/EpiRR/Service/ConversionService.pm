@@ -21,6 +21,9 @@ use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 use Data::Compare;
 use EpiRR::Service::NcbiEUtils;
+use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1; 
 use feature qw(say);
 
 has 'archive_services' => (
@@ -70,6 +73,13 @@ sub user_to_db {
       unless ( $errors && ref($errors) eq 'ARRAY' );
     # DBIx, Begin Transaction
     $self->schema()->txn_begin();
+
+    if(length($simple_dataset->{accession}) > 0){
+      my $acc = $simple_dataset->{accession};
+      if($acc !~ /^IHECRE\d{8}$/){
+        push @$errors, "Accession not in the correct format [IHEC12345678]:  $acc" ;
+      }
+    }
 
     my ( $dataset, $existing_dsv ) = $self->_dataset( $simple_dataset, $errors )
       if !@$errors;
