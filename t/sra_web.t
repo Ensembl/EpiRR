@@ -76,6 +76,8 @@ my $w = EpiRR::Service::ENAWeb->new();
     );
 
     my ( $output_experiment, $output_sample ) = $w->lookup_raw_data($input);
+use Data::Dumper;
+print Dumper($output_sample);
     is_deeply( $output_experiment, $expected_experiment,
         "Found experiment information" );
     is_deeply( $output_sample, $expected_sample, "Found sample information" );

@@ -48,6 +48,7 @@ eval("require $config_module")
 
 my $container = $config_module->c();
 my $accession_service = $container->resolve( service => 'accession_service' );
+say Dumper($accession_service);die;
 
 my $report_file_name = "$dir/summary." . time . ".tsv";
 open my $r_fh, '>', $report_file_name;
