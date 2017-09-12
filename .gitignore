@@ -20,3 +20,5 @@ nytprof.out
 *.bs
 epirr.db
 web/server.conf
+json/*
+ldepths/*
