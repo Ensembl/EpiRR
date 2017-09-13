@@ -55,7 +55,7 @@ sub parse_main {
             },
              'Contributor' = sub{
 		my ( $t, $element ) = @_;
-		$s->contributor_id($element->{'att'}->{'iid'});
+		$contributor_id = $element->{'att'}->{'iid'};
 	    },
              'Database/Name'=sub{
 		my ($t, $element)= @_;
@@ -63,7 +63,8 @@ sub parse_main {
             },
 	    'Molecule' => sub {
 		my ($t, $element) = @_;
-		$molecule=$element->trimmed_text();
+		my $molecule = $element->trimmed_text();
+		$s->set_meta_data('molecule' => $molecule,);
 	    },
             'Sample' => sub {
                 my ( $t, $element ) = @_;
