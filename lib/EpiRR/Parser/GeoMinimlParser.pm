@@ -53,6 +53,18 @@ sub parse_main {
                 my ( $t, $element ) = @_;
                 $library_strategy = $element->trimmed_text();
             },
+             'Contributor' = sub{
+		my ( $t, $element ) = @_;
+		$s->contributor_id($element->{'att'}->{'iid'});
+	    },
+             'Database/Name'=sub{
+		my ($t, $element)= @_;
+		$name=$element->trimmed_text();
+            },
+	    'Molecule' => sub {
+		my ($t, $element) = @_;
+		$molecule=$element->trimmed_text();
+	    },
             'Sample' => sub {
                 my ( $t, $element ) = @_;
                 $s->sample_id( $element->{'att'}->{'iid'} );
