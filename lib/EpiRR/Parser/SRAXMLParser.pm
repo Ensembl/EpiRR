@@ -21,14 +21,14 @@ use feature qw(switch say);
 use Moose;
 use namespace::autoclean;
 use XML::Twig;
-
+use EpiRR::Model::Experiment;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
 sub parse_experiment {
     my ( $self, $xml, $errors ) = @_;
 
-    my ( $e_id, $s_id, $et, $ls );
+    my $e = EpiRR::Model::Experiment -> new();
 
     my $t = XML::Twig->new(
         twig_handlers => {
@@ -36,51 +36,42 @@ sub parse_experiment {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
                 push @$errors,
-                  "Found multiple experiments in XML ($e_id and $id)."
-                  if $e_id;
-                $e_id = $id;
+                  "Found multiple experiments in XML ($e and $id)."
+                  if $e;
+                $e->experiment_id ($id);
             },
             'LIBRARY_STRATEGY' => sub {
                 my ( $t, $element ) = @_;
-                  $ls = $element->trimmed_text();
+		my $value = $element _> text();
+                  $e->set_meta_data ('library_strategy', $value);
             },
             'SAMPLE_DESCRIPTOR' => sub {
                 my ( $t, $element ) = @_;
-                my $sample = $element->{'att'}->{'accession'};
-                push @$errors,
-                  "Found multiple samples in XML ($s_id and $sample)"
-                  if ($s_id);
-                $s_id = $sample;
+                my $value = $element->{'att'}->{'accession'};
+                
+                  $e->set_meta_data ('sample_descriptor', $value);
+                 
+             
             },
             'EXPERIMENT_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
-
-                if ( $element->first_child_text('TAG') eq 'EXPERIMENT_TYPE' ) {
-                    my $experiment_type = $element->first_child_text('VALUE');
-                    push @$errors,
-"Found multiple experiment types in XML ($et and $experiment_type)"
-                      if ($et);
-
-                    $et = $experiment_type;
+                
+                my  $tag= ($element->first_child_text('TAG');{
+		my  $value = ($value->first_child_text('VALUE');{
+		
+		   $e->set_meta_data($tag, $value);
+             
                 }
             },
         }
     );
-    $t->parse($xml);
-    if(!defined $et && defined $ls){
-      $et = $ls;
-    }
-    if($et eq 'Bisulfite-Seq') {
-      $et = 'DNA Methylation';
-    }
-    push @$errors, "No experiment found" unless $e_id;
-    if ($e_id) {
-        push @$errors, "No experiment_type found"  unless $et;
-        push @$errors, "No sample found"           unless $s_id;
-        push @$errors, "No library_strategy found" unless $ls;
-    }
 
-    return ( $s_id, $et, $e_id, $ls );
+    $t->parse($xml);
+   
+    }
+    push @$errors, "No experiment found" unless $e;
+
+    return $e;
 }
 
 sub parse_sample {
