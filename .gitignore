@@ -7,7 +7,9 @@ inc/
 Build
 !Build/
 Build.bat
+json/*
 .last_cover_stats
+ldepths/*
 /Makefile
 /Makefile.old
 /MANIFEST.bak
@@ -19,4 +21,5 @@ nytprof.out
 *.o
 *.bs
 epirr.db
+epirr_prod.sql
 web/server.conf
