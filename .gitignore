@@ -7,8 +7,10 @@ inc/
 Build
 !Build/
 Build.bat
+epirr_prod.sql
+json/*
 .last_cover_stats
-/Makefile
+ldepths/
 /Makefile.old
 /MANIFEST.bak
 /META.yml
