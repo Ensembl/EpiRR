@@ -17,7 +17,7 @@ use strict;
 use warnings;
 use Carp;
 use feature qw(switch say);
-
+use Data::Dumper;
 use Moose;
 use namespace::autoclean;
 use XML::Twig;
@@ -39,10 +39,12 @@ sub parse_experiment {
                   "Found multiple experiments in XML ($e and $id)."
                   if $e;
                 $e->experiment_id ($id);
+		print "experiment_id fetched by parse_experiment: \n";
+                print Dumper($id);
             },
             'LIBRARY_STRATEGY' => sub {
                 my ( $t, $element ) = @_;
-		my $value = $element _> text();
+		my $value = $element->text();
                   $e->set_meta_data ('library_strategy', $value);
             },
             'SAMPLE_DESCRIPTOR' => sub {
@@ -56,21 +58,18 @@ sub parse_experiment {
             'EXPERIMENT_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
                 
-                my  $tag= ($element->first_child_text('TAG');{
-		my  $value = ($value->first_child_text('VALUE');{
+                my $tag= ($element->first_child_text('TAG'));
+		my $value = $element->first_child_text('VALUE');
 		
-		   $e->set_meta_data($tag, $value);
-             
-                }
+                $e->set_meta_data($tag, $value);
             },
         }
     );
 
     $t->parse($xml);
    
-    }
-    push @$errors, "No experiment found" unless $e;
-
+    #push @$errors, "No experiment found" unless $e;
+    push @$errors, "No experiment found" unless $e->experiment_id();
     return $e;
 }
 
