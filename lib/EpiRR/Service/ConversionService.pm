@@ -309,6 +309,10 @@ sub _raw_data {
             my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
+         
+            print "raw data:\n";
+            print Dumper($rd);
+                      
 
             if ( !@$rd_errors ) {
                 #no errors, should have objects
