@@ -19,5 +19,6 @@ use namespace::autoclean;
 with 'EpiRR::Roles::HasMetaData';
 has 'sample_id' => (is => 'rw', isa => 'Str');
 has 'experiment_id' => (is => 'rw', isa => 'Str');
+has 'ega_id' => (is => 'rw', isa => 'Str');
 __PACKAGE__->meta->make_immutable;
 1;
