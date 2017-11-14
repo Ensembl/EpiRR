@@ -51,9 +51,8 @@ sub parse_experiment {
                 my ( $t, $element ) = @_;
                 my $value = $element->{'att'}->{'accession'};
                 
-                  $e->set_meta_data ('sample_descriptor', $value);
-                 
-             
+                $e->sample_id($value);
+
             },
             'EXPERIMENT_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
