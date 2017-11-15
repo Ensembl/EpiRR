@@ -39,8 +39,8 @@ sub parse_experiment {
                   "Found multiple experiments in XML ($e and $id)."
                   if $e;
                 $e->experiment_id ($id);
-		print "experiment_id fetched by parse_experiment: \n";
-                print Dumper($id);
+	       #print "experiment_id fetched by parse_experiment: \n";
+               #print Dumper($id);
             },
             'LIBRARY_STRATEGY' => sub {
                 my ( $t, $element ) = @_;
