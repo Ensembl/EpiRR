@@ -1,4 +1,5 @@
 drop table if exists meta_data;
+drop table if exists raw_meta_data;
 drop table if exists raw_data;
 drop table if exists dataset_version;
 drop table if exists dataset;
@@ -86,6 +87,18 @@ primary key (meta_data_id),
 key(dataset_version_id),
 foreign key (dataset_version_id) references dataset_version(dataset_version_id)
 ) ENGINE=InnoDB CHARSET=UTF8;
+
+#raw_meta_data used to describe the experiment used in the dataset_version
+create table raw_meta_data (
+raw_meta_id int(10) unsigned not null auto_increment,
+raw_data_id int(10) unsigned not null,
+name varchar(256) not null,
+value varchar(4000) not null,
+primary key (raw_meta_id),
+key(dataset_version_id),
+foreign key (raw_data_id) references raw_data(raw_data_id)
+) ENGINE=InnoDB CHARSET=UTF8;
+
 
 #raw data for a data set. points to archive entries. Most need a single id (primary accession), but this isn't sufficient for all cases so we have a secondary_accession 
 create table raw_data (
