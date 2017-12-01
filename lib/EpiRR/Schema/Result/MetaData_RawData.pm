@@ -1,12 +1,12 @@
 use utf8;
-package EpiRR::Schema::Result::RawData;
+package EpiRR::Schema::Result::MetaData_RawData;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-EpiRR::Schema::Result::RawData
+EpiRR::Schema::Result::MetaData_RawData
 
 =cut
 
@@ -15,11 +15,11 @@ use warnings;
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<raw_data>
+=head1 TABLE: C<raw_meta_data>
 
 =cut
 
-__PACKAGE__->table("raw_data");
+__PACKAGE__->table("raw_meta_data");
 
 =head1 ACCESSORS
 
@@ -90,31 +90,17 @@ __PACKAGE__->set_primary_key("raw_meta_id");
 
 Type: belongs_to
 
-Related object: L<EpiRR::Schema::Result::Archive>
+Related object: L<EpiRR::Schema::Result::Raw_Data>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "archive",
-  "EpiRR::Schema::Result::Archive",
-  { archive_id => "archive_id" },
+  "raw_data",
+  "EpiRR::Schema::Result::Raw_Data",
+  { raw_data_id => "raw_data_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
-
-=head2 dataset_version
-
-Type: belongs_to
-
-Related object: L<EpiRR::Schema::Result::DatasetVersion>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "dataset_version",
-  "EpiRR::Schema::Result::DatasetVersion",
-  { dataset_version_id => "dataset_version_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
-);
+§
 
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
