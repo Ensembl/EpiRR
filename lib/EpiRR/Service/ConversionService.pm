@@ -353,7 +353,7 @@ sub _raw_data {
             push @samples, $s if ($s);
 
             $dataset_version->create_related(
-                'raw_datas',
+                'raw_data',
                 {
                     primary_accession   => $rd->primary_id(),
                     secondary_accession => $rd->secondary_id(),
