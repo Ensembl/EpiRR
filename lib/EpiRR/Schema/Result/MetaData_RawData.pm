@@ -86,7 +86,7 @@ __PACKAGE__->set_primary_key("raw_meta_id");
 
 =head1 RELATIONS
 
-=head2 archive
+=head2 raw_data
 
 Type: belongs_to
 
@@ -100,7 +100,6 @@ __PACKAGE__->belongs_to(
   { raw_data_id => "raw_data_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
-§
 
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
