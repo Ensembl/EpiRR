@@ -52,6 +52,8 @@ sub status {
 sub type {
   return $_[0]->resultset('Type');
 }
-
+sub raw_meta_data{
+  return $_[0]->resultset('MetaData_RawData.pm');
+}
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
