@@ -23,14 +23,14 @@ __PACKAGE__->table("raw_data");
 
 =head1 ACCESSORS
 
-=head2 raw_data_id
+=head2 raw_meta_id
 
   data_type: 'integer'
   extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 dataset_version_id
+=head2 raw_data_id
 
   data_type: 'integer'
   extra: {unsigned => 1}
@@ -52,14 +52,14 @@ __PACKAGE__->table("raw_data");
 =cut
 
 __PACKAGE__->add_columns(
-  "raw_data_id",
+  "raw_meta_id",
   {
     data_type => "integer",
     extra => { unsigned => 1 },
     is_auto_increment => 1,
     is_nullable => 0,
   },
-  "dataset_version_id",
+  "raw_data_id",
   {
     data_type => "integer",
     extra => { unsigned => 1 },
@@ -76,13 +76,13 @@ __PACKAGE__->add_columns(
 
 =over 4
 
-=item * L</raw_data_id>
+=item * L</raw_meta_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("raw_data_id");
+__PACKAGE__->set_primary_key("raw_meta_id");
 
 =head1 RELATIONS
 
