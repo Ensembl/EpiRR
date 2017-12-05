@@ -65,8 +65,8 @@ has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 # store data in database
 sub user_to_db {
     my ( $self, $simple_dataset, $errors ) = @_;
-    print ("simple_dataset: \n");
-    print Dumper($simple_dataset);
+    #print ("simple_dataset: \n");
+    #print Dumper($simple_dataset);
     #print ("self: \n");
     #print Dumper($self);
     confess("No dataset provided") if ( !$simple_dataset );
@@ -92,15 +92,15 @@ sub user_to_db {
       if !@$errors;
 
     my $dataset_version =
-      $self->_dataset_version( $simple_dataset, $dataset, $errors )
-      #print ("dataset_version: \n");
-      #print Dumper($dataset_version); 
+      $self->_dataset_version( $simple_dataset, $dataset, $errors ) 
      if !@$errors;
+     #print ("dataset_version: \n");
+     #print Dumper($dataset_version);
 
     my $samples = $self->_raw_data( $simple_dataset, $dataset_version, $errors )
       if !@$errors;
-      print ("Samples : \n");
-      print Dumper($samples);
+      #print ("Samples : \n");
+      #print Dumper($samples);
     for (@$samples) {
         $self->_sample_species( $_, $errors );
     }
@@ -135,12 +135,12 @@ sub user_to_db {
         my $new_dataset =
           $self->output_service->db_to_user($dataset_version)->to_hash();
 	
-	print ("existing_dataset \n");
-	print Dumper($existing_dataset);
+	#print ("existing_dataset \n");
+	#print Dumper($existing_dataset);
 	
 
-	print ("new_dataset \n");
-        print Dumper($new_dataset);
+	#print ("new_dataset \n");
+        #print Dumper($new_dataset);
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
             $_->{version}        = '';
@@ -261,6 +261,9 @@ sub _dataset {
     my $project_name = $user_dataset->project();
 
     my $project = $self->schema()->project()->find( { name => $project_name } );
+    #print ("\n project \n");
+    #print Dumper($project);
+	
     push @$errors, "No project found for $project_name" if ( !$project );
 
     return if @$errors;
@@ -380,6 +383,33 @@ sub _raw_data {
 
     return \@samples;
 }
+
+=pod
+sub _raw_meta_data {
+    my ( $self, $user_dataset, $raw_data, $errors ) = @_;
+    
+    my %raw_meta_data=
+      $self -> raw_meta_data_builder()->build_raw_meta_data ($sample_recors, $errors );
+
+    if ( !%raw_meta_data) {
+       push @$errors,
+"No common raw meta data for this dataset, cannot determine what it represents";
+    }
+
+    while ( my ( $k, $v ) = each %raw_meta_data ) {
+        $raw_data->create_related(
+            'meta_datas',
+            {
+                name  => $k,
+                value => $v,
+
+            }
+        );
+    }
+
+}
+
+=cut 
 
 __PACKAGE__->meta->make_immutable;
 1;
