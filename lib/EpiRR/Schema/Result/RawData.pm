@@ -27,7 +27,7 @@ __PACKAGE__->table("raw_data");
 
   data_type: 'integer'
   extra: {unsigned => 1}
-  is_auto_increment: 1
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 dataset_version_id
@@ -81,7 +81,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "integer",
     extra => { unsigned => 1 },
-    is_auto_increment => 1,
+    is_foreign_key => 1,
     is_nullable => 0,
   },
   "dataset_version_id",
@@ -154,6 +154,20 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 raw_meta_data
+
+Type: belongs_to 
+
+Related object: L<EpiRR::Schema::Result::MetaData_RawData>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "raw_meta_data",
+  "EpiRR::Schema::Result::MetaData_RawData",
+  { raw_meta_id => "raw_meta_id"},
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+);
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxSYF0W+CtG/+Tj1+lm/sg
