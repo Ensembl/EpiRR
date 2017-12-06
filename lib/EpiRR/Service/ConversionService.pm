@@ -355,7 +355,7 @@ sub _raw_data {
 
             push @samples, $s if ($s);
 
-             $dataset_version->create_related(
+                $variable_raw_data = $dataset_version->create_related(
                 'raw_data',
                 {
                     primary_accession   => $rd->primary_id(),
@@ -367,6 +367,17 @@ sub _raw_data {
                     extraction_protocol => $rd->extraction_protocol()
 		}
             ) if ( !@$rd_errors );
+
+    
+        while ( my ( $k, $v ) = each %rd ) {
+        $variable_raw_data->create_related(
+            'meta_datas',
+            {
+                name  => $k,
+                value => $v,
+
+            }
+
 
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
@@ -384,31 +395,7 @@ sub _raw_data {
     return \@samples;
 }
 
-=pod
-sub _raw_meta_data {
-    my ( $self, $user_dataset, $raw_data, $errors ) = @_;
-    
-    my %raw_meta_data=
-      $self -> raw_meta_data_builder()->build_raw_meta_data ($sample_recors, $errors );
-
-    if ( !%raw_meta_data) {
-       push @$errors,
-"No common raw meta data for this dataset, cannot determine what it represents";
-    }
-
-    while ( my ( $k, $v ) = each %raw_meta_data ) {
-        $raw_data->create_related(
-            'meta_datas',
-            {
-                name  => $k,
-                value => $v,
-
-            }
-        );
-    }
-
-}
-
+   
 =cut 
 
 __PACKAGE__->meta->make_immutable;
