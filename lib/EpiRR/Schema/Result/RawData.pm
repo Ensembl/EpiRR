@@ -154,20 +154,6 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-=head2 raw_meta_data
-
-Type: has_many 
-
-Related object: L<EpiRR::Schema::Result::MetaData_RawData>
-
-=cut
-
-__PACKAGE__->has_many(
-  "raw_meta_data",
-  "EpiRR::Schema::Result::MetaData_RawData",
-  { "foreign.raw_data_id" => "self.raw_data_id"},
-  { cascade_copy => 0, cascade_delete => 0 },
-);
 
 # Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxSYF0W+CtG/+Tj1+lm/sg
