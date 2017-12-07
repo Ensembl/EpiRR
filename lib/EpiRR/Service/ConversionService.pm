@@ -326,7 +326,7 @@ sub _raw_data {
             
 	    if ( !@$rd_errors ) {
              	my $variable_raw_data = $dataset_version->create_related(
-                  'raw_data',
+                  'raw_datas',
                   {
                   	primary_accession   => $rd->primary_id(),
                     	secondary_accession => $rd->secondary_id(),
