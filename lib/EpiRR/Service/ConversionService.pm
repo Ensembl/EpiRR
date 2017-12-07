@@ -65,10 +65,7 @@ has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 # store data in database
 sub user_to_db {
     my ( $self, $simple_dataset, $errors ) = @_;
-    #print ("simple_dataset: \n");
-    #print Dumper($simple_dataset);
-    #print ("self: \n");
-    #print Dumper($self);
+
     confess("No dataset provided") if ( !$simple_dataset );
     confess("Dataset must be EpiRR::Model::Dataset")
       if ( !$simple_dataset->isa('EpiRR::Model::Dataset') );
@@ -79,32 +76,24 @@ sub user_to_db {
 
     if(length($simple_dataset->{accession}) > 0){
       my $acc = $simple_dataset->{accession};
-      #print ("accession: \n");
-      #print Dumper($acc);
       if($acc !~ /^IHECRE\d{8}$/){
         push @$errors, "Accession not in the correct format [IHEC12345678]:  $acc" ;
       }
     }
 
     my ( $dataset, $existing_dsv ) = $self->_dataset( $simple_dataset, $errors )
-      #print ("existing_dsv: \n");
-      #print Dumper($existing_dsv);
       if !@$errors;
 
     my $dataset_version =
-      $self->_dataset_version( $simple_dataset, $dataset, $errors ) 
-     if !@$errors;
-     #print ("dataset_version: \n");
-     #print Dumper($dataset_version);
+      $self->_dataset_version( $simple_dataset, $dataset, $errors )
+      if !@$errors;
 
     my $samples = $self->_raw_data( $simple_dataset, $dataset_version, $errors )
       if !@$errors;
-      #print ("Samples : \n");
-      #print Dumper($samples);
+
     for (@$samples) {
         $self->_sample_species( $_, $errors );
     }
-
 
     $self->_create_meta_data( $dataset_version, $samples, $errors )
       if !@$errors;
@@ -117,30 +106,18 @@ sub user_to_db {
 
         my $status =
           $self->schema()->status()->find( { name => $status_name } );
-        #print ("Status : \n ");
-	#print Dumper($status);
         my $type = $self->schema()->type()->find( { name => $type_name } );
-        #print ("type \n");
-	#print Dumper($status);
+
         $dataset_version->status($status);
         $dataset_version->type($type);
-	#print ("dataset_version: \n");
-	#print Dumper($dataset_version);
     }
-
 
     if ( !@$errors && $existing_dsv ) {
         my $existing_dataset =
-	   $self->output_service->db_to_user($existing_dsv)->to_hash();
+          $self->output_service->db_to_user($existing_dsv)->to_hash();
         my $new_dataset =
           $self->output_service->db_to_user($dataset_version)->to_hash();
-	
-	#print ("existing_dataset \n");
-	#print Dumper($existing_dataset);
-	
 
-	#print ("new_dataset \n");
-        #print Dumper($new_dataset);
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
             $_->{version}        = '';
@@ -190,8 +167,7 @@ sub _create_meta_data {
             {
                 name  => $k,
                 value => $v,
-			
-	    }
+            }
         );
     }
 
@@ -261,9 +237,6 @@ sub _dataset {
     my $project_name = $user_dataset->project();
 
     my $project = $self->schema()->project()->find( { name => $project_name } );
-    #print ("\n project \n");
-    #print Dumper($project);
-	
     push @$errors, "No project found for $project_name" if ( !$project );
 
     return if @$errors;
@@ -336,10 +309,6 @@ sub _raw_data {
             my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
-         
-           # print "raw data:\n";
-           # print Dumper($rd);
-                      
 
             if ( !@$rd_errors ) {
                 #no errors, should have objects
@@ -354,8 +323,8 @@ sub _raw_data {
 
 
             push @samples, $s if ($s);
-
-            if ( !@$rd_errors ) {
+            
+	    if ( !@$rd_errors ) {
              	my $variable_raw_data = $dataset_version->create_related(
                   'raw_data',
                   {
@@ -393,9 +362,6 @@ sub _raw_data {
 
     return \@samples;
 }
-
-   
-=cut 
 
 __PACKAGE__->meta->make_immutable;
 1;
