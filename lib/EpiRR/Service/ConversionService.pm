@@ -334,7 +334,6 @@ sub _raw_data {
                     	archive_url         => $rd->archive_url(),
                     	experiment_type     => $rd->experiment_type(),
                     	assay_type          => $rd->assay_type(),
-                    	extraction_protocol => $rd->extraction_protocol()
 		  });
 
 #   		while ( my ( $k, $v ) = each %rd ) {
