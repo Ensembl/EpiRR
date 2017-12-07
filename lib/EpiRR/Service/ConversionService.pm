@@ -355,29 +355,28 @@ sub _raw_data {
 
             push @samples, $s if ($s);
 
-                $variable_raw_data = $dataset_version->create_related(
-                'raw_data',
-                {
-                    primary_accession   => $rd->primary_id(),
-                    secondary_accession => $rd->secondary_id(),
-                    archive             => $archive,
-                    archive_url         => $rd->archive_url(),
-                    experiment_type     => $rd->experiment_type(),
-                    assay_type          => $rd->assay_type(),
-                    extraction_protocol => $rd->extraction_protocol()
-		}
-            ) if ( !@$rd_errors );
+            if ( !@$rd_errors ) {
+             	my $variable_raw_data = $dataset_version->create_related(
+                  'raw_data',
+                  {
+                  	primary_accession   => $rd->primary_id(),
+                    	secondary_accession => $rd->secondary_id(),
+                    	archive             => $archive,
+                    	archive_url         => $rd->archive_url(),
+                    	experiment_type     => $rd->experiment_type(),
+                    	assay_type          => $rd->assay_type(),
+                    	extraction_protocol => $rd->extraction_protocol()
+		  });
 
-    
-        while ( my ( $k, $v ) = each %rd ) {
-        $variable_raw_data->create_related(
-            'meta_datas',
-            {
-                name  => $k,
-                value => $v,
-
-            }
-
+#   		while ( my ( $k, $v ) = each %rd ) {
+#        		$variable_raw_data->create_related(
+#            		  'raw_meta_datas',
+#            		  {
+#                		name  => $k,
+#                		value => $v
+#			  });
+#		}
+	    }
 
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
