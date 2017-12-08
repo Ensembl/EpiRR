@@ -154,9 +154,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
+=head2 raw_meta_datas
 
-# Created by DBIx::Class::Schema::Loader v0.07037 @ 2014-09-25 15:21:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LxSYF0W+CtG/+Tj1+lm/sg
+Type: has_many
+
+Related object: L<EpiRR::Schema::Result::RawMetaData>
+
+=cut
+
+__PACKAGE__->has_many(
+  "raw_meta_datas",
+  "EpiRR::Schema::Result::RawMetaData",
+  { "foreign.raw_data_id" => "self.raw_data_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2017-12-08 10:39:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w61nD1YYCA3uyxP1IMTfgA
 
 # Copyright 2013 European Molecular Biology Laboratory - European Bioinformatics Institute
 #
