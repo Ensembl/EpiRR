@@ -161,6 +161,11 @@ sub _create_meta_data {
 "No common meta data for this dataset, cannot determine what it represents";
     }
 
+   print ("metadata :\n");
+   print Dumper(\%meta_data);
+#   warn Data::Dumper::Dumper \%metadata;
+
+   
     while ( my ( $k, $v ) = each %meta_data ) {
         $dataset_version->create_related(
             'meta_datas',
@@ -309,6 +314,10 @@ sub _raw_data {
             my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
+              
+           print ("rd : \n");
+           print Dumper($rd);
+              
 
             if ( !@$rd_errors ) {
                 #no errors, should have objects
@@ -324,7 +333,7 @@ sub _raw_data {
 
             push @samples, $s if ($s);
             
-	    if ( !@$rd_errors ) {
+	    
              	my $variable_raw_data = $dataset_version->create_related(
                   'raw_datas',
                   {
@@ -336,15 +345,25 @@ sub _raw_data {
                     	assay_type          => $rd->assay_type(),
 		  });
 
-#   		while ( my ( $k, $v ) = each %rd ) {
-#        		$variable_raw_data->create_related(
-#            		  'raw_meta_datas',
-#            		  {
-#                		name  => $k,
-#                		value => $v
-#			  });
-#		}
-	    }
+		my @original_meta_data = qw( primary_id secondary_id archive archive_url experiment_type assay_type );           
+		my %orig_meta_data     = map {$_ => 1} @original_meta_data;
+   		while ( my ( $k, $v ) = each %$rd ) {
+                        
+			if ( ! exists $orig_meta_data{$k} ) {
+        			$variable_raw_data->create_related(
+            			  'raw_meta_datas',
+            			  {
+                			name  => $k,
+                			value => $v
+			 	 });
+			
+				print ("k: ");
+                        	print $k."\n";
+                        	print("v: ");
+                        	print $v."\n";
+			}
+		}
+	    
 
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
@@ -360,7 +379,7 @@ sub _raw_data {
     push @$errors, "No samples found" unless @samples;
 
     return \@samples;
-}
 
+}
 __PACKAGE__->meta->make_immutable;
 1;
