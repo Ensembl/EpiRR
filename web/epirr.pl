@@ -25,24 +25,16 @@ use utf8;
 plugin 'Config';
 
 my $db = app->config('db');
-print ("\n db : \n");
-print Dumper($db);
 
 
 my $schema = EpiRR::Schema->connect( $db->{dsn}, $db->{user}, $db->{password}, )
   || die "Could not connect";
-print ("\n schema : \n");
-print Dumper($schema);
 
 
 my $os = EpiRR::Service::OutputService->new( schema => $schema );
-print ("\n os : \n");
-print Dumper($os);
 
 my $controller =
   EpiRR::App::Controller->new( output_service => $os, schema => $schema );
-print ("\n controller : \n");
-print Dumper($controller);
 
 
 
