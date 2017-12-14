@@ -18,6 +18,7 @@ use namespace::autoclean;
 use Carp;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
+use Data::Dumper;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
@@ -66,6 +67,8 @@ sub db_to_user {
     }
 
     for my $r ( $dsv->raw_datas ) {
+        #print (" r \n");
+        #print Dumper($r);      
         my $x = EpiRR::Model::RawData->new(
             archive         => $r->archive()->name(),
             primary_id      => $r->primary_accession(),
@@ -73,11 +76,37 @@ sub db_to_user {
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
             assay_type      => $r->assay_type(),
-        );
+   
+   );
+
+
+ for (my($k, $v) = each $r->custom_field() ) {
+          $x->custom_field($k , $v) 
+   }
+
+
+
+        print (" x \n");
+        print Dumper($x);
         $d->add_raw_data($x);
     }
 
+#print (" d: \n ");
+#print Dumper ($d);
+
+      #foreach  my $k ( $rd->custom_fields() ) {
+      #                                    
+      #                            {
+      #                                  name  => $k,
+      #                                  value => $rd->custom_field($k)
+       #                          })
+
+
+
     return $d;
 }
+
+
+
 
 1;
