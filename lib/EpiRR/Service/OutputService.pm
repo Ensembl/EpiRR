@@ -83,8 +83,6 @@ sub db_to_user {
             $x->custom_field( $raw_meta_data->name() ) = $raw_meta_data->value(); 
         }
 
-        print (" x \n");
-        print Dumper($x);
         $d->add_raw_data($x);
     }
 
