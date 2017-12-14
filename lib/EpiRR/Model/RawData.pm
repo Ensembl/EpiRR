@@ -25,8 +25,6 @@ has 'secondary_id'    => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'archive_url'     => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'experiment_type' => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'assay_type'      => ( is => 'rw', isa => 'Maybe[Str]' );
-has 'extraction_protocol' => ( is => 'rw', isa => 'Maybe[Str]' );
-has 'submission_alias' => => (is => 'rw', isa => 'Maybe[Str]' );
 
 has custom_fields => (
     traits     => [qw( Hash )],
@@ -54,6 +52,12 @@ sub as_string {
 
 sub to_hash {
     my ($self) = @_;
+
+    my %extra_meta_data;    
+    for my $k ( $self->custom_fields() ) {
+        $extra_meta_data{$k} = $self->custom_field($k);
+    }
+
     return {
         'archive'         => $self->archive,
         'primary_id'      => $self->primary_id,
@@ -61,8 +65,7 @@ sub to_hash {
         'archive_url'     => $self->archive_url,
         'experiment_type' => $self->experiment_type,
         'assay_type'      => $self->assay_type,
-	'extraction_protocol' => $self->extraction_protocol,
-	'submission_alias' => $self->submission_alias,
+        %extra_meta_data
     };
 }
 
