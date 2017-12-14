@@ -28,6 +28,21 @@ has 'assay_type'      => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'extraction_protocol' => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'submission_alias' => => (is => 'rw', isa => 'Maybe[Str]' );
 
+has custom_fields => (
+    traits     => [qw( Hash )],
+    isa        => 'HashRef',
+    builder    => '_build_custom_fields',
+    handles    => {
+        custom_field          => 'accessor',
+        has_custom_fields     => 'exists',
+        custom_fields         => 'keys',
+        has_custom_fields     => 'count',
+        delete_custom_field   =>'delete',
+   }
+);
+
+sub _build_custom_fields { {} }
+
 sub as_string {
     my ($self) = @_;
     my $na = '-';
