@@ -161,8 +161,8 @@ sub _create_meta_data {
 "No common meta data for this dataset, cannot determine what it represents";
     }
 
-   print ("metadata :\n");
-   print Dumper(\%meta_data);
+   #print ("metadata :\n");
+   #print Dumper(\%meta_data);
 #   warn Data::Dumper::Dumper \%metadata;
 
    
@@ -315,8 +315,8 @@ sub _raw_data {
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
               
-           print ("rd : \n");
-           print Dumper($rd);
+           #print ("rd : \n");
+           #print Dumper($rd);
               
 
             if ( !@$rd_errors ) {
@@ -345,26 +345,20 @@ sub _raw_data {
                     	assay_type          => $rd->assay_type(),
 		  });
 
-		my @original_meta_data = qw( primary_id secondary_id archive archive_url experiment_type assay_type );           
-		my %orig_meta_data     = map {$_ => 1} @original_meta_data;
-   		while ( my ( $k, $v ) = each %$rd ) {
-                        
-			if ( ! exists $orig_meta_data{$k} ) {
+   		foreach  my $k ( $rd->custom_fields() ) {
         			$variable_raw_data->create_related(
             			  'raw_meta_datas',
             			  {
                 			name  => $k,
-                			value => $v
+                			value => $rd->custom_field($k)
 			 	 });
 			
-				print ("k: ");
-                        	print $k."\n";
-                        	print("v: ");
-                        	print $v."\n";
-			}
+				#print ("k: ");
+                        	#print $k."\n";
+                        	#print("v: ");
+                        	#print $v."\n";
 		}
 	    
-
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
         }
