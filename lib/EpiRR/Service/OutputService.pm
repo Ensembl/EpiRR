@@ -79,34 +79,16 @@ sub db_to_user {
    
    );
 
-
- for (my($k, $v) = each $r->custom_field() ) {
-          $x->custom_field($k , $v) 
-   }
-
-
+        for my $raw_meta_data ( $r->raw_meta_datas ) {
+            $x->custom_field( $raw_meta_data->name() ) = $raw_meta_data->value(); 
+        }
 
         print (" x \n");
         print Dumper($x);
         $d->add_raw_data($x);
     }
 
-#print (" d: \n ");
-#print Dumper ($d);
-
-      #foreach  my $k ( $rd->custom_fields() ) {
-      #                                    
-      #                            {
-      #                                  name  => $k,
-      #                                  value => $rd->custom_field($k)
-       #                          })
-
-
-
     return $d;
 }
-
-
-
 
 1;
