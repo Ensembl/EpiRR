@@ -23,3 +23,4 @@ nytprof.out
 epirr.db
 epirr_prod.sql
 web/server.conf
+web/epirr

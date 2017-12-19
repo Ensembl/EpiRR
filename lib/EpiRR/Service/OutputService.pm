@@ -77,10 +77,10 @@ sub db_to_user {
             experiment_type => $r->experiment_type(),
             assay_type      => $r->assay_type(),
    
-   );
+        );
 
-        for my $raw_meta_data ( $r->raw_meta_datas ) {
-            $x->custom_field( $raw_meta_data->name() ) = $raw_meta_data->value(); 
+        for my $raw_meta_data ( $r->raw_meta_datas ) {  
+	    $x->custom_field($raw_meta_data->name(), $raw_meta_data->value()); 
         }
 
         $d->add_raw_data($x);
