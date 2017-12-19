@@ -67,8 +67,6 @@ sub db_to_user {
     }
 
     for my $r ( $dsv->raw_datas ) {
-        #print (" r \n");
-        #print Dumper($r);      
         my $x = EpiRR::Model::RawData->new(
             archive         => $r->archive()->name(),
             primary_id      => $r->primary_accession(),
@@ -78,17 +76,13 @@ sub db_to_user {
             assay_type      => $r->assay_type(),
         );
 
-        for my $meta ( $r->raw_meta_datas ) {
-            $x->custom_field( $meta->name(), $meta->value() ); 
+        for my $raw_meta_data ( $r->raw_meta_datas ) {  
+	    $x->custom_field($raw_meta_data->name(), $raw_meta_data->value()); 
         }
 
-        #print (" x \n");
-        #print Dumper($x);
         $d->add_raw_data($x);
     }
 
-    #print Dumper($d->to_hash);
-    #print "----------\n";
     return $d;
 }
 

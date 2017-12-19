@@ -53,11 +53,10 @@ sub as_string {
 sub to_hash {
     my ($self) = @_;
 
-    my %raw_meta_data;
-
-    for my $k ( $self->custom_fields ) {
-        $raw_meta_data{$k} = $self->custom_field($k);
-    } 
+    my %extra_meta_data;    
+    for my $k ( $self->custom_fields() ) {
+        $extra_meta_data{$k} = $self->custom_field($k);
+    }
 
     return {
         'archive'         => $self->archive,
@@ -66,7 +65,7 @@ sub to_hash {
         'archive_url'     => $self->archive_url,
         'experiment_type' => $self->experiment_type,
         'assay_type'      => $self->assay_type,
-        %raw_meta_data
+        %extra_meta_data
     };
 }
 
