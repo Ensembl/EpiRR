@@ -76,37 +76,20 @@ sub db_to_user {
             archive_url     => $r->archive_url(),
             experiment_type => $r->experiment_type(),
             assay_type      => $r->assay_type(),
-   
-   );
+        );
 
+        for my $meta ( $r->raw_meta_datas ) {
+            $x->custom_field( $meta->name(), $meta->value() ); 
+        }
 
- for (my($k, $v) = each $r->custom_field() ) {
-          $x->custom_field($k , $v) 
-   }
-
-
-
-        print (" x \n");
-        print Dumper($x);
+        #print (" x \n");
+        #print Dumper($x);
         $d->add_raw_data($x);
     }
 
-#print (" d: \n ");
-#print Dumper ($d);
-
-      #foreach  my $k ( $rd->custom_fields() ) {
-      #                                    
-      #                            {
-      #                                  name  => $k,
-      #                                  value => $rd->custom_field($k)
-       #                          })
-
-
-
+    #print Dumper($d->to_hash);
+    #print "----------\n";
     return $d;
 }
-
-
-
 
 1;
