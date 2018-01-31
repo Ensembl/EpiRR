@@ -25,12 +25,12 @@ use EpiRR::Model::Experiment;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
-use utf8;
+
 
 sub parse_experiment {
     my ( $self, $xml, $errors ) = @_;
 
-    print Dumper($xml);
+   
 
     my $e = EpiRR::Model::Experiment -> new();
 
