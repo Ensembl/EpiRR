@@ -19,27 +19,14 @@ use warnings;
 use Moose;
 use namespace::autoclean;
 
+with 'EpiRR::Roles::HasMetaData';
+
 has 'archive'         => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'primary_id'      => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'secondary_id'    => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'archive_url'     => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'experiment_type' => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'assay_type'      => ( is => 'rw', isa => 'Maybe[Str]' );
-
-has custom_fields => (
-    traits     => [qw( Hash )],
-    isa        => 'HashRef',
-    builder    => '_build_custom_fields',
-    handles    => {
-        custom_field          => 'accessor',
-        has_custom_fields     => 'exists',
-        custom_fields         => 'keys',
-        has_custom_fields     => 'count',
-        delete_custom_field   =>'delete',
-   }
-);
-
-sub _build_custom_fields { {} }
 
 sub as_string {
     my ($self) = @_;
@@ -53,10 +40,7 @@ sub as_string {
 sub to_hash {
     my ($self) = @_;
 
-    my %extra_meta_data;    
-    for my $k ( $self->custom_fields() ) {
-        $extra_meta_data{$k} = $self->custom_field($k);
-    }
+    my %raw_meta_data = $self->all_meta_data();
 
     return {
         'archive'         => $self->archive,
@@ -65,7 +49,7 @@ sub to_hash {
         'archive_url'     => $self->archive_url,
         'experiment_type' => $self->experiment_type,
         'assay_type'      => $self->assay_type,
-        %extra_meta_data
+        %raw_meta_data
     };
 }
 

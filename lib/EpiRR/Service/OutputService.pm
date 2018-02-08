@@ -77,7 +77,7 @@ sub db_to_user {
         );
 
         for my $raw_meta_data ( $r->raw_meta_datas ) {  
-	    $x->custom_field($raw_meta_data->name(), $raw_meta_data->value()); 
+	    $x->set_meta_data($raw_meta_data->name(), $raw_meta_data->value()); 
         }
 
         $d->add_raw_data($x);

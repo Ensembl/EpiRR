@@ -309,9 +309,9 @@ sub _raw_data {
           $self->schema()->archive()->find( { name => $archive_name } );
 
         if ( $self->accessor_exists($archive_name) ) {
-            my $archive_accessor = $self->get_accessor($archive_name);
+           my $archive_accessor = $self->get_accessor($archive_name);
 
-            my ( $rd, $s ) =
+           my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
               
@@ -319,48 +319,40 @@ sub _raw_data {
            #print Dumper($rd);
               
 
-            if ( !@$rd_errors ) {
-                #no errors, should have objects
-                confess("No raw data returned for $rd_txt") unless $rd;
-                confess("No sample returned for $rd_txt")   unless $s;
+           if ( !@$rd_errors ) {
+              #no errors, should have objects
+              confess("No raw data returned for $rd_txt") unless $rd;
+              confess("No sample returned for $rd_txt")   unless $s;
 
-                push @$rd_errors, "No experiment type found for $rd_txt"
-                  unless ( $rd->experiment_type() );
-                push @$rd_errors, "No assay type found for $rd_txt"
-                  unless ( $rd->assay_type() );
-            }
+              push @$rd_errors, "No experiment type found for $rd_txt"
+                unless ( $rd->experiment_type() );
+              push @$rd_errors, "No assay type found for $rd_txt"
+                unless ( $rd->assay_type() );
+           }
 
+           push @samples, $s if ($s); 
+	     
+           my $variable_raw_data = $dataset_version->create_related( 'raw_datas',
+           {
+               primary_accession   => $rd->primary_id(),
+               secondary_accession => $rd->secondary_id(),
+               archive             => $archive,
+               archive_url         => $rd->archive_url(),
+               experiment_type     => $rd->experiment_type(),
+               assay_type          => $rd->assay_type(),
+	   });
 
-            push @samples, $s if ($s);
-            
+           my %raw_meta_data = $rd->all_meta_data();
+           for my $k ( keys %raw_meta_data ) {
+              $variable_raw_data->create_related( 'raw_meta_datas',
+              {
+                 name  => $k,
+                 value => $raw_meta_data{$k}
+	      });
+           }
 	    
-             	my $variable_raw_data = $dataset_version->create_related(
-                  'raw_datas',
-                  {
-                  	primary_accession   => $rd->primary_id(),
-                    	secondary_accession => $rd->secondary_id(),
-                    	archive             => $archive,
-                    	archive_url         => $rd->archive_url(),
-                    	experiment_type     => $rd->experiment_type(),
-                    	assay_type          => $rd->assay_type(),
-		  });
-
-   		foreach  my $k ( $rd->custom_fields() ) {
-        			$variable_raw_data->create_related(
-            			  'raw_meta_datas',
-            			  {
-                			name  => $k,
-                			value => $rd->custom_field($k)
-			 	 });
-			
-				#print ("k: ");
-                        	#print $k."\n";
-                        	#print("v: ");
-                        	#print $v."\n";
-		}
-	    
-            $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
-            $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
+           $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
+           $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
         }
 
         if ( ! $self->accessor_exists($archive_name) ) {
