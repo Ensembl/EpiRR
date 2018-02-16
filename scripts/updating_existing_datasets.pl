@@ -52,24 +52,23 @@ foreach my $raw_data(@all_raw_data){
 		        	}
 
 				# If molecule and molecule_ontology_uri are still set within the sample XML, copy them over to the experiment 
-			        if ( $sample->get_meta_data('molecule') && ! $eexperiment->get_meta_data('molecule') ) {
+			        if ( $sample->get_meta_data('molecule') && ! $experiment->get_meta_data('molecule') ) {
 					$raw_data->add_to_raw_meta_datas(	
      					{
 						name  => 'molecule', 
-						value => $sample->get_meta_data('molecule'))
+						value => $sample->get_meta_data('molecule')
 					});
 				}
 
-			        if ( $sample->get_meta_data('molecule_ontology_uri') && ! $eexperiment->get_meta_data('molecule_ontology_uri') ) {
+			        if ( $sample->get_meta_data('molecule_ontology_uri') && ! $experiment->get_meta_data('molecule_ontology_uri') ) {
 					$raw_data->add_to_raw_meta_datas(	
      					{
 						name  => 'molecule_ontology_uri', 
-						value => $sample->get_meta_data('molecule_ontology_uri'))
+						value => $sample->get_meta_data('molecule_ontology_uri')
 					});
 				}
 			}
 		}					
 	}
 }	
-
 
