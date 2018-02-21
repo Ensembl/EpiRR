@@ -17,6 +17,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 use File::Spec;
+use Data::Dumper;
 use feature qw(say);
 
 use EpiRR::Parser::DDBJXMLParser;
@@ -134,14 +135,17 @@ sub _cache_experiments_samples {
   my $cache_samples = {};
   
   for my $exp (@exps) {
-    $exp =~ /(DRA\d{6})/;
+    confess "\nExperiment XMLs filenames do not contain expected experiment identifiers (DRX......): $exp\n" unless ($exp =~ m/DRX\d{6}/); 
+
+    $exp =~ /(DRX\d{6})/;
     my $id = $1;
+
     my $file_exp = File::Spec->catfile($base_path,$id . '.experiment.xml'); 
     my $file_sam = File::Spec->catfile($base_path,$id . '.sample.xml'); 
     confess "Missing Sample File $file_sam" if(! -e $file_sam);
     my $sample     = $self->xml_parser->parse_sample($file_sam, $err);
     my $exp        = $self->xml_parser->parse_experiment($file_exp, $err);
-      
+
     ##### Merge all Experiments and Samples in one data structure ########
     $self->_merge($exp, $cache_exps);
     $self->_merge($sample, $cache_samples);
