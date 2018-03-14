@@ -46,9 +46,6 @@ croak("-dir $dir is not a directory") unless ( -d $dir );
 eval("require $config_module")
   or croak "cannot load module $config_module $@";
 
-my $container = $config_module->c();
-my $accession_service = $container->resolve( service => 'accession_service' );
-
 my $report_file_name = "$dir/summary." . time . ".tsv";
 open my $r_fh, '>', $report_file_name;
 print $r_fh
@@ -69,24 +66,31 @@ foreach my $raw_data(@all_raw_data){
       foreach my $n (@list_of_EGAX) {
 	if( $n eq "EGAX00001272789") {
         
-	my $accessor = $conversion_service->get_accessor($raw_data->archive->name);
-	
-	my $row = $self->experiment_xml( $n, $errors );
-	my ( $exp_id, $status_id, $experiment_xml ) = @$row;
+	my $accessor = $conversion_service->get_accessor( $raw_data->archive->name );
+        	
+        print "-------------------------\n";
+        print "Looking at experiment: $n\n";
+
+	my $exp_row = $accessor->experiment_xml( $n, $errors );
+        my ( $exp_id, $status_id, $experiment_xml ) = @$exp_row; 
         
-	open my $exp_xml_fh, '>', "$exp_id.xml";
-	print $exp_xml_fh $experiment_xml."\n";
+        open my $exp_xml_fh, '>', "$exp_id.xml";
+	print $exp_xml_fh $experiment_xml;
         close $exp_xml_fh;
 
-        my $sample_row = $self->lookup_sample( $experiment->sample_id(), $errors ) if ($experiment->sample_id());
-	my ( $sample_id, $sample_xml ) = @$row;
+        my $experiment = $accessor->extract_metadata_from_experiment_xml( $exp_row, $errors ); 
+        
+        my $sample_row = $accessor->lookup_sample( $experiment->sample_id(), $errors ) if ($experiment->sample_id());
+	my ( $sample_id, $sample_xml ) = @$sample_row;
+
+        print "Sample ID from experiment: ".$experiment->sample_id()." and that from the sample database is: $sample_id \n";
 
 	open my $sample_xml_fh, '>', "$sample_id.xml";
 	print $sample_xml_fh $sample_xml."\n";
         close $sample_xml_fh;
 
-        my $cmd = "pipenv run main.py -sample -out:./".$sample_id.".versioned.xml ./".$sample_id.".xml";
-	system$cmd);
+        my $cmd = "python lib/ihec-ecosystems/version_metadata/__main__.py -sample -config:lib/ihec-ecosystems/version_metadata/config_edited.json -out:./".$sample_id.".versioned.xml ./".$sample_id.".xml";
+	system($cmd);
       }}
     }
   }
