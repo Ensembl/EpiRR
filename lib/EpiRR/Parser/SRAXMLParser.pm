@@ -28,9 +28,7 @@ use EpiRR::Model::RawData;
 
 
 sub parse_experiment {
-    my ( $self, $xml, $errors ) = @_;
-
-   
+    my ( $self, $xml, $errors ) = @_; 
 
     my $e = EpiRR::Model::Experiment -> new();
 
@@ -71,6 +69,8 @@ sub parse_experiment {
 
     $t->parse($xml);
    
+    $e->set_meta_data( 'experiment_type', 'mRNA-Seq' ) unless ( $e->meta_data_exists('experiment_type') ); 
+
     #push @$errors, "No experiment found" unless $e;
     push @$errors, "No experiment found" unless $e->experiment_id();
     return $e;
@@ -96,6 +96,7 @@ sub parse_sample {
                 my $tag   = ( $element->first_child_text('TAG') );
                 my $value = $element->first_child_text('VALUE');
                 $s->set_meta_data( $tag, $value );
+                $s->set_meta_data( 'donor_stage', $element->first_child_text('UNITS') ) if ( $tag eq "age" );
             },
             'SCIENTIFIC_NAME' => sub {
                 my ( $t, $element ) = @_;
@@ -112,6 +113,15 @@ sub parse_sample {
         }
     );
     $t->parse($xml);
+
+    if ( $s->meta_data->{'material'} eq 'cell line' ) { 
+      $s->set_meta_data( 'material', 'Cell Line' );
+      $s->set_meta_data( 'line', $s->delete_meta_data( 'cell_type' ) ) if $s->meta_data_exists( 'cell_type' );
+      $s->set_meta_data( 'line', $s->delete_meta_data( 'cell type' ) ) if $s->meta_data_exists( 'cell type' );
+    }
+    $s->set_meta_data( 'biomaterial_type', $s->delete_meta_data( 'material' ) );
+    $s->set_meta_data( 'donor_age', $s->delete_meta_data( 'age' ) );
+    $s->set_meta_data( 'disease', $s->delete_meta_data( 'disease state' ) );
 
     push @$errors, "Sample ID not found in XML" if ( !$s->sample_id() );
     return $s;
