@@ -15,6 +15,8 @@ requires 'namespace::autoclean';
 requires 'Try::Tiny';
 requires 'Mojolicious', '>= 6.33';
 requires 'DBD::mysql';
+requires 'Set::Object';
+requires 'Data::Compare::Plugins::Set::Object';
 
 on 'test' => sub {
   requires 'Test::More';
