@@ -32,6 +32,8 @@ sub parse_experiment {
 
     my $e = EpiRR::Model::Experiment -> new();
 
+    my $library_selection;
+
     my $t = XML::Twig->new(
         twig_handlers => {
             'EXPERIMENT' => sub {
@@ -64,12 +66,17 @@ sub parse_experiment {
 		
                 $e->set_meta_data($tag, $value);
             },
-        }
+            'LIBRARY_SELECTION' => sub {
+                my ( $t, $element ) = @_;
+                my $value = $element->text();
+                $library_selection = $value;
+            },
+	}
     );
 
     $t->parse($xml);
    
-    $e->set_meta_data( 'experiment_type', 'mRNA-Seq' ) unless ( $e->meta_data_exists('experiment_type') ); 
+    $e->set_meta_data( 'experiment_type', 'mRNA-Seq' ) unless ( $e->meta_data_exists('experiment_type') || $library_selection ne 'cDNA' ); 
 
     #push @$errors, "No experiment found" unless $e;
     push @$errors, "No experiment found" unless $e->experiment_id();
@@ -120,7 +127,7 @@ sub parse_sample {
       $s->set_meta_data( 'line', $s->delete_meta_data( 'cell type' ) ) if $s->meta_data_exists( 'cell type' );
     }
     $s->set_meta_data( 'biomaterial_type', $s->delete_meta_data( 'material' ) );
-    $s->set_meta_data( 'donor_age', $s->delete_meta_data( 'age' ) );
+    $s->set_meta_data( 'donor_age', $s->delete_meta_data( 'age' ) ) if $s->meta_data_exists( 'age' );
     $s->set_meta_data( 'disease', $s->delete_meta_data( 'disease state' ) );
 
     push @$errors, "Sample ID not found in XML" if ( !$s->sample_id() );
