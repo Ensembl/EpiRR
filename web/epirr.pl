@@ -157,7 +157,7 @@ __DATA__
 <html>
 <head>
 <title>EpiRR <%= $title %></title>
-<link href="../favicon.ico" rel="icon" type="image/x-icon" />
+<link href="favicon.ico" rel="icon" type="image/x-icon" />
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <!-- Optional theme -->
