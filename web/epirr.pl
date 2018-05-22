@@ -190,16 +190,21 @@ __DATA__
 @@ index.html.ep
 % layout 'layout';
 <h1>EpiRR REST API</h1>
-<h2>Endpoints</h2>
+<h2>Introduction</h2>
+<p>The <b>Epi</b>genome <b>R</b>eference <b>R</b>egistry, aka EpiRR, serves as a registry for datasets grouped in reference epigenomes and their respective metadata, including direct links to the raw data in public sequence archives. IHEC reference epigenomes must meet the minimum the criteria listed <a target="_blank" href="http://ihec-epigenomes.org/research/reference-epigenome-standards/">here</a> and any associated metadata should comply with the IHEC specifications described <a target="_blank" href="https://github.com/IHEC/ihec-metadata/blob/master/specs/Ihec_metadata_specification.md">here</a>.</p>
+<br>
+<h2>Accessing EpiRR data</h2>
+<p>EpiRR REST API provides language agnostic bindings to the EpiRR data, which you can access from <a href="https://www.ebi.ac.uk/vg/epirr/">https://www.ebi.ac.uk/vg/epirr/</a></p>
+<h3>REST API Endpoints</h3>
 <dl class="dl-horizontal">
 <dt><a href="<%= $url %>/summary">/summary</a></dt>
 <dd>Report summary stats</dd>
 <dt><a href="<%= $url %>/view/all">/view/all</a></dt>
-<dd>List all current Epigenomes</dt>
+<dd>List all current reference Epigenomes</dt>
 <dt>/view/:id</dt>
-<dd>View the detail of one reference Epigenome</dt>
+<dd>View in detail a specific reference Epigenome</dt>
 </dl>
-<h2>Response types</h2>
+<h3>Response types</h3>
 <p>Append <code>?format=<var>x</var></code> to the end of your query to control the format.</p>
 <p>Formats available:</p>
 <ul>
@@ -207,6 +212,9 @@ __DATA__
 <li>html</li>
 </ul>
 <p>Alternatively, use the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">"Accept"</a> header in your HTTP request.</p>
+<br>
+<h2>How to make submissions to EpiRR</h2>
+<p>Submissions to EpiRR can be arranged by contacting <a href="mailto:blueprint-dcc@ebi.ac.uk">blueprint-dcc@ebi.ac.uk</a>. Submissions are accepted as either JSON or custom text format files, where one file must be used per reference epigenome. For more information on EpiRR submissions, please visit the <a target="_blank" href="https://github.com/Ensembl/EpiRR">EpiRR Github repository</a>.</p>
 
 @@ viewid.html.ep
 % layout 'layout';
