@@ -17,14 +17,11 @@ requires 'Mojolicious', '>= 6.33';
 requires 'DBD::mysql';
 requires 'Set::Object';
 requires 'Data::Compare::Plugins::Set::Object';
+requires 'Module::Build::Pluggable';
+requires 'Module::Build::Pluggable::CPANfile';
 
 on 'test' => sub {
   requires 'Test::More';
 	requires 'Test::MockObject::Extends';
   requires 'DBD::SQLite';
-};
-
-on 'build' => sub {
-  requires 'Module::Build::Pluggable';
-  requires 'Module::Build::Pluggable::CPANfile';
 };
