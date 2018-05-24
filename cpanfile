@@ -15,6 +15,8 @@ requires 'namespace::autoclean';
 requires 'Try::Tiny';
 requires 'Mojolicious', '>= 6.33';
 requires 'DBD::mysql';
+requires 'Module::Build::Pluggable';
+requires 'Module::Build::Pluggable::CPANfile';
 
 on 'test' => sub {
   requires 'Test::More';
@@ -22,7 +24,3 @@ on 'test' => sub {
   requires 'DBD::SQLite';
 };
 
-on 'build' => sub {
-  requires 'Module::Build::Pluggable';
-  requires 'Module::Build::Pluggable::CPANfile';
-};
