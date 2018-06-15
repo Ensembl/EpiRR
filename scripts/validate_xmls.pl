@@ -24,6 +24,11 @@ use File::Basename;
 use autodie;
 use feature qw(say);
 use Data::Dumper;
+use URI::Encode qw(uri_encode);
+use LWP;
+#has '+base_url'        => ( default => 'https://www.ebi.ac.uk/ega/datasets/' );  
+#has '+valid_status_id' => ( default => 2 );
+
 $Data::Dumper::Indent = 1;
 $Data::Dumper::Sortkeys = 1;
 $Data::Dumper::Deepcopy = 1;
@@ -55,39 +60,46 @@ print $r_fh
   join( "\t", qw( File Project Local_name Description Status EpiRR_ID Errors ) )
   . $/;
 
-my $container = $config_module->c();
+my $errors = [];
 my $database_service = $container->resolve( service => 'database/dbic_schema' );
 my $conversion_service = $container->resolve( service => 'conversion_service' );
+my $acs = {};
+$acs->{EGA} = $conversion_service->get_accessor('EGA');
+$acs->{ENA} = $conversion_service->get_accessor('ENA');
+$acs->{DDBJ} = $conversion_service->get_accessor('DDBJ');
+
 my @all_raw_data = $database_service->raw_data->all;
 
 foreach my $raw_data(@all_raw_data){
-  if ( $raw_data->archive->name eq 'EGA' || $raw_data->archive->name eq 'ENA' || $raw_data->archive->name eq 'DDBJ' ) {
-    if ( $raw_data->dataset_version->is_current ) {
-      my $errors = [];
-      my @list_of_EGAX = ($raw_data->primary_accession,);
+  my $archive_name = $raw_data->archive->name;
+  next unless(exists  $acs->{$archive_name});
+  next unless($raw_data->dataset_version->is_current);
 
-      foreach my $n (@list_of_EGAX) {
-	if( $n eq "EGAX00001272789") {
-        
-	my $accessor = $conversion_service->get_accessor($raw_data->archive->name);
-	
-	my $row = $self->experiment_xml( $n, $errors );
-	my ( $exp_id, $status_id, $experiment_xml ) = @$row;
-        
-	open my $exp_xml_fh, '>', "$exp_id.xml";
-	print $exp_xml_fh $experiment_xml."\n";
-        close $exp_xml_fh;
+  my $ac = $acs->{$archive_name};
+  foreach my $n ($raw_data->primary_accession) {
+    my $experiment = $ac->experiment_xml($n , $errors);
+    say $archive_name;die;
+#    my ( $exp_id, $status_id, $experiment_xml ) = @$row;
+    say Dumper($experiment); die;
+    if( $n eq "EGAX00001272789") {
 
-        my $sample_row = $self->lookup_sample( $experiment->sample_id(), $errors ) if ($experiment->sample_id());
-	my ( $sample_id, $sample_xml ) = @$row;
 
-	open my $sample_xml_fh, '>', "$sample_id.xml";
-	print $sample_xml_fh $sample_xml."\n";
-        close $sample_xml_fh;
-
-        my $cmd = "pipenv run main.py -sample -out:./".$sample_id.".versioned.xml ./".$sample_id.".xml";
-	system$cmd);
-      }}
+#	my $row = $self->experiment_xml( $n, $errors );
+#	my ( $exp_id, $status_id, $experiment_xml ) = @$row;
+#        
+#	open my $exp_xml_fh, '>', "$exp_id.xml";
+#	print $exp_xml_fh $experiment_xml."\n";
+#        close $exp_xml_fh;
+#
+#        my $sample_row = $self->lookup_sample( $experiment->sample_id(), $errors ) if ($experiment->sample_id());
+#	my ( $sample_id, $sample_xml ) = @$row;
+#
+#	open my $sample_xml_fh, '>', "$sample_id.xml";
+#	print $sample_xml_fh $sample_xml."\n";
+#        close $sample_xml_fh;
+#
+#        my $cmd = "pipenv run main.py -sample -out:./".$sample_id.".versioned.xml ./".$sample_id.".xml";
+#	system$cmd);
     }
   }
 }

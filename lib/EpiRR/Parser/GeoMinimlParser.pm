@@ -81,6 +81,7 @@ sub parse_main {
     $t->parse($xml);
     # ENCODE specific part
     if (defined $contributor and $contributor eq 'ENCODE') {
+    # pass to $err instead of die
       if(!defined $library_strategy) {
         die  $s->sample_id . ': library_strategy not defined';
       }

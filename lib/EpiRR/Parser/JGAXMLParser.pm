@@ -25,6 +25,10 @@ use XML::Twig;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
+use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1; 
+
 sub parse_experiment {
   my ( $self, $xml_file, $errors ) = @_;
 
@@ -49,13 +53,14 @@ sub parse_experiment {
         my ( $t, $element ) = @_;
         $tmp->{library_strategy} = $element->trimmed_text();
       },
-      #TD:  Check for multiple records
+      # ToDo:  Check for multiple records
       'EXPERIMENT_ATTRIBUTES/EXPERIMENT_ATTRIBUTE/VALUE' => sub {
         my ( $t, $element ) = @_;
         $tmp->{experiment_type} = $element->trimmed_text();
       },
     }
   );
+
   $t->parsefile($xml_file);
   return($cache);
 }
