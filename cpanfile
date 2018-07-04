@@ -17,6 +17,7 @@ requires 'Mojolicious', '>= 6.33';
 requires 'DBD::mysql';
 requires 'Module::Build::Pluggable';
 requires 'Module::Build::Pluggable::CPANfile';
+requires 'Set::Object';
 
 on 'test' => sub {
   requires 'Test::More';
