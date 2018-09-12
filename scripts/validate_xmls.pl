@@ -385,9 +385,9 @@ sub parse_options {
   # Add option accessions for filtering. Store as hash
   my $opts = {
     cfg_epirr     => 'EpiRR::Config::Production',
-    cfg_ihec_json => '/homes/juettema/src/ihec-ecosystems/version_metadata/config.json',
-    work_dir      => '/nfs/production/panda/ensembl/funcgen/juettemann/epirr_submissions/test',
-    ihec_dir      => '/homes/juettema/src/ihec-ecosystems/version_metadata/',
+    cfg_ihec_json => "$HOME/src/ihec-ecosystems/version_metadata/config.json",
+    work_dir      => $WORKDIR,
+    ihec_dir      => $VALIDATOR,
     archive       => ['ENA', 'EGA'],
     project       => '',
     accessions    => [],
