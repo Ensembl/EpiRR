@@ -62,7 +62,7 @@ If you need to update a submission, add the EpiRR accession to the file:
     RAW_DATA	ENA	ERX000001
     RAW_DATA	EGA	EGAX00000000001	EGAD00000000001
 
-###Attributes
+### Attributes
 
 The attributes required are common between both submission formats. The attribute name should be lower case for JSON file submission and upper case for the text format.
 
