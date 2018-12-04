@@ -58,6 +58,8 @@ sub iterate {
         my ($exp_xml) = $self->{sth}->{lc($archive)}->{exp}->fetchrow_array();
         $self->{sth}->{lc($archive)}->{sample}->execute($exp_acc);
         my ($sample_acc, $sample_xml) = $self->{sth}->{lc($archive)}->{sample}->fetchrow_array();
+        
+        next if(! defined $self->{opts}->{accessions}->{$sample_acc} and !defined $self->{opts}->{accessions}->{$exp_acc} );
        
         my $err_e   = $self->validate('experiment' ,$exp_acc, $exp_xml);
         my $err_s   = $self->validate('sample' ,$sample_acc, $sample_xml);
@@ -198,6 +200,7 @@ sub filter_raw_data {
   my %archives = map { $_ => 1 } @{$self->{opts}->{archive}};
   my %projects = map { $_ => 1 } @{$self->{opts}->{project}};
   my $accessions = $self->{epirr_accessions};
+  # say Dumper($accessions);die;
   
   foreach my $archive (sort keys %{$accessions}) {
     foreach my $project (sort keys %{$accessions->{$archive}}){
@@ -205,6 +208,7 @@ sub filter_raw_data {
     }
     delete $self->{epirr_accessions}->{$archive} unless (exists $archives{$archive});
   }
+
 }
 
 
@@ -397,7 +401,7 @@ sub parse_options {
     ihec_dir      => $ENV{IHEC_DIR},
     archive       => [],
     project       => [],
-    accessions    => [],
+    accessions    => ['ERS2024989'],
     json_dir      => undef,
   };
   
@@ -494,6 +498,7 @@ sub parse_options {
   INFO 'Working Directory:' . $opts->{work_dir};
   INFO 'Archives to process: ' . join "--", @{$opts->{archive}};
   INFO 'Projects to process: ' . join "--", @{$opts->{project}};
+  # INFO Dumper $opts;die;
   return $self->{opts} = $opts;
 }
 
