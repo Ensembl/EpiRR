@@ -1,4 +1,4 @@
-
+#!/usr/bin/env perl
 
 use warnings;
 use strict;
@@ -36,6 +36,8 @@ sub main {
   $self->remove_xml_tsv_log_files() if $self->{opts}->{clean};
   $self->iterate();
   # defined ($self->{opts}->{json_dir}) ? $self->parse_json() : $self->filter_raw_data();
+
+  exit;
 }
 
 
@@ -56,10 +58,18 @@ sub iterate {
         my ($exp_acc, $ihec) = @{$a};
         $self->{sth}->{lc($archive)}->{exp}->execute($exp_acc);
         my ($exp_xml) = $self->{sth}->{lc($archive)}->{exp}->fetchrow_array();
+        #warn "Data fetching terminated early by error: $DBI::errstr\n"
+        #  if $DBI::err;
+        $self->{sth}->{lc($archive)}->{exp}->finish();
+        
         $self->{sth}->{lc($archive)}->{sample}->execute($exp_acc);
         my ($sample_acc, $sample_xml) = $self->{sth}->{lc($archive)}->{sample}->fetchrow_array();
-        
-        next if(! defined $self->{opts}->{accessions}->{$sample_acc} and !defined $self->{opts}->{accessions}->{$exp_acc} );
+        #warn "Data fetching terminated early by error: $DBI::errstr\n"
+        #  if $DBI::err;      
+        $self->{sth}->{lc($archive)}->{sample}->finish();
+
+        next if( keys $self->{opts}->{accessions} and ! defined $self->{opts}->{accessions}->{$sample_acc} and !defined $self->{opts}->{accessions}->{$exp_acc} );
+        #print "Looking at @{$a} from $archive for project: $project.\n";
        
         my $err_e   = $self->validate('experiment' ,$exp_acc, $exp_xml);
         my $err_s   = $self->validate('sample' ,$sample_acc, $sample_xml);
@@ -74,6 +84,11 @@ sub iterate {
     }
   }
   $self->write_stats();
+  
+  #if( $self->{dbh}->{erapro}->ping ) {
+    $self->{dbh}->{erapro}->disconnect
+      or warn "Disconnection failed: $DBI::errstr\n";
+  #}
 }
 
 # $type experiment or sample
@@ -136,8 +151,6 @@ sub parse_json {
   }
 }
 
-
-
 sub write_report {
   my ($self, $archive, $project) = @_;
 
@@ -192,8 +205,6 @@ sub report {
   $self->{stats}->{$type}->{$project}->{$flag}->{$acc}++;
 }
 
-
-
 sub filter_raw_data {
   my ($self) = @_;
 
@@ -208,9 +219,7 @@ sub filter_raw_data {
     }
     delete $self->{epirr_accessions}->{$archive} unless (exists $archives{$archive});
   }
-
 }
-
 
 sub write_xml_file {
   my ($self, $accession, $xml) = @_;
@@ -224,7 +233,6 @@ sub write_xml_file {
 
   return($file);
 }
-
 
 sub run_py {
   my ($self, $array_args, $file1, $file2) = @_; 
@@ -297,6 +305,8 @@ sub sql_oracle {
   #default is 80, far to short for the XML records
   $dbh->{LongReadLen} = 66600;
 
+  $self->{dbh}->{erapro} = $dbh;
+
   my $sth;
   $sth = $dbh->prepare(' 
     SELECT xmltype.getclobval(experiment_xml) 
@@ -317,8 +327,6 @@ sub sql_oracle {
 
   $self->{sth}->{ena}->{sample} = $sth;
   $self->{sth}->{ddbj}->{sample} = $sth;
-
-
 
   $sth = $dbh->prepare('
     SELECT xmltype.getclobval(experiment_xml) 
@@ -349,8 +357,7 @@ sub fetch_epirr_accessions {
   INFO "DSN: $dsn\tUser: $user\tPW: $pass";
   my $dbh = DBI->connect( $dsn, $user, $pass, 
     { 'RaiseError' => 1, 'PrintError' => 0 } ) or croak "Could not connect: $!";
-  INFO "Connected to DSN: $dsn as $user";
-  
+  INFO "Connected to DSN: $dsn as $user"; 
 
   my $archive = "'".join("','", @{$self->{opts}->{archive}})."'";
   my $project = "'".join("','", @{$self->{opts}->{project}})."'";
@@ -367,7 +374,6 @@ sub fetch_epirr_accessions {
     AND project.name IN ($project)
   ");
 
-  
   INFO $sql;
   
   my $sth = $dbh->prepare($sql);
@@ -376,6 +382,9 @@ sub fetch_epirr_accessions {
   while ( my ($acc, $archive, $project, $ihec)  = $sth->fetchrow_array ){
     push @{ $self->{epirr_accessions}->{lc($archive)}->{lc($project)} }, [$acc, $ihec];  
   }
+
+  $dbh->disconnect
+    or warn "Disconnection from EpiRR database failed: $DBI::errstr\n";
 }
 
 #  errs.sample.1.CKH.ERS.Sep-10-2018-22.22.26.log
@@ -387,7 +396,6 @@ sub remove_xml_tsv_log_files {
     unlink @files or croak "Could not delete files in Working Dir: $!";
   }
 }
-
 
 sub parse_options {
   my ($self) = @_;
@@ -401,26 +409,30 @@ sub parse_options {
     ihec_dir      => $ENV{IHEC_DIR},
     archive       => [],
     project       => [],
-    accessions    => ['ERS2024989'],
+    accessions    => [],
     json_dir      => undef,
   };
-  
-  GetOptions($opts, qw/
-    cfg_epirr=s
-    cfg_ihec_json=s
-    work_dir=s
-    ihec_dir=s
-    archive:s{,}
-    project:s{,}
-    accessions=s{,}
-    json_dir=s
 
-    legacy
-    debug
-    clean
-    help
-    verbose
-  /) or pod2usage(-msg => 'Misconfigured options given', -verbose => 1, -exitval => 1);
+  my $splitter = sub {
+    my ($name, $val) = @_;
+    push @{$opts->{$name}}, split q{,}, $val;
+  };
+  
+  GetOptions($opts,
+    'cfg_epirr=s',
+    'cfg_ihec_json=s',
+    'work_dir=s',
+    'ihec_dir=s',
+    'archive=s@' => $splitter,
+    'project=s@' => $splitter,
+    'accessions=s@' => $splitter,
+    'json_dir=s',
+    'legacy',
+    'debug',
+    'clean',
+    'help',
+    'verbose',
+  ) or pod2usage(-msg => 'Misconfigured options given', -verbose => 1, -exitval => 1);
   pod2usage(-verbose => 1, -exitval => 0) if $opts->{help};
 
   my @required = qw (cfg_epirr cfg_ihec_json work_dir ihec_dir archive);
@@ -428,7 +440,6 @@ sub parse_options {
 
   Log::Log4perl->easy_init($INFO);
   Log::Log4perl->easy_init($DEBUG) if $opts->{debug} ;
-
 
   #Sanity Checks
   croak('"-work_dir '. $opts->{work_dir} .'" not found') unless ( -d $opts->{work_dir} );
@@ -451,7 +462,6 @@ sub parse_options {
 
   # These are the projects available through ERA DB
   $opts->{valid_archives} = [qw (ddbj ega ena)]; 
-
   
   if(scalar @{$opts->{archive}} == 0 or !defined $opts->{archive} ){
     $opts->{archive} = $opts->{valid_archives}; 
