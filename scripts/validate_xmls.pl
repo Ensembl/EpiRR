@@ -73,7 +73,10 @@ sub iterate {
        
         my $err_e   = $self->validate('experiment' ,$exp_acc, $exp_xml);
         my $err_s   = $self->validate('sample' ,$sample_acc, $sample_xml);
-        $self->validate_molecule($exp_xml, $sample_xml, $err_e, $err_s);
+        ($err_e, $err_s) = $self->validate_molecule($exp_xml, $sample_xml, $err_e, $err_s);
+       
+        #print "Within the iterate subroutine the errors are:\nEXPERIMENT: $err_e\nSAMPLE: $err_s\n";
+
         $self->report($ihec, $project, $exp_acc, $err_e, 'experiment');
         $self->report($ihec, $project, $sample_acc, $err_s, 'sample');
         # if ($i == 3){$self->write_report($archive, $project);next PROJECT;}
@@ -118,14 +121,21 @@ sub validate_molecule {
 
   if ( $exp_xml !~ m!<TAG>MOLECULE</TAG>!o and $sample_xml !~ m!<TAG>MOLECULE</TAG>!o ) {
     $err_e .= 'MOLECULE not defined';
-  }
 
-  if(!$self->{opts}->{legacy}) {
-    if ($exp_xml !~ m!<TAG>MOLECULE</TAG>!o or $sample_xml =~ m!<TAG>MOLECULE</TAG>!o ){
-      $err_e .= "MOLECULE needs to be defined in Experiment, not in Sample";
-      $err_s .= "MOLECULE needs to be defined in Experiment, not in Sample";
+    if (!$self->{opts}->{legacy}) {
+      $err_e .= "MOLECULE needs to be defined in Experiment";
     }
   }
+
+  if ( (!$self->{opts}->{legacy}) and $sample_xml =~ m!<TAG>MOLECULE</TAG>!o ){
+      $err_e .= "MOLECULE needs to be defined in Experiment, not in Sample";
+      $err_s .= "MOLECULE needs to be defined in Experiment, not in Sample";
+  }
+
+ #print "Within the validate_molecule subroutine the errors are:\nEXPERIMENT: $err_e\nSAMPLE: $err_s\n";
+
+ return ($err_e, $err_s);
+
 }
 
 #    $self->{accs}->{$archive_name}->{$epirr_acc}->{$primary_accession}++;
@@ -268,7 +278,10 @@ sub run_py {
     else{
       croak "Not validated, but no error file found $out\n $err";
     }
+  } elsif ( $out !~ /validated:/ ) {
+    $err_log = "Unexpected failure of validator. Check manually."
   }
+    
   return $err_log;
 }
 
