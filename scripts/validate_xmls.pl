@@ -120,16 +120,16 @@ sub validate_molecule {
   my ($self, $exp_xml, $sample_xml, $err_e, $err_s) = @_;
 
   if ( $exp_xml !~ m!<TAG>MOLECULE</TAG>!o and $sample_xml !~ m!<TAG>MOLECULE</TAG>!o ) {
-    $err_e .= 'MOLECULE not defined';
+    $err_e = defined($err_e) ? "MOLECULE not defined. $err_e" : "MOLECULE not defined.";
 
     if (!$self->{opts}->{legacy}) {
-      $err_e .= "MOLECULE needs to be defined in Experiment";
+      $err_e = defined($err_e) ? "MOLECULE needs to be defined in Experiment. $err_e" : "MOLECULE not defined.";
     }
   }
 
   if ( (!$self->{opts}->{legacy}) and $sample_xml =~ m!<TAG>MOLECULE</TAG>!o ){
-      $err_e .= "MOLECULE needs to be defined in Experiment, not in Sample";
-      $err_s .= "MOLECULE needs to be defined in Experiment, not in Sample";
+      $err_e = defined($err_e) ? "MOLECULE needs to be defined in Experiment, not in Sample. $err_e" : "MOLECULE needs to be defined in Experiment, not in Sample.";
+      $err_s = defined($err_s) ? "MOLECULE needs to be defined in Experiment, not in Sample. $err_s" : "MOLECULE needs to be defined in Experiment, not in Sample.";
   }
 
  #print "Within the validate_molecule subroutine the errors are:\nEXPERIMENT: $err_e\nSAMPLE: $err_s\n";
@@ -183,15 +183,19 @@ sub write_stats {
   my $report = File::Spec->catfile($self->{opts}->{work_dir}, 'overview.tsv');
   open my $fh, '>', $report or croak "Could not open $report: $!";
   INFO "Writing $report";
-    say $fh "Project\tType\tValidated\tFailed";
+    say $fh "Project\tType\tValidated\tFailed\tValidator Issue";
     foreach my $type (sort keys %{ $self->{stats} }){
       foreach my $project (sort keys %{ $self->{stats}->{$type} } ){
         foreach my $flag (sort keys %{ $self->{stats}->{$type}->{$project} } ){
-          my $true   = keys %{$self->{stats}->{$type}->{$project}->{'Validated'}};
-          my $false  = keys %{$self->{stats}->{$type}->{$project}->{'Failed'}};
-          $true  = 0 if(!defined $true);
-          $false = 0 if(!defined $false);
-          say $fh "$project\t$type\t$true\t$false";
+          my $true              = keys %{$self->{stats}->{$type}->{$project}->{'Validated'}};
+          my $false             = keys %{$self->{stats}->{$type}->{$project}->{'Failed'}};
+          my $validator_failure = keys %{$self->{stats}->{$type}->{$project}->{'Validator Failure'}};
+ 
+          $true              = 0 if(!defined $true);
+          $false             = 0 if(!defined $false);
+          $validator_failure = 0 if(!defined $validator_failure); 
+
+          say $fh "$project\t$type\t$true\t$false\t$validator_failure";
         }
       }
     } 
@@ -202,7 +206,10 @@ sub report {
   my ($self, $ihec, $project, $acc, $error, $type ) = @_;
 
   my $flag; 
-  if ( defined($error) ){
+  if ( defined($error) and $error =~ m/Check manually/)
+  {
+    $flag = 'Validator Failure';
+  } elsif ( defined($error) ){
     $flag  = 'Failed';
   }
   else{
