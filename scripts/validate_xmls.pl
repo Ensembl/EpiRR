@@ -70,9 +70,12 @@ sub iterate {
 
         next if( keys $self->{opts}->{accessions} and ! defined $self->{opts}->{accessions}->{$sample_acc} and !defined $self->{opts}->{accessions}->{$exp_acc} );
         #print "Looking at @{$a} from $archive for project: $project.\n";
-       
-        my $err_e   = $self->validate('experiment' ,$exp_acc, $exp_xml);
-        my $err_s   = $self->validate('sample' ,$sample_acc, $sample_xml);
+      
+        my @validator_args = qw( experiment ); 
+        my $err_e   = $self->validate( $exp_acc, $exp_xml, \@validator_args );
+        @validator_args = qw( sample );
+        push @validator_args, '-not-sra-xml-but-try' if( $archive eq 'ddbj' ); 
+        my $err_s   = $self->validate( $sample_acc, $sample_xml, \@validator_args );
         ($err_e, $err_s) = $self->validate_molecule($exp_xml, $sample_xml, $err_e, $err_s);
        
         #print "Within the iterate subroutine the errors are:\nEXPERIMENT: $err_e\nSAMPLE: $err_s\n";
@@ -97,7 +100,7 @@ sub iterate {
 # $type experiment or sample
 # Check the XML with the validator. If the 
 sub validate {
-  my ($self, $type, $accession, $xml) = @_;
+  my ($self, $accession, $xml, $validator_args) = @_;
 
   # INFO "Validating: $type - $accession";
   # DEBUG "Accession: $accession\tObject: ".ref $object;
@@ -105,8 +108,7 @@ sub validate {
 
   my $file_xml      = $self->write_xml_file($accession, $xml);
   my $file_ver_xml  = File::Spec->catfile($work_dir, "$accession.versioned.xml");
-
-  my $error_log = $self->run_py([$type], $file_ver_xml, $file_xml);
+  my $error_log = $self->run_py($file_ver_xml, $file_xml, $validator_args);
   my $validated = defined($error_log) ? 'Failed' : 'Validated';
   INFO "$accession Validation $validated"; 
 
@@ -252,7 +254,7 @@ sub write_xml_file {
 }
 
 sub run_py {
-  my ($self, $array_args, $file1, $file2) = @_; 
+  my ($self, $file1, $file2, $array_args) = @_; 
   # DEBUG  ( caller(1) )[3] ."\tLine: ". ( caller(0) )[2];
   TRACE "File1: $file1\tFile2: $file2\tArgs:", join "\t", @{$array_args};
   # Remove whitespaces
@@ -270,7 +272,7 @@ sub run_py {
   my $fh_err   = File::Temp->new( UNLINK => 1,  SUFFIX => '.err.epirr');
   my $file_err = $fh_err->filename;
    
-  my $cmd = "python $py_main $args -config:$cfg_json -out:$file1 $file2 >$file_out 2>$file_err";
+  my $cmd = "python $py_main $args -overwrite-outfile -config:$cfg_json -out:$file1 $file2 >$file_out 2>$file_err";
   $self->run_cmd($cmd);
 
   my $err = path($file_err)->slurp;
@@ -470,7 +472,7 @@ sub parse_options {
   
   # Required 
   $self->{py_main}    = File::Spec->catfile($opts->{ihec_dir}.'__main__.py');
-  croak "Could not find __main__.py in ihec_dir [" . $opts->{ihec_dir} ."]" if(!-e $self->{py_main});
+  croak "Could not find ".$self->{py_main}." in ihec_dir [" . $opts->{ihec_dir} ."]" if(!-e $self->{py_main});
   $self->{py_review}  = File::Spec->catfile($opts->{ihec_dir}.'review.py');
   croak "Could not find review.py in ihec_dir [" . $opts->{ihec_dir} ."]" if(!-e $self->{py_review});
 
@@ -541,7 +543,7 @@ sub parse_options {
   validate_xmls.pl  -cfg_epirr  EpiRR::Config::Production
                     -work_dir $HOME/validate_dir
                     -cfg_ihec_json $HOME/src/ihec-ecosystems/version_metadata/config.json 
-                    -dir_ihec $HOME/src/hec-ecosystems/version_metadata
+                    -ihec_dir $HOME/src/hec-ecosystems/version_metadata
 
 
 =head1 DESCRIPTION
