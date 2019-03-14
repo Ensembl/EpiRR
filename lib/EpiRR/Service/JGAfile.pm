@@ -19,6 +19,8 @@ use Carp;
 use File::Spec;
 use feature qw(say);
 use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1; 
 
 use EpiRR::Parser::JGAXMLParser;
 
@@ -86,6 +88,7 @@ sub lookup_raw_data {
       $self->is_loaded(1);
     }
 
+    
     my $primary_id = $raw_data->primary_id();
     #my $xml = $self->get_xml( $raw_data->primary_id() );
 
