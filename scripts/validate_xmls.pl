@@ -54,16 +54,22 @@ sub iterate {
     PROJECT:
     foreach my $project (sort keys $accs->{$archive}){
       foreach my $a ( @{$accs->{$archive}->{$project}} ){
-       
         my ($exp_acc, $ihec) = @{$a};
+        # next unless ($ihec eq 'IHECRE00003421');
+        DEBUG "------ Start ------";
+        DEBUG "IHEC: $ihec";
+        DEBUG "Experiment: $exp_acc";
         $self->{sth}->{lc($archive)}->{exp}->execute($exp_acc);
         my ($exp_xml) = $self->{sth}->{lc($archive)}->{exp}->fetchrow_array();
+        croak "No XML $exp_acc\t$ihec" if(!defined $exp_xml or length($exp_xml) < 50);
         #warn "Data fetching terminated early by error: $DBI::errstr\n"
         #  if $DBI::err;
         $self->{sth}->{lc($archive)}->{exp}->finish();
         
         $self->{sth}->{lc($archive)}->{sample}->execute($exp_acc);
         my ($sample_acc, $sample_xml) = $self->{sth}->{lc($archive)}->{sample}->fetchrow_array();
+        DEBUG "Sample: $sample_acc";
+        croak "No Sample XML $sample_acc\t$ihec\t$exp_acc" if(!defined $sample_xml or length($sample_xml) < 50);
         #warn "Data fetching terminated early by error: $DBI::errstr\n"
         #  if $DBI::err;      
         $self->{sth}->{lc($archive)}->{sample}->finish();
@@ -102,19 +108,20 @@ sub iterate {
 sub validate {
   my ($self, $accession, $xml, $validator_args) = @_;
 
-  # INFO "Validating: $type - $accession";
-  # DEBUG "Accession: $accession\tObject: ".ref $object;
+
+  DEBUG "Validate: accession: $accession\tArgs: ".join "\t", @{$validator_args};
   my $work_dir  = $self->{opts}->{work_dir};
 
   my $file_xml      = $self->write_xml_file($accession, $xml);
+  DEBUG "Validate: XML file: $file_xml";
   my $file_ver_xml  = File::Spec->catfile($work_dir, "$accession.versioned.xml");
+  DEBUG "Validate: XML VER file: $file_ver_xml";
   my $error_log = $self->run_py($file_ver_xml, $file_xml, $validator_args);
   my $validated = defined($error_log) ? 'Failed' : 'Validated';
-  INFO "$accession Validation $validated"; 
+  # DEBUG "$accession Validation $validated"; 
 
   unlink($file_ver_xml) if(-e $file_ver_xml);
   unlink($file_xml);
-  
   return($error_log);
 }
 
@@ -244,19 +251,20 @@ sub write_xml_file {
   my ($self, $accession, $xml) = @_;
 
   my $file = File::Spec->catfile($self->{opts}->{work_dir}, "$accession.xml");
-  return if(-e $file);
+  DEBUG "write_xml_file: file: $file";
+  return($file) if(-e $file);
   open my $fh, '>', $file;
     binmode($fh, ":utf8");
     print $fh $xml;
   close $fh;
-
+  DEBUG "write_xml_file: Finished writing";
   return($file);
 }
 
 sub run_py {
   my ($self, $file1, $file2, $array_args) = @_; 
   # DEBUG  ( caller(1) )[3] ."\tLine: ". ( caller(0) )[2];
-  TRACE "File1: $file1\tFile2: $file2\tArgs:", join "\t", @{$array_args};
+  DEBUG "File1: $file1\tFile2: $file2\tArgs:", join "\t", @{$array_args};
   # Remove whitespaces
   # add leading dash if it not exists
   for my $e (@{$array_args}) {
