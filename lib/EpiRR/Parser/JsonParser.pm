@@ -19,6 +19,7 @@ use strict;
 use warnings;
 use Carp;
 use Moose;
+use Data::Dumper;
 use namespace::autoclean;
 
 use EpiRR::Model::Dataset;
@@ -64,7 +65,6 @@ sub parse {
     catch {
         $self->add_error("Not a valid JSON file");
     };
-
     $self->convert_dataset($perl_data) if ($perl_data);
 }
 
@@ -84,7 +84,24 @@ sub _get_string {
     return $string;
 
 }
-
+# $dataset_hashref:
+# 'accession' => 'IHECRE00003843',
+# 'description' => 'Sample AML_230-60/CEMT0172',
+# 'local_name' => 'CEMT0172',
+# 'project' => 'CEEHRC',
+# 'raw_data' => [...]
+#
+# $rawdata_ref:
+# {'archive' => 'EGA',
+# 'primary_id' => 'EGAX00001645025',
+# 'secondary_id' => 'EGAD00001003963'}
+#
+# $raw_data
+# {'archive' => 'EGA',
+#  'meta_data' => {},
+#  'primary_id' => 'EGAX00001645061',
+#  'secondary_id' => 'EGAD00001003963'
+#  }, 'EpiRR::Model::RawData'}
 sub convert_dataset {
     my ( $self, $dataset_hashref ) = @_;
 
@@ -100,6 +117,7 @@ sub convert_dataset {
       my $key = join(';',grep {defined $_} $rd->archive,$rd->primary_id,$rd->secondary_id);
       $rd_ids{$key}++;
       if ($rd_ids{$key} > 1){
+
         $self->add_error('Duplicate raw_data values detected: '.$key);
       }
     }

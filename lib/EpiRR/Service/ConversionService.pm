@@ -24,7 +24,7 @@ use Set::Object qw(set);
 use EpiRR::Service::NcbiEUtils;
 use Data::Dumper;
 $Data::Dumper::Indent = 1;
-$Data::Dumper::Sortkeys = 1; 
+$Data::Dumper::Sortkeys = 1;
 use feature qw(say);
 
 has 'archive_services' => (
@@ -122,7 +122,7 @@ sub user_to_db {
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
             $_->{version}        = '';
-            $_->{raw_data}       = set( @{ $_->{raw_data} } ); 
+            $_->{raw_data}       = set( @{ $_->{raw_data} } );
         }
 
         my $comparison = Data::Compare->new( $existing_dataset, $new_dataset );
@@ -167,7 +167,7 @@ sub _create_meta_data {
    #print Dumper(\%meta_data);
 #   warn Data::Dumper::Dumper \%metadata;
 
-   
+
     while ( my ( $k, $v ) = each %meta_data ) {
         $dataset_version->create_related(
             'meta_datas',
@@ -316,10 +316,10 @@ sub _raw_data {
            my ( $rd, $s ) =
               $self->get_accessor($archive_name)
               ->lookup_raw_data( $user_rd, $rd_errors );
-              
+
            #print ("rd : \n");
            #print Dumper($rd);
-              
+
 
            if ( !@$rd_errors ) {
               #no errors, should have objects
@@ -332,8 +332,8 @@ sub _raw_data {
                 unless ( $rd->assay_type() );
            }
 
-           push @samples, $s if ($s); 
-	     
+           push @samples, $s if ($s);
+
            my $variable_raw_data = $dataset_version->create_related( 'raw_datas',
            {
                primary_accession   => $rd->primary_id(),
@@ -352,7 +352,7 @@ sub _raw_data {
                  value => $raw_meta_data{$k}
 	      });
            }
-	    
+
            $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
            $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
         }
