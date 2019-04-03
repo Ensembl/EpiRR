@@ -128,7 +128,7 @@ sub _cache_experiments_samples {
   my $base_path = $self->base_path;
 
   opendir(my $dh, $base_path) || die "Can't opendir $base_path: $!";
-    my @exps    = grep { /experiment/ } readdir($dh);
+    my @exps    = grep { /experiment/ && !/^\./} readdir($dh);
   closedir($dh);
 
   my $cache_exps    = {};

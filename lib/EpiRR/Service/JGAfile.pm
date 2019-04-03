@@ -159,11 +159,11 @@ sub _get_file {
 
   my @files;
   opendir(my $dh, $path) || die "Can't opendir $path: $!";
-    @files = grep { /$type/ } readdir($dh);
+    @files = grep { /$type/ && !/^\./} readdir($dh);
   closedir($dh);
 
   if( scalar(@files) != 1) {
-    confess "More or less than expected [$path] [$type]";
+    confess "Expected number of files: 1. Found: ".scalar(@files)." [$path] [$type]";
   }
   my $file = File::Spec->catfile($path, $files[0]);
   return $file;
