@@ -91,7 +91,7 @@ sub lookup_raw_data {
 
 #    my @parser_errors;
     # TODO: push into errors and continue
-    my $experiment = $self->cache_experiments->{$primary_id}; 
+    my $experiment 	= $self->cache_experiments->{$primary_id}; 
     my $sample_id       = $self->cache_experiments->{$primary_id}->sample_id();
     my $experiment_type = $self->cache_experiments->{$primary_id}->get_meta_data('experiment_type');
     my $experiment_id   = $self->cache_experiments->{$primary_id}->experiment_id();
@@ -153,26 +153,42 @@ sub lookup_raw_data {
 
 sub _cache_experiments_samples {
   my ($self, $err) = @_;
-  my $path = $self->base_path;
+  my $base_path = $self->base_path;
 
-# Get all Experiment XML files
-  my $exp_file  = $self->_get_file($path, 'Experiment');
-  my $experiment = $self->xml_parser->parse_experiment($exp_file, $err );
+  opendir(my $dh, $base_path) || die "Can't opendir $base_path: $!";
+    my @exps    = grep { /experiment/ && !/^\./} readdir($dh);
+  closedir($dh);
 
-  my $sample_file  = $self->_get_file($path, 'Sample');
-  my $sample = $self->xml_parser->parse_sample($sample_file, $err);
+  my $cache_exps    = {};
+  my $cache_samples = {};
+  
+  for my $exp (@exps) {
+    confess "\nExperiment XMLs filenames do not contain expected experiment identifiers (ENCSR......): $exp\n" unless ($exp =~ m/ENCSR\w{6}/); 
 
-#ToDo: Any error check necessary?
-  # Sets the variables Moose-style
-  $self->cache_samples($sample);
-  $self->cache_experiments($experiment);
+    $exp =~ /(ENCSR\w{6})/;
+    my $id = $1;
+
+    my $file_exp = File::Spec->catfile($base_path,$id . '_experiment.xml'); 
+    my $file_sam = File::Spec->catfile($base_path,$id . '_samples.xml'); 
+    confess "Missing Sample File $file_sam" if(! -e $file_sam);
+    my $sample     = $self->xml_parser->parse_sample($file_sam, $err);
+    my $exp        = $self->xml_parser->parse_experiment($file_exp, $err);
+
+    ##### Merge all Experiments and Samples in one data structure ########
+    $self->_merge($exp, $cache_exps);
+    $self->_merge($sample, $cache_samples);
+
+  }
+  $self->cache_samples($cache_samples);
+  $self->cache_experiments($cache_exps);
+
+
 }
-# Merge hashes from files (e.g. all experiment files from RNA,ChIP and Bisulfite) into one hash
 sub _merge {
   my ($self, $hash, $cache) = @_;
 
   foreach my $key (sort keys %{$hash}){
-    confess "Duplication [$key]" if(exists $cache->{$key});
+    #confess "Duplication [$key]" if(exists $cache->{$key});
     $cache->{$key}=$hash->{$key};
   }
 }
