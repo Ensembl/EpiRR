@@ -74,7 +74,6 @@ sub lookup_raw_data {
             assay_type      => $assay_type,
         );
     }
-
     return ( $raw_data_out, $sample );
 
 }

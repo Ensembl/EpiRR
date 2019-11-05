@@ -26,54 +26,56 @@ use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
 
-
 sub parse_experiment {
     my ( $self, $xml, $errors ) = @_;
-
-   
-
-    my $e = EpiRR::Model::Experiment -> new();
-
+ 
+    my ( $e_id, $s_id, $et, $ls );
+ 
     my $t = XML::Twig->new(
         twig_handlers => {
             'EXPERIMENT' => sub {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
                 push @$errors,
-                  "Found multiple experiments in XML ($e and $id)."
-                  if $e;
-                $e->experiment_id ($id);
-	       #print "experiment_id fetched by parse_experiment: \n";
-               #print Dumper($id);
+                  "Found multiple experiments in XML ($e_id and $id)."
+                  if $e_id;
+                $e_id = $id;
             },
             'LIBRARY_STRATEGY' => sub {
                 my ( $t, $element ) = @_;
-		my $value = $element->text();
-                  $e->set_meta_data ('library_strategy', $value);
+                  $ls = $element->trimmed_text();
             },
             'SAMPLE_DESCRIPTOR' => sub {
                 my ( $t, $element ) = @_;
-                my $value = $element->{'att'}->{'accession'};
-                
-                $e->sample_id($value);
-
+                my $sample = $element->{'att'}->{'accession'};
+                push @$errors,
+                  "Found multiple samples in XML ($s_id and $sample)"
+                  if ($s_id);
+                $s_id = $sample;
             },
             'EXPERIMENT_ATTRIBUTE' => sub {
                 my ( $t, $element ) = @_;
-                
-                my $tag= ($element->first_child_text('TAG'));
-		my $value = $element->first_child_text('VALUE');
-		
-                $e->set_meta_data($tag, $value);
+ 
+                if ( $element->first_child_text('TAG') eq 'EXPERIMENT_TYPE' ) {
+                    my $experiment_type = $element->first_child_text('VALUE');
+                    push @$errors,
+"Found multiple experiment types in XML ($et and $experiment_type)"
+                      if ($et);
+ 
+                    $et = $experiment_type;
+                }
             },
         }
     );
-
     $t->parse($xml);
-   
-    #push @$errors, "No experiment found" unless $e;
-    push @$errors, "No experiment found" unless $e->experiment_id();
-    return $e;
+    push @$errors, "No experiment found" unless $e_id;
+    if ($e_id) {
+        push @$errors, "No experiment_type found"  unless $et;
+        push @$errors, "No sample found"           unless $s_id;
+        push @$errors, "No library_strategy found" unless $ls;
+    }
+ 
+    return ( $s_id, $et, $e_id, $ls );
 }
 
 sub parse_sample {
