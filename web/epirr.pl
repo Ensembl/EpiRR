@@ -16,7 +16,7 @@ use strict;
 use warnings;
 use Mojolicious::Lite;
 use Carp;
-
+use Data::Dumper;
 use EpiRR::Schema;
 use EpiRR::Service::OutputService;
 use EpiRR::App::Controller;
@@ -26,12 +26,17 @@ plugin 'Config';
 
 my $db = app->config('db');
 
+
 my $schema = EpiRR::Schema->connect( $db->{dsn}, $db->{user}, $db->{password}, )
   || die "Could not connect";
 
+
 my $os = EpiRR::Service::OutputService->new( schema => $schema );
+
 my $controller =
   EpiRR::App::Controller->new( output_service => $os, schema => $schema );
+
+
 
 get '/summary' => sub {
     my $self = shift;

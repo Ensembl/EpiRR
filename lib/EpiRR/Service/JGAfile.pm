@@ -19,6 +19,8 @@ use Carp;
 use File::Spec;
 use feature qw(say);
 use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1; 
 
 use EpiRR::Parser::JGAXMLParser;
 
@@ -86,6 +88,7 @@ sub lookup_raw_data {
       $self->is_loaded(1);
     }
 
+    
     my $primary_id = $raw_data->primary_id();
     #my $xml = $self->get_xml( $raw_data->primary_id() );
 
@@ -156,11 +159,11 @@ sub _get_file {
 
   my @files;
   opendir(my $dh, $path) || die "Can't opendir $path: $!";
-    @files = grep { /$type/ } readdir($dh);
+    @files = grep { /$type/ && !/^\./} readdir($dh);
   closedir($dh);
 
   if( scalar(@files) != 1) {
-    confess "More or less than expected [$path] [$type]";
+    confess "Expected number of files: 1. Found: ".scalar(@files)." [$path] [$type]";
   }
   my $file = File::Spec->catfile($path, $files[0]);
   return $file;

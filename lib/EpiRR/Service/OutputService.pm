@@ -18,6 +18,7 @@ use namespace::autoclean;
 use Carp;
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
+use Data::Dumper;
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema', required => 1 );
 
@@ -74,6 +75,11 @@ sub db_to_user {
             experiment_type => $r->experiment_type(),
             assay_type      => $r->assay_type(),
         );
+
+        for my $raw_meta_data ( $r->raw_meta_datas ) {  
+	    $x->set_meta_data($raw_meta_data->name(), $raw_meta_data->value()); 
+        }
+
         $d->add_raw_data($x);
     }
 

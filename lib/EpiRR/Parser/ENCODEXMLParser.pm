@@ -11,7 +11,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-package EpiRR::Parser::JGAXMLParser;
+package EpiRR::Parser::ENCODEXMLParser;
 
 use strict;
 use warnings;
@@ -25,15 +25,11 @@ use XML::Twig;
 use EpiRR::Model::Sample;
 use EpiRR::Model::RawData;
 
-use Data::Dumper;
-$Data::Dumper::Indent = 1;
-$Data::Dumper::Sortkeys = 1; 
-
 sub parse_experiment {
   my ( $self, $xml_file, $errors ) = @_;
 
   my $id = '';
-  my $tmp = {};
+  my $e = EpiRR::Model::Experiment -> new();
   my $cache = {};
 
   my $t = XML::Twig->new(
@@ -41,32 +37,51 @@ sub parse_experiment {
       'EXPERIMENT' => sub {
         my ( $t, $element ) = @_;
         $id = $element->{'att'}->{'accession'};
-        $tmp->{primary_id} = $id;
-        $cache->{$id} = $tmp;
-        $tmp = {};
+        #$tmp->{primary_id} = $id;
+        $e->experiment_id ($id);
+        $cache->{$id} = $e;
+        $e = EpiRR::Model::Experiment -> new();
       },
-      'SAMPLE_REF' => sub {
+      #'SAMPLE_REF' => sub {
+      #  my ( $t, $element ) = @_;
+      #  $tmp->{sample_id} = $element->{'att'}->{'accession'};
+      #},
+      'SAMPLE_DESCRIPTOR' => sub {
         my ( $t, $element ) = @_;
-        $tmp->{sample_id} = $element->{'att'}->{'accession'};
+        my $value = $element->{'att'}->{'accession'};
+                
+        $e->sample_id($value);
       },
-      'DESIGN/LIBRARY_DESCRIPTOR/LIBRARY_STRATEGY/SEQUENCING_LIBRARY_STRATEGY' => sub {
+      #'DESIGN/LIBRARY_DESCRIPTOR/LIBRARY_STRATEGY/SEQUENCING_LIBRARY_STRATEGY' => sub {
+      #  my ( $t, $element ) = @_;
+      #  $tmp->{library_strategy} = $element->trimmed_text();
+      #},
+      'LIBRARY_STRATEGY' => sub {
         my ( $t, $element ) = @_;
-        $tmp->{library_strategy} = $element->trimmed_text();
+        my $value = $element->text();
+        $e->set_meta_data ('library_strategy', $value);
       },
-      # ToDo:  Check for multiple records
-      'EXPERIMENT_ATTRIBUTES/EXPERIMENT_ATTRIBUTE/VALUE' => sub {
+      #TD:  Check for multiple records
+      #'EXPERIMENT_ATTRIBUTES/EXPERIMENT_ATTRIBUTE/VALUE' => sub {
+      #  my ( $t, $element ) = @_;
+      #  $tmp->{experiment_type} = $element->trimmed_text();
+      #},
+      'EXPERIMENT_ATTRIBUTE' => sub {
         my ( $t, $element ) = @_;
-        $tmp->{experiment_type} = $element->trimmed_text();
+               
+        my $tag= ($element->first_child_text('TAG'));
+        my $value = $element->first_child_text('VALUE');
+		
+        $e->set_meta_data($tag, $value);
       },
     }
   );
-
   $t->parsefile($xml_file);
   return($cache);
 }
+
 sub _merge {
   my ($self, $tmp, $cache, $id) = @_;
-
 
   foreach my $key (sort keys %{$tmp}){
     confess "Duplication [$id]" if(exists $cache->{$id});

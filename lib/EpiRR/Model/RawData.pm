@@ -19,6 +19,8 @@ use warnings;
 use Moose;
 use namespace::autoclean;
 
+with 'EpiRR::Roles::HasMetaData';
+
 has 'archive'         => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'primary_id'      => ( is => 'rw', isa => 'Maybe[Str]' );
 has 'secondary_id'    => ( is => 'rw', isa => 'Maybe[Str]' );
@@ -37,6 +39,9 @@ sub as_string {
 
 sub to_hash {
     my ($self) = @_;
+
+    my %raw_meta_data = $self->all_meta_data();
+
     return {
         'archive'         => $self->archive,
         'primary_id'      => $self->primary_id,
@@ -44,6 +49,7 @@ sub to_hash {
         'archive_url'     => $self->archive_url,
         'experiment_type' => $self->experiment_type,
         'assay_type'      => $self->assay_type,
+        %raw_meta_data
     };
 }
 

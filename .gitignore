@@ -7,10 +7,10 @@ inc/
 Build
 !Build/
 Build.bat
-epirr_prod.sql
 json/*
 .last_cover_stats
-ldepths/
+ldepths/*
+/Makefile
 /Makefile.old
 /MANIFEST.bak
 /META.yml
@@ -21,4 +21,6 @@ nytprof.out
 *.o
 *.bs
 epirr.db
+epirr_prod.sql
 web/server.conf
+web/epirr

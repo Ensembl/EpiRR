@@ -61,9 +61,9 @@ sub lookup_raw_data {
 
     my $archive_raw_data = EpiRR::Model::RawData->new(
         archive         => $raw_data->archive,
-        primary_id      => $experiment_id,
-        experiment_type => $experiment_type,
-        assay_type      => $assay_type,
+        primary_id      => $experiment_id->experiment_id(),
+        experiment_type => "constant_exp_type", #$experiment->{experiment_type}"constant_exp_type",
+        assay_type      => "constant_exp_type", #$experiment->{assay_type},
         archive_url     => $self->base_url() . $experiment_id,
     );
 
@@ -80,4 +80,4 @@ sub get_xml {
     return $self->eutils->efetch( \@uids, 'sra' )->get_Response()->content();
 }
 __PACKAGE__->meta->make_immutable;
-1;
+;
