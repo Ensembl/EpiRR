@@ -1,3 +1,5 @@
+.*
+!/.gitignore
 /local/
 /blib/
 /.build/
