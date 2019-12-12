@@ -23,6 +23,7 @@ use JSON;
 use autodie;
 use EpiRR::Parser::JsonParser;
 use EpiRR::Parser::TextFileParser;
+use feature qw(say);
 
 has 'conversion_service' => (
     is       => 'rw',
@@ -53,6 +54,11 @@ sub text_parser {
 	return EpiRR::Parser::TextFileParser->new()
 }
 
+# Process inputfiles
+# 1. Decide on Parser
+# 2. Parse
+# 3. Create RawData (from parsing JSON) and DataSet (to store in DB)
+# 4. Using ConversionService, store it in the DB
 sub accession {
     my ( $self, $in_file, $out_file, $err_file, $quiet ) = @_;
 
@@ -71,7 +77,6 @@ sub accession {
         $parser = $self->text_parser();
         print STDERR "Using text parser$/" unless $quiet;
     }
-
     $parser->file_path($in_file);
     $parser->parse();
 

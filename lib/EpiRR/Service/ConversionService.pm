@@ -21,6 +21,10 @@ use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 use Data::Compare;
 use EpiRR::Service::NcbiEUtils;
+use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1; 
+use feature qw(say);
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -58,6 +62,7 @@ has 'output_service' => (
 
 has 'schema' => ( is => 'rw', isa => 'EpiRR::Schema' );
 
+# store data in database
 sub user_to_db {
     my ( $self, $simple_dataset, $errors ) = @_;
 
@@ -66,8 +71,15 @@ sub user_to_db {
       if ( !$simple_dataset->isa('EpiRR::Model::Dataset') );
     confess("Must provide errors array ref")
       unless ( $errors && ref($errors) eq 'ARRAY' );
-
+    # DBIx, Begin Transaction
     $self->schema()->txn_begin();
+
+    if(length($simple_dataset->{accession}) > 0){
+      my $acc = $simple_dataset->{accession};
+      if($acc !~ /^IHECRE\d{8}$/){
+        push @$errors, "Accession not in the correct format [IHEC12345678]:  $acc" ;
+      }
+    }
 
     my ( $dataset, $existing_dsv ) = $self->_dataset( $simple_dataset, $errors )
       if !@$errors;
@@ -163,7 +175,8 @@ sub _create_meta_data {
 
 sub _retrieve_and_check_dataset {
     my ( $self, $user_dataset, $errors ) = @_;
-
+    # Q! Is this accessing the DB?
+    # Q! Is find DBIx?
     my $dataset =
       $self->schema()->dataset()
       ->find( { accession => $user_dataset->accession() } );
@@ -216,6 +229,8 @@ sub _sample_species {
     }
 }
 
+# Check if associated project exists
+# If the DS has an accession
 sub _dataset {
     my ( $self, $user_dataset, $errors ) = @_;
 
@@ -227,10 +242,12 @@ sub _dataset {
     return if @$errors;
 
     my $dataset;
+    # Check if name of datasets and the associated projects are the same
     if ( $user_dataset->accession() ) {
         $dataset = $self->_retrieve_and_check_dataset( $user_dataset, $errors );
     }
     elsif ( $user_dataset->local_name() ) {
+      # Q! search_related DBIx?
         $dataset =
           $project->search_related( 'datasets',
             { local_name => $user_dataset->local_name() } )->single();
@@ -294,7 +311,7 @@ sub _raw_data {
               ->lookup_raw_data( $user_rd, $rd_errors );
 
             if ( !@$rd_errors ) {
-                #no errors, should have objects 
+                #no errors, should have objects
                 confess("No raw data returned for $rd_txt") unless $rd;
                 confess("No sample returned for $rd_txt")   unless $s;
 
@@ -322,7 +339,7 @@ sub _raw_data {
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
         }
-        
+
         if ( ! $self->accessor_exists($archive_name) ) {
             push @$rd_errors, "Do not know how to read raw data from archive";
         }

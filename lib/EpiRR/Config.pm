@@ -41,6 +41,7 @@ our $container = container 'EpiRR' => as {
             array_express_accessor => depends_on('array_express_accessor'),
             geo_accessor           => depends_on('geo_accessor'),
             sra_accessor           => depends_on('sra_accessor'),
+            jga_accessor           => depends_on('jga_accessor'),
             output_service         => depends_on('output_service'),
         },
         block => sub {
@@ -52,16 +53,28 @@ our $container = container 'EpiRR' => as {
                 eutils             => $s->param('eutils'),
                 output_service     => $s->param('output_service'),
                 archive_services   => {
-                    ENA  => $s->param('ena_accessor'),
-                    SRA  => $s->param('sra_accessor'),
-                    DDBJ => $s->param('ena_accessor'),
-                    AE   => $s->param('array_express_accessor'),
-                    GEO  => $s->param('geo_accessor'),
+                    ENA   => $s->param('ena_accessor'),
+                    SRA   => $s->param('sra_accessor'),
+                    DDBJ  => $s->param('sra_accessor'),
+#                    DDBJ  => $s->param('ena_accessor'),
+                    AE    => $s->param('array_express_accessor'),
+                    GEO   => $s->param('geo_accessor'),
+                    JGA   => $s->param('jga_accessor'),
                 }
             );
             return $c;
         }
     );
+
+    service 'jga_accessor' => (
+        class        => 'EpiRR::Service::JGAfile',
+        lifecycle    => 'Singleton',
+        dependencies => { base_path => depends_on('jga_base_path') }
+    );
+    service 'jga_base_path' =>
+    #'/homes/juettema/src/EpiRR/json/CREST/JGA_XML/'
+    '/homes/juettema/src/EpiRR/json/CREST/CREST_new/JGA_XML/'
+    ;
 
     service 'dataset_classifier' => (
         class     => 'EpiRR::Service::IhecDatasetClassifier',

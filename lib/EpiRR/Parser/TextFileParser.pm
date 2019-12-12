@@ -18,14 +18,13 @@ package EpiRR::Parser::TextFileParser;
 use strict;
 use warnings;
 use Carp;
-use feature qw(switch);
+use feature qw(switch say);
 use Moose;
 use namespace::autoclean;
 
 use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 
-use Data::Dumper;
 
 =head1 NAME
 
@@ -55,7 +54,7 @@ Array Express does not have accession numbers visisble for an equivalent entity,
 
 =head2 ACCESSION
 
-One required when updating an existing dataset. 
+One required when updating an existing dataset.
 
 =head2 LOCAL_NAME
 
@@ -113,7 +112,7 @@ sub handle_project {
 sub handle_raw_data {
     my ( $self, $tokens ) = @_;
     my ( $archive, $primary_id, $secondary_id ) = @$tokens;
-    
+
     $self->check_token_count( $tokens, 3 );
 
     if ( !$archive ) {
@@ -122,7 +121,7 @@ sub handle_raw_data {
     if ( !$primary_id ) {
         $self->add_error("No primary ID given for RAW_DATA");
     }
-    
+
     my $rd_token = join( ';', grep {defined $_} @$tokens );
     if ( $self->raw_data_tokens_exists($rd_token) ) {
         $self->add_error("Duplicate RAW_DATA declared: $rd_token");
@@ -257,13 +256,13 @@ sub _finish {
 
 sub _next_line {
   my ($self) = @_;
-  
+
   if ($self->file_handle){
     my $fh = $self->file_handle();
     return <$fh>;
   }
   else {
-    return $self->_pop_line(); 
+    return $self->_pop_line();
   }
 }
 
@@ -271,7 +270,7 @@ sub _next_line {
 sub next_token_set {
     my ($self) = @_;
     my ( $type, @tokens );
-    
+
     while (my $line = $self->_next_line()) {
         chomp $line;
         next if $line =~ /^#/;

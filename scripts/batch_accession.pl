@@ -22,6 +22,12 @@ use File::Find;
 use File::Spec;
 use File::Basename;
 use autodie;
+use feature qw(say);
+use Data::Dumper;
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Sortkeys = 1;
+$Data::Dumper::Deepcopy = 1;
+
 
 my $config_module = 'EpiRR::Config';
 my $dir;
