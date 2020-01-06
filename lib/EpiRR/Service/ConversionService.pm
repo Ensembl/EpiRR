@@ -69,6 +69,29 @@ sub user_to_db {
 
     $self->schema()->txn_begin();
 
+
+
+    if(length($simple_dataset->{accession}) > 0){
+      my $project;
+      my $project_id_prefix;
+      if ($simple_dataset->project()) {
+        $project =  $self->schema()->project()->find( { name => $simple_dataset->project() } );
+        if ($project){
+            $project_id_prefix=$project->get_column('id_prefix');
+        }else{
+            push @$errors, "Project name not found in the DB";
+        }
+      }else{
+        push @$errors, "Project name is missing";
+      }
+      if (!@$errors)  {
+        my $acc = $simple_dataset->{accession};
+        if($acc !~ /^$project_id_prefix\d{8}$/){
+            push @$errors, "Accession not in the correct format [IHEC12345678]:  $acc" ;
+        }
+      }
+    }
+
     my ( $dataset, $existing_dsv ) = $self->_dataset( $simple_dataset, $errors )
       if !@$errors;
 
@@ -109,6 +132,7 @@ sub user_to_db {
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
             $_->{version}        = '';
+            $_->{raw_data}       = set( @{ $_->{raw_data} } );
         }
 
         my $comparison = Data::Compare->new( $existing_dataset, $new_dataset );
@@ -318,6 +342,17 @@ sub _raw_data {
                     assay_type          => $rd->assay_type(),
                 }
             ) if ( !@$rd_errors );
+
+            if ( !@$rd_errors ) {
+                my %raw_meta_data = $rd->all_meta_data();
+                for my $k ( keys %raw_meta_data ) {
+                    $variable_raw_data->create_related( 'raw_meta_datas',
+                        {
+                            name  => $k,
+                            value => $raw_meta_data{$k}
+                        });
+                }
+            }
 
             $user_rd->experiment_type( $rd->experiment_type() ) if ($rd && $rd->experiment_type);
             $user_rd->assay_type( $rd->assay_type ) if ($rd && $rd->experiment_type);
