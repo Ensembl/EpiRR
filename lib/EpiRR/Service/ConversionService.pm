@@ -331,7 +331,7 @@ sub _raw_data {
 
             push @samples, $s if ($s);
 
-            $dataset_version->create_related(
+            my $variable_raw_data = $dataset_version->create_related(
                 'raw_datas',
                 {
                     primary_accession   => $rd->primary_id(),
@@ -343,7 +343,7 @@ sub _raw_data {
                 }
             ) if ( !@$rd_errors );
 
-            if ( !@$rd_errors ) {
+            if ( $variable_raw_data ) {
                 my %raw_meta_data = $rd->all_meta_data();
                 for my $k ( keys %raw_meta_data ) {
                     $variable_raw_data->create_related( 'raw_meta_datas',
