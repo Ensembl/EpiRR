@@ -21,6 +21,7 @@ use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 use Data::Compare;
 use EpiRR::Service::NcbiEUtils;
+use Set::Object qw(set);
 
 has 'archive_services' => (
     traits  => ['Hash'],
