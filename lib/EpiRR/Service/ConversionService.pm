@@ -21,7 +21,6 @@ use EpiRR::Model::Dataset;
 use EpiRR::Model::RawData;
 use Data::Compare;
 use EpiRR::Service::NcbiEUtils;
-use Set::Object qw(set);
 
 has 'archive_services' => (
     traits  => ['Hash'],
@@ -133,7 +132,6 @@ sub user_to_db {
         for ( $existing_dataset, $new_dataset ) {
             $_->{full_accession} = '';
             $_->{version}        = '';
-            $_->{raw_data}       = set( @{ $_->{raw_data} } );
         }
 
         my $comparison = Data::Compare->new( $existing_dataset, $new_dataset );

@@ -89,7 +89,11 @@ sub fetch_summary {
 
       foreach my $summary_entry ( @summary ){
         my $project_name = $summary_entry->{project};
-        my $status = $summary_entry->{status};
+        
+	#Skip HipSci
+        next if($project_name eq "HipSci");
+
+	my $status = $summary_entry->{status};
         my $dataset_count = $summary_entry->{dataset_count};
 
         $project_summary{$project_name} += $dataset_count;
