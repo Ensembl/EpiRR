@@ -2,470 +2,795 @@
 
 use warnings;
 use strict;
-
-use Pod::Usage;
-use EpiRR::Schema;
-use Getopt::Long;
-use Carp;
-use Cwd;
-use DBI;
-use DBD::Oracle;
-use File::Find;
-use File::Spec;
-use File::Temp qw/ tempfile/;
-use File::chdir;
-use Path::Tiny;
-use File::Basename;
-use Log::Log4perl qw(:easy);
-use XML::LibXML;
-use autodie;
-use List::MoreUtils qw(all);
-use JSON::MaybeXS qw(encode_json decode_json);
-use JSON::PP;
 use feature qw(say);
-use Data::Dumper;
 
-$Data::Dumper::Indent = 1;
+use Getopt::Long;
+use Readonly;
+use Log::Log4perl qw(:easy);
+use DBI;
+use XML::LibXML;
+
+use Cwd;
+use File::Path qw(make_path rmtree);
+use File::Spec;  
+use File::chdir;
+use File::Slurper qw(read_text);
+
+use Path::Tiny;
+
+use JSON::MaybeXS qw(encode_json decode_json);
+
+use Data::Printer;
+use Data::Dump qw(pp);
+
+use Data::Dumper;
+$Data::Dumper::Indent   = 1;
 $Data::Dumper::Sortkeys = 1;
 $Data::Dumper::Deepcopy = 1;
+$Data::Dumper::Terse    = 1;
+
+# Default Log level
+Log::Log4perl->easy_init($INFO);
+
+# location of https://github.com/IHEC/ihec-ecosystems
+use constant IHEC_DIR         => $ENV{IHEC_DIR};
+# log files and some temporary files are written here
+use constant WORK_DIR         => $ENV{VALIDATOR_WORK_DIR};
+# tmp dir location
+use constant TMP_DIR          => $ENV{VALIDATOR_TMP_DIR}; 
+# used for downloading Experiment & Sample XMLs
+use constant DL_DIR           => $ENV{VALIDATOR_DL_DIR}; 
+# EpiRR config, should in general point to Production. Provides access to ERAPRO DB
+use constant CFG_EPIRR        => 'EpiRR::Config::Production';
+
+# Validator config.json, found in ihec-ecosystems/version_metadata/config.json
+use constant VALIDATOR_CFG    => $ENV{VALIDATOR_CFG};
+
+# Files used when running the validator
+use constant EXPERIMENT_XML   => File::Spec->catfile(TMP_DIR, 'experiment.xml');
+use constant SAMPLE_XML       => File::Spec->catfile(TMP_DIR, 'sample.xml');
+use constant VALIDATOR_JSON   => File::Spec->catfile(TMP_DIR, 'log.json');
+use constant VALIDATOR_STDOUT => File::Spec->catfile(TMP_DIR, 'stdout.out');
+use constant VALIDATOR_STDERR => File::Spec->catfile(TMP_DIR, 'stderr.err');
+use constant VALIDATOR_OUT    => File::Spec->catfile(TMP_DIR, 'versioned.xml');
+
+
+# Archives which can be accessed directly through ERAPRO DB
+Readonly our $VALID_ARCHIVES => [
+  'ddbj', 
+  'ega', 
+  'ena'
+  ]; 
+
+# Projects currently in EpiRR, copied from projects table. Unlikely to change often
+Readonly our $VALID_PROJECTS => [
+  'amed-crest',
+  'blueprint',
+  'ceehrc',
+  'deep',
+  'encode',
+  'epp',
+  'gis',
+  'hipsci',
+  'korea epigenome project (knih)',
+  'nih roadmap epigenomics',
+  'epihk',
+];
+
+# # Statistics
+# our $statistic = {};
 
 main();
 
 sub main {
-  my $self = bless({}, __PACKAGE__);
-  $self->parse_options();
-  $self->sql_oracle();
-  $self->fetch_epirr_accessions();
-  $self->filter_raw_data();
-  $self->remove_xml_tsv_log_files() if $self->{opts}->{clean};
-  $self->iterate();
-  # defined ($self->{opts}->{json_dir}) ? $self->parse_json() : $self->filter_raw_data();
 
-  exit;
+  my $options = get_options();
+  set_log_level($options);
+  create_directories($options);
+  check_options_and_environment_variables($options);
+  iterate($options);
+
+}
+
+=head2 create_directories
+
+  Description: 
+
+=cut
+
+sub create_directories {
+  my ($options) = @_;
+
+  remove_directory(WORK_DIR) if($options->{clean});
+  create_directory(WORK_DIR);
+  remove_directory(TMP_DIR);
+  create_directory(TMP_DIR);
+  create_directory(DL_DIR) if($options->{keep});
+}
+
+=head2 create_directory
+
+  Description: 
+  Returntype: 
+
+=cut
+
+# Create working and tmp directory. make_path == mkdir -p
+sub create_directory {
+  my ($dir) = @_;
+
+  eval { make_path($dir) };
+  if ($@) {
+    die "Couldn't create $dir Error: $@";
+  }
+  DEBUG "Created directory: $dir";
 }
 
 
-# Check if experiment validates
-# If not, extract and do vodoo
-# Check if it has a sample
-# Check if sample validates
-# $self->{accs}->{$archive_name}->{$epirr_acc}->{$primary_accession}++;
-sub iterate {
-  my ($self) = @_;
-  my $i = 0;
-  my $accs = $self->{epirr_accessions};
-  foreach my $archive (sort keys $accs){
-    PROJECT:
-    foreach my $project (sort keys $accs->{$archive}){
-      foreach my $a ( @{$accs->{$archive}->{$project}} ){
-        my ($exp_acc, $ihec) = @{$a};
-        next unless ($ihec eq 'IHECRE00003421');
-        DEBUG "------ Start ------";
-        DEBUG "IHEC: $ihec";
-        DEBUG "Experiment Acc: $exp_acc";
-        my ($exp_xml, $samples) = $self->test_and_get_xmls($archive, $exp_acc, $ihec);
-        
-        # Figure out when this happens, 
-       # next if( keys $self->{opts}->{accessions} and ! defined $self->{opts}->{accessions}->{$sample_acc} and !defined $self->{opts}->{accessions}->{$exp_acc} );
-      
-        $self->validate_experiment($ihec, $project, $exp_acc, $exp_xml);
-        $self->validate_samples($ihec, $project, $samples, $archive);
+=head2 remove_directory
 
-        # ($err_e, $err_s)    = $self->validate_molecule($exp_xml, $sample_xml, $err_e, $err_s);
-       
-        if ($i == 2){$self->write_report($archive, $project);next PROJECT;}
-        $i++;
+  Description: 
+  Returntype: 
+
+=cut
+
+sub remove_directory {
+  my ($dir) = @_;
+  
+  return unless (-d $dir);
+
+  eval { rmtree($dir) };
+  if ($@) {
+    die "Couldn't remove $dir Error: $@";
+  }
+  DEBUG "Removed directory: $dir";
+}
+
+=head2 iterate
+
+  Description: 
+  Returntype: 
+
+=cut
+
+sub iterate {
+  my ($options) = @_;
+
+  my $oracle_queries = prepare_oracle_queries();
+  my $records        = fetch_epirr_accessions($options);
+
+PROJECT:
+  foreach my $project ( sort keys $records ) {
+    my $report    = {};
+    my $statistic = {};
+    foreach my $ihec ( sort keys $records->{$project} ) {
+      INFO "IHEC: $ihec";
+      $statistic->{$project}->{ihec}++;
+      my @experiment_accessions = split(',', $records->{$project}->{$ihec});
+      foreach my $e_acc (@experiment_accessions) {
+        INFO "Processing: $project\t$ihec\t$e_acc";
+        
+        remove_directory(TMP_DIR);
+        create_directory(TMP_DIR);
+        
+        my $sample_acc = 
+          create_xml_records($options, $e_acc, $oracle_queries);
+        
+        $report->{$project}->{$ihec}->{$e_acc} = {};
+        $report->{$project}->{$ihec}->{$sample_acc} = {};
+        
+
+        validate('experiment');
+        parse_validator_json($report->{$project}->{$ihec}->{$e_acc});
+        validate_molecule($report->{$project}->{$ihec}->{$e_acc});
+        create_statistics   ($statistic, $report->{$project}->{$ihec}->{$e_acc}, $project);
+        
+        validate('sample');
+        parse_validator_json($report->{$project}->{$ihec}->{$sample_acc});
+        create_statistics   ($statistic, $report->{$project}->{$ihec}->{$sample_acc}, $project);
+        # last PROJECT;
       }
-      $self->write_report($archive, $project);
-      delete($self->{report}->{$project});
+    }
+    write_reports($statistic, $report, $project);
+  }
+}
+
+=head2 write_reports
+
+  Description: 
+  Returntype: 
+
+=cut
+
+sub write_reports {
+  my ($statistic, $report, $project) = @_;
+  my $date=`date +%Y%m%d%H%M`;
+  chomp($date);
+
+  my $errors = File::Spec->catfile(WORK_DIR,$project.".$date.errors.txt"); 
+  my $stats  = File::Spec->catfile(WORK_DIR,$project.".$date.statistics.txt"); 
+
+  write_file($errors, Dumper $report);
+  write_file($stats, Dumper $statistic);
+
+}
+
+=head2 validate_molecule
+
+  Description:  In the early days it was possible for the MOLECULE to be defined in either
+                Exeperiment or Sample. The validator can't check both, hence it is performed 
+                here. 
+
+=cut
+
+sub validate_molecule {
+  my ($report) = @_;
+
+  my $exp_xml    = path(EXPERIMENT_XML)->slurp;
+  my $sample_xml = path(SAMPLE_XML)->slurp;
+
+  if ( $sample_xml =~ m!<TAG>MOLECULE</TAG>!o and $exp_xml !~ m!<TAG>MOLECULE</TAG>!o ) {
+    push @{$report->{'1.0'}->{errors}}, "MOLECULE defined in Sample, not Experiment";
+    $report->{'1.0'}->{status} = 0;
+  }
+  elsif ( $exp_xml !~ m!<TAG>MOLECULE</TAG>!o and $sample_xml !~ m!<TAG>MOLECULE</TAG>!o ) {
+    push @{$report->{'1.0'}->{errors}}, "MOLECULE not defined";
+    $report->{'1.0'}->{status} = 0;
+  }
+
+}
+
+=head2 create_statistics
+
+  Description:  Update statistics hash, adding validated or failed experiments. 
+                Remove Validated records from report for better readability
+
+=cut
+
+
+
+sub create_statistics {
+  my ($statistic, $report, $project) = @_;
+  
+  foreach my $version (sort keys %$report){
+    my $status = $report->{$version}->{status};
+    if ($status == 0)  {
+      $statistic->{$project}->{$version}->{Failed}++;
+      delete $report->{$version}->{status};
+    }
+    if ($status == 1)  {
+      $statistic->{$project}->{$version}->{Validated}++;
+      delete $report->{$version};
     }
   }
-  $self->write_stats();
-  
-  #if( $self->{dbh}->{erapro}->ping ) {
-    $self->{dbh}->{erapro}->disconnect
-      or warn "Disconnection failed: $DBI::errstr\n";
-  #}
 }
 
-sub test_and_get_xmls {
-  my ($self, $archive, $exp_acc, $ihec) = @_;
+=head2 create_xml_records
 
-  #warn "Data fetching terminated early by error: $DBI::errstr\n"  if $DBI::err;
+  Description:  Writes XML files used in current validator run.
+                If -keep, also writes the XML file to the designated 
+                download directory
+=cut
 
-  $self->{sth}->{lc($archive)}->{exp}->execute($exp_acc);
-  my ($exp_xml) = $self->{sth}->{lc($archive)}->{exp}->fetchrow_array();
-  DEBUG "Experiment XML\n$exp_xml";
-  $self->test_xml($exp_xml, $archive, $exp_acc, $ihec);
- 
-  $self->{sth}->{lc($archive)}->{sample}->execute($exp_acc);
-  my $samples = $self->{sth}->{lc($archive)}->{sample}->fetchall_hashref('SAMPLE_ID');
-  DEBUG "Sample XML:\n".Dumper ($samples);
+sub create_xml_records {
+  my ($options, $e_acc, $oracle_queries) = @_; 
+
+  my $xmls = fetch_xmls($e_acc, $oracle_queries);
   
-  for my $s (sort keys %{$samples}){
-    my $acc = $samples->{$s}->{SAMPLE_ID};
-    my $xml = $samples->{$s}->{SAMPLE_XML};
-    $self->test_xml($xml, $archive, $acc, $ihec);
-  }  
-  return ($exp_xml, $samples);
-  # Check if make any difference
-  # $self->{sth}->{lc($archive)}->{exp}->finish();
-  # $self->{sth}->{lc($archive)}->{sample}->finish();
-
-}
-
-sub test_xml {
-  my ($self, $xml, $archive, $acc, $ihec ) = @_;
-
-  # Loader complains if XML is malformed or string is empty
-  # If neecessary, validate function can test against DTD
-  my $dom = eval {XML::LibXML->load_xml(string => \$xml);};
-  if ($@){
-    say STDERR "Malformed XML. Archive: $archive, IHEC: $ihec, Accession: $acc";
+  write_file(EXPERIMENT_XML, $xmls->{experiment_xml});
+  write_file(SAMPLE_XML,     $xmls->{sample_xml});
+  
+  if($options->{keep}){
+    my $file = File::Spec->catfile(DL_DIR, $xmls->{experiment_acc}.'.xml');
+    DEBUG "Experiment filename: $file";
+    write_file($file, $xmls->{experiment_xml});
+    
+    $file = File::Spec->catfile(DL_DIR, $xmls->{sample_acc}.'.xml');
+    DEBUG "Sampe filename: $file";
+    write_file($file, $xmls->{sample_xml});
   }
+  return $xmls->{sample_acc};
 }
 
+=head2 write_file
 
-sub validate_experiment {
-  my ($self, $ihec, $project, $acc, $xml) = @_;
+  Description:  Opens a file at the given path and prints the content.
+                Uses binmode UTF8 to print special characters correctly.
 
-  my $type = 'experiment';
-  my $validator_args  = [$type]; 
-  $self->validate_xml($ihec, $project, $validator_args, $acc, $xml, $type);
+=cut
+
+sub write_file {
+  my ($file, $content) = @_;
+
+  open my $fh, '>', $file or die "Could not open file: $file. Error $!";
+    binmode($fh, ":utf8");
+    print $fh $content;
+  close $fh;
+  DEBUG "$file finished writing";
 }
 
-sub validate_samples {
-  my ($self, $ihec, $project, $samples, $archive) = @_;
+=head2 parse_validator_json
 
-  my $type = 'sample';
-  my $validator_args  = [$type];
-  push @$validator_args, '-not-sra-xml-but-try' if( $archive eq 'ddbj' ); 
+  Description: Parse the JSON output produced by the validator.
+  ToDo: Improve variables names
 
-  for my $s (sort keys %{$samples}){
-    my $acc = $samples->{$s}->{SAMPLE_ID};
-    my $xml = $samples->{$s}->{SAMPLE_XML};
-    $self->validate_xml($ihec, $project, $validator_args, $acc, $xml, $type );
-  }  
-}
+=cut
 
-sub validate_xml  {
-  my ($self, $ihec, $project, $validator_args, $acc, $xml, $type) = @_;
-  
-  my ($validated, $error) = $self->validate($acc, $xml, $validator_args );
-  DEBUG "Validated: $validated";
-  DEBUG "Error: $error";
-  if ($validated eq 'Failed'){
-    push( @{$self->{report}->{$project}->{$ihec}}, $error);
-  }
-  # Hash to avoid duplicates
-  $self->{stats}->{$type}->{$project}->{$validated}->{$acc}++;
-
-}
-
-# $type experiment or sample
-# Check the XML with the validator. If the 
-sub validate {
-  my ($self, $accession, $xml, $validator_args) = @_;
-
-  DEBUG "Validate: accession: $accession\tArgs: ".join "\t", @{$validator_args};
-  my $work_dir  = $self->{opts}->{work_dir};
-
-  my $file_xml      = $self->write_xml_file($accession, $xml);
-  my $file_ver_xml  = File::Spec->catfile($work_dir, "$accession.versioned.xml");
-  my ($validated, $error_log) = $self->run_validator($file_ver_xml, $file_xml, $validator_args);
-  unlink($file_ver_xml) if(-e $file_ver_xml);
-  unlink($file_xml);
-  return($validated, $error_log);
-}
-
-sub run_validator {
-  my ($self, $versioned_xml, $xml, $array_args) = @_; 
-  
-  # Validator can currently only run in IHEC directory
-  local $CWD = $self->{opts}->{ihec_dir};
-  DEBUG "CD to: $CWD";
-
-  # DEBUG  ( caller(1) )[3] ."\tLine: ". ( caller(0) )[2];
-  DEBUG "Versioned XML: $versioned_xml\tXML: $xml\tArgs:", join "\t", @{$array_args};
-  # Remove whitespaces
-  # add leading dash if it not exists
-  for my $e (@{$array_args}) {
-    $e =~ s/\s+//g;
-    $e = "-$e" if($e !~ /^-/);
-  }
-  my $args      = join(' ', @$array_args);
-  DEBUG "Validator arguments: $args";
-  my $cfg_json  = $self->{opts}->{cfg_ihec_json};
-
-  # Keep files for debuggin
-  my $fh_out    = File::Temp->new( UNLINK => 0,  SUFFIX => '.out.epirr');
-  my $file_stdout  = $fh_out->filename; 
-  my $fh_err    = File::Temp->new( UNLINK => 0,  SUFFIX => '.err.epirr');
-  my $file_stderr  = $fh_err->filename;
-  my $fh_json   = File::Temp->new( UNLINK => 0,  SUFFIX => '.json.epirr');
-  my $file_json = $fh_json->filename;
-  DEBUG "Validator STDOUT: $file_stdout";
-  DEBUG "Validator STDERR: $file_stderr";
-  DEBUG "Validator JSON  : $file_json";
-
-  my $cmd = "python -m version_metadata $args -overwrite-outfile -out:$versioned_xml -jsonlog:$file_json $xml >$file_stdout 2>$file_stderr";
-  $self->run_cmd($cmd);
-  
-  my ($validated, $error) = $self->parse_validator_json(path($file_json));
-  DEBUG "Validated: $validated";
-  DEBUG "Validator Error: $error";
-  unlink($file_stderr);
-  unlink($file_stdout);
-  unlink($file_json);
-  return ($validated, $error);
-}
-
-# {
-#     "ENCSR993QER_experiment.no_MOLECULE_plusURI.xml": [
-#         {
-#             "ENCSR522UKJ": {
-#                 "error_type": "__prevalidation__",
-#                 "errors": [
-#                     "missing",
-#                     [
-#                         "experiment_ontology_curie",
-#                         "extraction_protocol_sonication_cycles",
-#                         "extraction_protocol_type_of_sonicator"                                                                                                                                            
-#                     ]
-#                 ],
-#                 "version": "1.1"
-#             }
-#         },
-#         { 
-#             "ENCSR522UKJ": {
-#                 "errors": [], 
-#                 "ok": true,
-#                 "version": "1.0" 
-#             }         
-#         }             
-#     ]                 
-# }
 sub parse_validator_json {
-  my ($self, $file) = @_;
+  my ($report) = @_;
 
-  my $content = $file->slurp;
+  my $content = read_text(VALIDATOR_JSON);
   DEBUG "Validator JSON:\n$content";
   my $j = '';
+
   eval { $j = decode_json($content) };
   if ($@){
-    die "invalid json. error: $@\n";
+    die "invalid json. File:".VALIDATOR_JSON."\n error: $@:";
   }
 
-  my $validated = 'Validated';
-  my $error = {};
   foreach my $file_name (keys %{$j} ){
     foreach my $k (@{$j->{$file_name}}){
       foreach my $acc (keys %{$k}){
-        next if $k->{$acc}->{ok} eq 'true';
-        $validated = 'Failed';   
         my $version = $k->{$acc}->{version};
-        $error->{$acc}->{$version} = [$k->{$acc}->{errors}];                                                                                                                                              
+        $report->{$version}->{errors} = $k->{$acc}->{errors};                                                                                                                                              
+        $report->{$version}->{status} = convert_status($k->{$acc}->{ok});  
       }   
     }   
   }
-  DEBUG Dumper($error);
-  my $error_string = $self->stringify_error($error);
-
-  return($validated, $error_string);
+  DEBUG "Parsed Validator results" . Dumper($report); 
 }
 
-#   'DRX036828' => {
-#     '1.0' => [
-#       '__mising_both__:__experiment_ontology_uri+experiment_type__'
-#     ],
-#     '1.1' => [
-#       '__mising_both__:__experiment_ontology_curie+experiment_type__'
-#     ]
-#   }
-# }
-sub stringify_error {
-  my ($self, $error) = @_;
+=head2 convert_status
 
-  my $err_str = '';
-  foreach my $acc (sort keys %{$error}) {
-    $err_str .= $acc;
-    foreach my $version ( sort keys %{$error->{$acc}} ){
-      my $errors = join("\n\t", @{$error->{$acc}->{$version}});
-      $err_str .= "\n\t$version\t$errors";
-    }
-  }
-  DEBUG "JSON error stringify:\n$err_str";
- 
- return $err_str;
+  Description:  Status is converted to 'JSON::PP::Boolean' when decoding.
+                Replace with integer.
 
+=cut
+
+sub convert_status {
+  my ($status) = @_;
+
+  DEBUG "status: $status";
+  return 1 if($status);
+  return 0 if(!$status);
 }
 
+=head2 validate
 
+  Description:  Run the validator. 
+                Validator needs to run in IHEC directory
 
-sub validate_molecule {
-  die "Needs updating";
-  my ($self, $exp_xml, $sample_xml, $err_e, $err_s) = @_;
+=cut
 
-  if ( $exp_xml !~ m!<TAG>MOLECULE</TAG>!o and $sample_xml !~ m!<TAG>MOLECULE</TAG>!o ) {
-    $err_e = defined($err_e) ? "MOLECULE not defined. $err_e" : "MOLECULE not defined.";
+sub validate {
+  my ($type) = @_;
 
-    if (!$self->{opts}->{legacy}) {
-      $err_e = defined($err_e) ? "MOLECULE needs to be defined in Experiment. $err_e" : "MOLECULE not defined.";
-    }
-  }
+  die "Only experiment or sample accepted " unless ($type =~ /^(?:experiment|sample)$/);
 
-  if ( (!$self->{opts}->{legacy}) and $sample_xml =~ m!<TAG>MOLECULE</TAG>!o ){
-      $err_e = defined($err_e) ? "MOLECULE needs to be defined in Experiment, not in Sample. $err_e" : "MOLECULE needs to be defined in Experiment, not in Sample.";
-      $err_s = defined($err_s) ? "MOLECULE needs to be defined in Experiment, not in Sample. $err_s" : "MOLECULE needs to be defined in Experiment, not in Sample.";
-  }
+  local $CWD = IHEC_DIR;
+  DEBUG "Current directory: " . getcwd();
 
- #print "Within the validate_molecule subroutine the errors are:\nEXPERIMENT: $err_e\nSAMPLE: $err_s\n";
+  my $cmd = create_command($type);
+  DEBUG "Executing:\n" . $cmd;
 
- return ($err_e, $err_s);
-
+  system($cmd)  == 0 or die "FAILED to execute\n$cmd\nError: $?";
 }
 
-sub write_report {
-  my ($self, $archive, $project) = @_;
+=head2 create_command
 
-  my $dir      = $self->{opts}->{work_dir};
-  my $filename = $archive.'_'."$project.".time.'.tsv';
+  Description:  Command to run the validator is slightly different depening on
+                if it a Sample or Experiment is tested.
 
-  my $report = File::Spec->catfile($dir, $filename);
+=cut
+
+sub create_command {
+  my ($type) = @_;
+
   
-  open my $fh, '>', $report or croak "Could not open $report: $!";
-    INFO "Writing $report";
-    # say $fh "IHEC accession\tProject\tArchive accession\tValidation\tErrors";
-    for my $ihec (sort keys %{ $self->{report}->{$project} } ){
-      for my $error (@{ $self->{report}->{$project}->{$ihec} }){
-        say $fh "$error";
+  my @cmd;
+  push(@cmd, 'python');
+  push(@cmd, '-m');
+  push(@cmd, 'version_metadata');
+  push(@cmd, '-config:'.VALIDATOR_CFG);
+  push(@cmd, '-overwrite-outfile');
+  push(@cmd, '-out:'.VALIDATOR_OUT);
+  push(@cmd, '-jsonlog:'.VALIDATOR_JSON);
+  
+  if ($type eq 'experiment'){
+    push(@cmd, '-experiment');
+    push(@cmd, EXPERIMENT_XML);
+  }
+  else{
+    push(@cmd, '-sample');
+    push(@cmd, SAMPLE_XML);
+  }
+
+  push(@cmd, '>'.VALIDATOR_STDOUT);
+  push(@cmd, '2>'.VALIDATOR_STDERR);
+
+  # system does not allow redirection of STDOUT and STDERR when passing an array
+  return (join(" ", @cmd));
+
+}
+
+=head2 fetch_xmls
+
+  Description: Fetch Experiment XML using accession stored in EpiRR. 
+               Try basic test if XML is valid. 
+  Returntype: hash ref
+
+=cut
+
+sub fetch_xmls {
+  my ($e_acc, $oracle_queries) = @_;
+
+  #warn "Data fetching terminated early by error: $DBI::errstr\n"  if $DBI::err;
+  my $archive = assign_accession_archive($e_acc);
+  
+  DEBUG "Archive for experiment accession: $archive";
+  $oracle_queries->{$archive}->{exp}->execute($e_acc);
+  my ($e_xml) = $oracle_queries->{$archive}->{exp}->fetchrow_array();
+  DEBUG "Experiment XML:\n$e_xml";
+  test_xml($e_xml);
+ 
+  $oracle_queries->{$archive}->{sample}->execute($e_acc);
+  my ($sample_acc, $sample_xml) = $oracle_queries->{$archive}->{sample}->fetchrow_array();
+  DEBUG "Sample_acc: $sample_acc\nSample XML:\n".Dumper ($sample_xml);
+  test_xml($sample_xml);
+  
+  return ({
+      'experiment_acc' => $e_acc, 
+      'experiment_xml' => $e_xml, 
+      'sample_acc' => $sample_acc, 
+      'sample_xml' => $sample_xml, 
+    } );
+
+}
+
+=head2 assign_accession_archive
+
+  Description: Links Experiment accession to archive.
+               Necessary to pick the correct SQL
+  Error: Throws if accession does not match
+
+=cut
+
+sub assign_accession_archive {
+  my ($acc) = @_;
+
+  return 'ega' if($acc =~ /^EGAX\d*$/);
+  return 'ena' if($acc =~ /^(?:DRX|ERX)\d*$/);
+  die "Accession '$acc' not matching ega (^EGAX\d*$) or ENA (^DRX|ERX\d*$)";
+}
+
+=head2 test_xml
+
+  Description: Tries to load XML, which performs basic validation tests.
+  Returntype: None
+  Error: Throws if XML is not valid 
+  ToDo: Could be used to perform XSD test
+
+=cut
+
+sub test_xml {
+  my ($xml) = @_;
+
+  # Loader complains if XML is malformed or string is empty
+  # If neecessary, validate function can test against XSD
+  my $dom = eval {XML::LibXML->load_xml(string => \$xml);};
+  if ($@){
+    die "Malformed XML. Error: $@";
+  }
+}
+
+
+
+=head2 get_options
+
+  Description: Process command line option
+  Returntype: hash ref
+
+=cut
+
+
+sub get_options {
+  my $options = read_command_line();
+  
+  return $options;
+}
+
+=head2 read_command_line
+
+  Description: Option reading. Parses the command line
+  Returntype: hash ref
+
+=cut
+
+sub read_command_line {
+  DEBUG "read_command_line";
+
+  #splitting command line options, predeclaration required
+  my $options = {
+    archive       => [],
+    project       => [],
+    accessions    => [],
+  };
+
+  # split command line arguments into comma separated list
+  my $splitter = sub {
+    my ($name, $val) = @_;
+    push @{$options->{$name}}, split q{,}, $val;
+  };
+  
+  GetOptions($options,
+    'archive=s@'        => $splitter,
+    'project=s@'        => $splitter,
+    'ihec_accession=s@' => $splitter,
+    'legacy', # MOLECULE can be in Sample or Experiment
+    'debug',
+    'clean',
+    'keep',
+    'help',
+    'verbose',
+  ) or pod2usage(-msg => 'Misconfigured options given', -verbose => 1, -exitval => 1);
+  pod2usage(-verbose => 1, -exitval => 0) if $options->{help};
+
+  INFO "Command line arguments: " . Dumper $options;
+  # print Dumper $options;
+  return $options;
+}
+
+=head2 check_options_and_environment_variables
+
+  Description: Validates arguments, sets defaults
+  Returntype: None
+
+=cut
+
+sub check_options_and_environment_variables {
+  my ($options) = @_;
+
+  check_environment_variables();
+  check_projects_options($options);
+  check_archive_options($options);
+  check_ihec_accession_options($options);
+}
+
+
+
+
+=head2 set_log_level
+
+  Description: Set Log level.
+
+=cut
+
+sub set_log_level {
+  my ($options) = @_;
+
+  Log::Log4perl->easy_init($DEBUG) if $options->{debug};
+  DEBUG "Log Level DEBUG";
+}
+
+
+=head2 check_environment_variables
+
+  Description: Checks mandatory variables that need to be that in the shell environment
+
+=cut
+
+sub check_environment_variables {
+  DEBUG "check_environment_variables";
+
+  die "Validator Config not found or set in environment"             unless (-e $ENV{VALIDATOR_CFG}      );
+  die "Working directory not found or set in environment"            unless (   $ENV{VALIDATOR_WORK_DIR} );
+  die "tmp directory not found or set in environment"                unless (   $ENV{VALIDATOR_TMP_DIR}  );
+  die "Download directory not found or set in environment"           unless (   $ENV{VALIDATOR_DL_DIR}   );
+  die "'ihec-ecosystems' directory not found or set in environment"  unless (-d $ENV{IHEC_DIR} );
+
+  die "Oracle DB DSN not found or set in environment"   unless ($ENV{ERA_DSN});
+  die "Oracle DB USER not found or set in environment"  unless ($ENV{ERA_USER});
+  die "Oracle DB PW not found or set in environment"    unless ($ENV{ERA_PASS});
+
+  die "EpiRR DB DSN not found or set in environment"   unless ($ENV{EPIRR_DSN});
+  die "EpiRR DB USER not found or set in environment"  unless ($ENV{EPIRR_USER});
+  die "EpiRR DB PW not found or set in environment"    unless ($ENV{EPIRR_PASS})
+}
+
+=head2 check_projects_options
+
+  Description: Checks if specific projects were selected, test if valid if so
+
+=cut
+
+sub check_projects_options {
+  my ($options) = @_;
+
+  DEBUG "Projects from command line: " . Dumper $options->{project};
+
+  if(defined $options->{project} and scalar @{$options->{project}} > 0  ){
+    $_ = lc for @{$options->{project}};
+    my %valid = map { $_ => 1 } @$VALID_PROJECTS; 
+    foreach my $project (@{$options->{project}}) {
+      if( !exists($valid{$project}) ){
+        die  ">$project< is not a valid project. Valid projects are: " . Dumper $VALID_PROJECTS;
       }
     }
-  close($fh);
-}
-
-sub write_stats {
-  my ($self) = @_;
-
-  my $stats = File::Spec->catfile($self->{opts}->{work_dir}, 'overview.tsv');
-  open my $fh, '>', $stats or croak "Could not open $stats: $!";
-  INFO "Writing Statistics: $stats";
-    say $fh "Project\tType\tValidated\tFailed";
-    foreach my $type (sort keys %{ $self->{stats} }){
-      foreach my $project (sort keys %{ $self->{stats}->{$type} } ){
-        foreach my $flag (sort keys %{ $self->{stats}->{$type}->{$project} } ){
-          my $validated = keys %{$self->{stats}->{$type}->{$project}->{'Validated'}};
-          my $failed    = keys %{$self->{stats}->{$type}->{$project}->{'Failed'}};
-          # my $validator_failure = keys %{$self->{stats}->{$type}->{$project}->{'Validator Failure'}};
- 
-          $validated  = 0 if(!defined $validated);
-          $failed     = 0 if(!defined $failed);
-          # $validator_failure = 0 if(!defined $validator_failure); 
-
-          say $fh "$project\t$type\t$validated\t$failed";
-        }
-      }
-    } 
-  close($fh);
-}
-
-# sub report {
-#   my ($self, $ihec, $project, $acc, $error, $type ) = @_;
-#   DEBUG "$ihec, $project, $acc, $error, $type";
-#   my $flag; 
-#   if ( defined($error) and $error =~ m/Check manually/){
-#     $flag = 'Validator Failure';
-#   } 
-#   elsif ( defined($error) ){
-#     $flag  = 'Failed';
-#   }
-#   else{
-#     $error = '';
-#     $flag = 'Validated';
-#   }
-#   my $tmp = "$ihec\t$project\t$acc\t$flag\t$error"; 
-#   push( @{$self->{report}->{$project}}, $tmp);
-
-#   $self->{stats}->{$type}->{$project}->{$flag}->{$acc}++;
-# }
-
-sub filter_raw_data {
-  my ($self) = @_;
-
-  my %archives = map { $_ => 1 } @{$self->{opts}->{archive}};
-  my %projects = map { $_ => 1 } @{$self->{opts}->{project}};
-  my $accessions = $self->{epirr_accessions};
-  # say Dumper($accessions);die;
-  
-  foreach my $archive (sort keys %{$accessions}) {
-    foreach my $project (sort keys %{$accessions->{$archive}}){
-      delete $self->{epirr_accessions}->{project} unless (exists $projects{$project});
-    }
-    delete $self->{epirr_accessions}->{$archive} unless (exists $archives{$archive});
-  }
-}
-
-sub write_xml_file {
-  my ($self, $accession, $xml) = @_;
-
-  my $file = File::Spec->catfile($self->{opts}->{work_dir}, "$accession.xml");
-  DEBUG "write_xml_file: file: $file";
-  return($file) if(-e $file);
-  open my $fh, '>', $file;
-    binmode($fh, ":utf8");
-    print $fh $xml;
-  close $fh;
-  DEBUG "write_xml_file: Finished writing";
-  return($file);
-}
-
-
-
-
-sub run_cmd {
-  my ($self, $cmd) = @_;
-
-  die "Nothing passed to execute" if(!$cmd);
-  DEBUG $cmd;
-  system($cmd);
-  if ($? == -1) {
-    print "failed to execute: $!\n";
-  }
-  elsif ($? & 127) {
-    printf "child died with signal %d, %s coredump\n",
-    ($? & 127),  ($? & 128) ? 'with' : 'without';
   }
   else {
-   # Success, but only blows up the log file.
-    # DEBUG printf "child exited with value %d\n", $? >> 8;
+    $options->{project} = undef;
   }
 }
 
-sub sql_oracle {
-  my ($self) = @_;
+=head2 check_archive_options
 
-  my $dsn = $ENV{ERA_DSN};
+  Description:  Checks if specific archives were selected
+                As we can only process
+
+=cut
+
+sub check_archive_options {
+  my ($options) = @_;
+
+  DEBUG "Archives from command line: " . Dumper $options->{archive};
+
+  if(defined $options->{archive} and scalar @{$options->{archive}} > 0  ){
+    $_ = lc for @{$options->{archive}};
+    my %valid = map { $_ => 1 } @$VALID_ARCHIVES; 
+    foreach my $archive (@{$options->{archive}}) {
+      if(  !exists($valid{$archive}) ){
+         die ">$archive< is not a valid archive. Valid archives are: " . Dumper $VALID_ARCHIVES;
+      }
+    }
+  }
+  else {
+    # Makes a later check shorter
+    $options->{archive} = $VALID_ARCHIVES;
+  }
+}
+
+=head2 check_ihec_accession_options
+
+  Description: Validates IHEC accesions, if selected
+  Returntype: None
+
+=cut
+
+sub check_ihec_accession_options {
+  my ($options) = @_;
+
+  if(defined $options->{ihec_accession} and scalar @{$options->{ihec_accession}} > 0  ){
+    foreach my $ihec (@{$options->{ihec_accession}}) {
+      die "Invalid IHEC accession '$ihec'" unless ($ihec =~ /^IHECRE\d{8}$/);
+    }
+  }
+  else {
+    $options->{ihec_accession} = undef;
+  }
+}
+
+=head2 fetch_epirr_accessions
+
+  Description: Connect to EpiRR and fetch relevant (filtered by project and archive) accessions
+  Returntype: None
+
+=cut
+
+sub fetch_epirr_accessions {
+  my ($options) = @_;
+
+  my $dsn  = $ENV{EPIRR_DSN};
+  my $user = $ENV{EPIRR_USER};
+  my $pass = $ENV{EPIRR_PASS};
+  DEBUG "DSN: $dsn\tUser: $user\tPW: $pass";
+  
+  my $dbh = DBI->connect( $dsn, $user, $pass, 
+    { 'RaiseError' => 1, 'PrintError' => 0 } ) or die "Could not connect: $!";
+  
+  # GROUP_CONCAT has 1024 characters limitation
+  $dbh->do(q{SET SESSION group_concat_max_len = 1000000});
+  
+  INFO "Connected to DSN: $dsn as $user"; 
+  my $archive = "'".join("','", @{$options->{archive}})."'";
+  my $sql = "
+    SELECT  
+      project.name                    as project, 
+      accession                       as ihec,  
+      GROUP_CONCAT(primary_accession) as experiment
+    FROM 
+      dataset 
+    JOIN project          USING (project_id) 
+    JOIN dataset_version  USING (dataset_id) 
+    JOIN raw_data         USING (dataset_version_id) 
+    JOIN archive          USING (archive_id) 
+    WHERE 
+      is_current = 1
+    AND archive.name IN ($archive)
+  ";
+  if(my $c = create_epirr_constraints($options)){
+    $sql .= $c;     
+  }
+  $sql .= "
+    GROUP BY
+      project.name, 
+      accession
+  ";
+  DEBUG "SQL: Fetch accessions from EpiRR:\n$sql";
+
+  my $sth = $dbh->prepare($sql) or die "Unable to prepare $sql" . $dbh->errstr;
+  $sth->execute() or die "Unable to execute '$sql'.  " . $sql->errstr;
+
+  my $records_to_validate;
+  
+  # declaring in while loop results in a scope issue, 1 undef record will be retrieved.
+  my $r = {};
+  while ( $r  = $sth->fetchrow_hashref ){
+    my $project   = lc($r->{project});
+    my $ihec      = $r->{ihec};
+    my $exp_accs  = $r->{experiment};
+    $records_to_validate->{$project}->{$ihec} = $exp_accs ;  
+  }
+  $sth->finish;
+  $dbh->disconnect
+    or warn "Disconnection from EpiRR database failed: $DBI::errstr\n";
+
+  DEBUG "Records to validate: " . Dumper $records_to_validate;
+  return $records_to_validate;
+}
+
+=head2 create_epirr_constraints
+
+  Description: Check if any constraints were selected, create string
+  Returntype: string containing SQL constraints
+
+=cut
+
+
+sub create_epirr_constraints {
+  my ($options) = @_;
+
+  my $constraints = undef;
+
+  if( defined $options->{project} ){
+    my $project = "'".join("','", @{$options->{project}})."'";
+    $constraints .= "  AND project.name IN ($project)";
+  }
+
+  if( defined $options->{ihec_accession} ){
+    my $ihec = "'".join("','", @{$options->{ihec_accession}})."'";
+    $constraints .= "  AND dataset.accession IN ($ihec)";
+  }
+
+  return $constraints;
+}
+
+
+sub prepare_oracle_queries {
+  my $oracle_queries = {};
+
+  my $dsn  = $ENV{ERA_DSN};
   my $user = $ENV{ERA_USER};
   my $pass = $ENV{ERA_PASS};
 
   my $dbh = DBI->connect( $dsn, $user, $pass, 
-    { 'RaiseError' => 1, 'PrintError' => 0 } ) or croak "Could not connect: $!";
-  INFO "Connected to DSN: $dsn";
+    { 'RaiseError' => 1, 'PrintError' => 0 } ) or die "Could not connect: $!";
+  INFO "Oracle: Connected to DSN: $dsn";
+  
   #default is 80, far to short for the XML records
   $dbh->{LongReadLen} = 66600;
 
-  $self->{dbh}->{erapro} = $dbh;
+  # Used for disconnect later
+  $oracle_queries->{dbh_erapro} = $dbh;
 
   my $sth;
+  
   $sth = $dbh->prepare(' 
     SELECT xmltype.getclobval(experiment_xml) 
     FROM experiment 
     WHERE experiment_id = ? 
     AND ega_id IS NULL
   ');
-  $self->{sth}->{ena}->{exp} = $sth;
-  # Same for DDBJ, different key to have automated match with archive name
-  $self->{sth}->{ddbj}->{exp} = $sth;
+  $oracle_queries->{ena}->{exp} = $sth;
 
   $sth = $dbh->prepare('
     SELECT sample_id, xmltype.getclobval(sample_xml) as sample_xml 
@@ -473,9 +798,7 @@ sub sql_oracle {
     JOIN experiment_sample USING (sample_id) 
     WHERE experiment_id = ?
   ');
-
-  $self->{sth}->{ena}->{sample} = $sth;
-  $self->{sth}->{ddbj}->{sample} = $sth;
+  $oracle_queries->{ena}->{sample} = $sth;
 
   $sth = $dbh->prepare('
     SELECT xmltype.getclobval(experiment_xml) 
@@ -483,301 +806,17 @@ sub sql_oracle {
     IN (experiment_id, ega_id) 
     AND ega_id IS NOT NULL
   ');
-
-  $self->{sth}->{ega}->{exp} = $sth;
+  $oracle_queries->{ega}->{exp} = $sth;
 
   $sth = $dbh->prepare('
-    SELECT sample.sample_id, xmltype.getclobval(sample_xml) 
+    SELECT sample.sample_id, xmltype.getclobval(sample_xml) as sample_xml
     FROM sample 
-    JOIN experiment_sample ON sample.sample_id = experiment_sample.sample_id 
-    JOIN experiment ON experiment.experiment_id = experiment_sample.experiment_id 
-    WHERE  ? IN (experiment.experiment_id, experiment.EGA_ID) 
+    JOIN experiment_sample ON sample.sample_id         = experiment_sample.sample_id 
+    JOIN experiment        ON experiment.experiment_id = experiment_sample.experiment_id 
+    WHERE ? IN (experiment.experiment_id, experiment.EGA_ID) 
     AND experiment.EGA_ID IS NOT NULL
   ');
-  $self->{sth}->{ega}->{sample} = $sth;
+  $oracle_queries->{ega}->{sample} = $sth;
+
+  return $oracle_queries;
 }
-
-sub fetch_epirr_accessions {
-  my ($self) = @_;
-
-  my $dsn  = $ENV{EPIRR_TEST_DSN};
-  my $user = $ENV{EPIRR_TEST_USER};
-  my $pass = $ENV{EPIRR_TEST_PASS};
-  INFO "DSN: $dsn\tUser: $user\tPW: $pass";
-  my $dbh = DBI->connect( $dsn, $user, $pass, 
-    { 'RaiseError' => 1, 'PrintError' => 0 } ) or croak "Could not connect: $!";
-  INFO "Connected to DSN: $dsn as $user"; 
-
-  my $archive = "'".join("','", @{$self->{opts}->{archive}})."'";
-  my $project = "'".join("','", @{$self->{opts}->{project}})."'";
-
-  my $sql = ("
-    SELECT DISTINCT(primary_accession), archive.name,  project.name, dataset.accession 
-    FROM raw_data 
-    JOIN archive          USING(archive_id) 
-    JOIN dataset_version  USING (dataset_version_id) 
-    JOIN dataset          USING (dataset_id) 
-    JOIN project          USING(project_id) 
-    WHERE is_current = 1 
-    AND archive.name IN ($archive)
-    AND project.name IN ($project)
-  ");
-
-  INFO $sql;
-  
-  my $sth = $dbh->prepare($sql);
-  $sth->execute();
-
-  while ( my ($acc, $archive, $project, $ihec)  = $sth->fetchrow_array ){
-    push @{ $self->{epirr_accessions}->{lc($archive)}->{lc($project)} }, [$acc, $ihec];  
-  }
-
-  $dbh->disconnect
-    or warn "Disconnection from EpiRR database failed: $DBI::errstr\n";
-  DEBUG "EpiRR accessions: " . Dumper $self->{epirr_accessions};
-}
-
-#  errs.sample.1.CKH.ERS.Sep-10-2018-22.22.26.log
-sub remove_xml_tsv_log_files {
-   my ($self) = @_;
-   my $dir = $self->{opts}->{work_dir};
-   my @files = glob ("$dir/*.xml $dir/*.tsv $dir/*.log");
-   if (scalar @files > 0){  
-    unlink @files or croak "Could not delete files in Working Dir: $!";
-  }
-}
-
-sub parse_options {
-  my ($self) = @_;
-
-  # undef so missing arguments are caught.
-  # Add option accessions for filtering. Store as hash
-  my $opts = {
-    cfg_epirr     => 'EpiRR::Config::Production',
-    cfg_ihec_json => $ENV{CFG_IHEC_JSON},
-    work_dir      => $ENV{WORK_DIR},
-    ihec_dir      => $ENV{IHEC_DIR},
-    archive       => [],
-    project       => [],
-    accessions    => [],
-    json_dir      => undef,
-  };
-
-  my $splitter = sub {
-    my ($name, $val) = @_;
-    push @{$opts->{$name}}, split q{,}, $val;
-  };
-  
-  GetOptions($opts,
-    'cfg_epirr=s',
-    'cfg_ihec_json=s',
-    'work_dir=s',
-    'ihec_dir=s',
-    'archive=s@' => $splitter,
-    'project=s@' => $splitter,
-    'accessions=s@' => $splitter,
-    'json_dir=s',
-    'legacy',
-    'debug',
-    'clean',
-    'help',
-    'verbose',
-  ) or pod2usage(-msg => 'Misconfigured options given', -verbose => 1, -exitval => 1);
-  pod2usage(-verbose => 1, -exitval => 0) if $opts->{help};
-
-  my @required = qw (cfg_epirr cfg_ihec_json work_dir ihec_dir archive);
-  die pod2usage() unless all { defined $opts->{$_} } @required;
-
-  Log::Log4perl->easy_init($INFO);
-  Log::Log4perl->easy_init($DEBUG) if $opts->{debug} ;
-
-  $self->check_required_directories_modules($opts);
-  $self->check_and_set_projects($opts);
-  $self->check_and_set_archives($opts);
-
-  # Could not find a way to directly map from options
-  my %tmp = map { $_ => 1 } @{$opts->{accessions}};
-  $opts->{accessions} = \%tmp;
-
-  if(defined $opts->{json_dir}){
-    die "Using json files in directory not implemented";
-  }
-
-  DEBUG "All options: " . Dumper $opts;
-  
-  return $self->{opts} = $opts;
-}
-
-sub check_required_directories_modules {
-  my ($self, $opts) = @_;
-
-  croak('"-work_dir '. $opts->{work_dir} .'" not found') unless ( -d $opts->{work_dir} );
-  croak('"-ihec_dir '. $opts->{ihec_dir} .'" not found') unless ( -d $opts->{ihec_dir} );
-  croak('"-cfg_ihec_json '. $opts->{cfg_ihec_json} .'" not found') unless ( -e $opts->{cfg_ihec_json} );
-  
-  eval ('require ' . $opts->{cfg_epirr} ) or croak('-cfg_epirr '. $opts->{cfg_epirr} . 'Cannot load module ' . $@);
-
-  INFO 'Working Directory:' . $opts->{work_dir};
-  INFO 'IHEC Directory:'    . $opts->{ihec_dir};
-  INFO 'Validator Config: ' . $opts->{cfg_ihec_json}
-
-
-}
-
-sub check_and_set_projects {
-  my ($self, $opts) = @_;
-
-  $opts->{valid_projects} = [
-      'amed-crest','blueprint','ceehrc','deep','encode',
-      'epp','gis','hipsci','korea epigenome project (knih)','nih roadmap epigenomics'
-  ];
-
-  # If no projects are specified, test all
-  if(scalar @{$opts->{project}} == 0 or !defined $opts->{project}){
-    $opts->{project} = $opts->{valid_projects};
-  }
-
-  # Used as hash keys later, need to be all lowercase
-  $_ = lc for @{$opts->{project}};
-
-  my %valid = map { $_ => 1 }  @{ $opts->{valid_projects} }; 
-  foreach my $p  (@{$opts->{project}}) {
-    if( !exists($valid{$p}) ){
-      croak ">$p< is not a valid project. Valid projects are: " . join "--", @{$opts->{valid_projects}};
-    }
-  }
-  
-  INFO 'Projects to process: ' . join "--", @{$opts->{project}};
-
-}
-
-sub check_and_set_archives {
-  my ($self, $opts) = @_;
-
-  $opts->{valid_archives} = [qw (ddbj ega ena)]; 
-  
-  if(scalar @{$opts->{archive}} == 0 or !defined $opts->{archive} ){
-    $opts->{archive} = $opts->{valid_archives}; 
-  }
-
-  $_ = lc for @{$opts->{archive}};
-
-  my %valid = map { $_ => 1 }  @{ $opts->{valid_archives} }; 
-  foreach my $a  (@{$opts->{archive}}) {
-    if( !exists($valid{$a}) ){
-      croak "'>$a< is not a valid archive. Valid archives are: " . join "--", @{$opts->{valid_archives}};
-    }
-  }
-  INFO 'Archives to process: ' . join "--", @{$opts->{archive}};
-}
-
-sub check_and_set_json_dir {
-  my ($self, $opts) = @_;
-
-  INFO "-json_dir set. Removing -archive, -project, -accessions restriction";
-  my $d = $opts->{json_dir};
-  croak "-json_dir $d not found" if(!-d $d); 
-  $opts->{archive} = [];
-  $opts->{project} = [];
-  $opts->{accessions} = [];
-
-}
-
-
-sub parse_refepi_json {
-  die "Stub, not tested";
-  my ($self) = @_;
-  INFO "Parsing JSON files";
-
-  my $dir = $self->{opts}->{json_dir};
-  my @files =  glob("$dir/*.refepi.json");
-  croak "No *.refepi.json files in $dir" if(scalar @files == 0);
-  foreach my $file_path (@files) {
-    DEBUG "Processing $file_path";
-    my $file = read_file($file_path);
-    my $json = decode_json($file);
-    my $project = $json->{project};
-    my $basename = basename($file_path);
-    my $epirr_acc = defined($json->{accession}) ? $json->{accession}  : "new_$basename" ;
-
-    for my $rd (@{$json->{raw_data}}){
-      $self->{accs}->{$rd->{archive}}->{$epirr_acc}->{$rd->{primary_id}}++;
-      $self->{acc2project}->{$rd->{primary_id}} = $project;
-    }
-  }
-}
-
-
-=head1 NAME
-
-  validate_xmls
-
-=head1 SYNOPSIS
-
-  validate_xmls.pl  -cfg_epirr  EpiRR::Config::Production
-                    -work_dir $HOME/validate_dir
-                    -cfg_ihec_json $HOME/src/ihec-ecosystems/version_metadata/config.json 
-                    -ihec_dir $HOME/src/hec-ecosystems/version_metadata
-
-
-=head1 DESCRIPTION
-
-This script will iterate through XML files and run the IHEC validator on them.
-
-=head1 PARAMETERS
-
-=over 8
-
-=item B<-cfg_epirr>
-
-Epirr config module, eg EpiRR::Config::Production'
-
-=item B<-cfg_ihec_json>
-
-Configuration file used by the IHEC validator. It is advised to have absolute path in 
-the config file. 
-
-=item B<-work_dir>
-
-Directory where temporary files and summary.tsv will be created
-
-=item B<-ihec_dir>
-
-IHEC repository containing the validator (__main__.py) and review.py 
-
-=item B<-archive>
-
-List of archives to retrieve from database. If not set, all archives are processed. 
-Please note that DDBJ is not accessible for us at the moment. 
-
-=item B<-project>
-
-List of projects to process. If not set, all projects are processed.
-
-=item B<-accessions>
-
-List of accessions to process. If not set, all accessions are processed
-
-=item B<-json_dir>
-
-Directory containing JSON files in IHEC format. All accessions found will be processed.
-
-=item B<-legacy>
-
-Set if the examples examining are submitted before 25 May 2018. MOLECULE can also be in Sample. 
-After it has to be in experiment.
-
-=item B<-clean>
-
-Removes all *.tsv and all *.xml files in -work_dir
-
-=item B<-debug>
-
-Debug mode
-
-=back
-
-=cut
-
-
-
