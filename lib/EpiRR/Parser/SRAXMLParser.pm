@@ -28,7 +28,6 @@ use EpiRR::Model::RawData;
 
 sub parse_experiment {
     my ( $self, $xml, $errors ) = @_;
- 
     my $experiment = EpiRR::Model::Experiment->new();
     my $experiment_type_cache;
     my $library_strategy_cache;
@@ -38,7 +37,7 @@ sub parse_experiment {
             'EXPERIMENT' => sub {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
-                push @$errors, "Cannot handle multiple experiments in XML" 
+                    push @$errors, "Cannot handle multiple experiments in XML" 
                     if (defined $experiment->experiment_id());
                 $experiment->experiment_id($id);
             },
@@ -50,7 +49,7 @@ sub parse_experiment {
             'SAMPLE_DESCRIPTOR' => sub {
                 my ( $t, $element ) = @_;
                 my $sample = $element->{'att'}->{'accession'};
-                push @$errors, "Found multiple samples in XML" 
+                    push @$errors, "Found multiple samples in XML" 
                     if (defined $experiment->sample_id());
                 $experiment->sample_id($sample);
             },
@@ -59,9 +58,8 @@ sub parse_experiment {
  
                 if ( $element->first_child_text('TAG') eq 'EXPERIMENT_TYPE' ) {
                     my $experiment_type = $element->first_child_text('VALUE');
-                    push @$errors, "Found multiple experiment types in XML" 
+                        push @$errors, "Found multiple experiment types in XML" 
                         if (defined $experiment_type_cache);
- 
                     $experiment_type_cache = $experiment_type;
                 }
                 $experiment->set_meta_data( $element->first_child_text('TAG'), $element->first_child_text('VALUE') );
@@ -69,19 +67,18 @@ sub parse_experiment {
         }
     );
     $t->parse($xml);
-    push @$errors, "No experiment found" unless $experiment->experiment_id();
-    if ($experiment->experiment_id()){
-        push @$errors, "No experiment_type found" unless defined $experiment_type_cache;
-        push @$errors, "No sample found" unless defined $experiment->sample_id();
-        push @$errors, "No library_strategy found" unless $library_strategy_cache;
-    }
+        push @$errors, "No experiment found" unless $experiment->experiment_id();
+        if ($experiment->experiment_id()){
+            push @$errors, "No experiment_type found" unless defined $experiment_type_cache;
+            push @$errors, "No sample found" unless defined $experiment->sample_id();
+            push @$errors, "No library_strategy found" unless $library_strategy_cache;
+        }
 
     return ($experiment);
 }
 
 sub parse_sample {
     my ( $self, $xml, $errors ) = @_;
-
     my $s = EpiRR::Model::Sample->new();
 
     my $t = XML::Twig->new(
@@ -89,8 +86,8 @@ sub parse_sample {
             'SAMPLE' => sub {
                 my ( $t, $element ) = @_;
                 my $id = $element->{'att'}->{'accession'};
-                push @$errors, "Cannot handle multiple samples"
-                  if ( $s->sample_id() );
+                    push @$errors, "Cannot handle multiple samples"
+                    if ( $s->sample_id() );
                 $s->sample_id($id);
             },
             'SAMPLE_ATTRIBUTE' => sub {
@@ -115,8 +112,7 @@ sub parse_sample {
         }
     );
     $t->parse($xml);
-
-    push @$errors, "Sample ID not found in XML" if ( !$s->sample_id() );
+        push @$errors, "Sample ID not found in XML" if ( !$s->sample_id() );
     return $s;
 }
 

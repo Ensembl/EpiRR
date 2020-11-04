@@ -45,11 +45,11 @@ sub parse_experiment {
         $cache->{$id} = $tmp;
         $tmp = {};
       },
-      'SAMPLE_REF' => sub {
+      'SAMPLE_DESCRIPTOR' => sub {
         my ( $t, $element ) = @_;
         $tmp->{sample_id} = $element->{'att'}->{'accession'};
       },
-      'DESIGN/LIBRARY_DESCRIPTOR/LIBRARY_STRATEGY/SEQUENCING_LIBRARY_STRATEGY' => sub {
+      'DESIGN/LIBRARY_DESCRIPTOR/LIBRARY_STRATEGY' => sub {
         my ( $t, $element ) = @_;
         $tmp->{library_strategy} = $element->trimmed_text();
       },
