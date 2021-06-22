@@ -12,8 +12,7 @@ class XmlTest:
     4. Convert to and return JSON
     """
     def __init__(self, xml_string):
-        self.xml_string = re.sub("^\s+",'',xml_string)
-        print(self.xml_string)
+        self.xml_string = xml_string.strip()
         self.sra_xsd = {}
         self.sra_xsd['experiment'] = 'xsd/SRA.experiment.xsd'
         self.sra_xsd['sample']     = 'xsd/SRA.sample.xsd'
