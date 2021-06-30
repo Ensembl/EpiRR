@@ -1,58 +1,67 @@
-import sys, getopt, xmltodict, json
+import sys, getopt, xmltodict, json, requests
 from XmlTest import XmlTest
+from collections import OrderedDict
 
-def main(argv):
-    inputfile = ''
+ 
+   
+def read_file(ifile):
+    with open(ifile, 'r') as file:
+        return file.read()
+
+def get_options(argv):
+    ifile = ''  
+    ofile = f'{sys.argv[0]}.out.json'
     try:
-        opts, args = getopt.getopt(argv,"hi:",["ifile="])
+        opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
     except getopt.GetoptError:
-        print ('test.py -i <inputfile>')
+        print ('test.py -i <inputfile> -o <outputfile>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print ('test.py -i <inputfile>')
+            print ('test.py -i <inputfile> -o <outputfile>')
             sys.exit()
         elif opt in ("-i", "--ifile"):
-            inputfile = arg
+            ifile = arg
+        elif opt in ("-o", "--ofile"):
+            ofile = arg
         else:
-            print ('test.py -i <inputfile>')
+            print ('test.py -i <inputfile> -o <outputfile>')
             sys.exit()
-            
-    with open(inputfile, 'r') as file:
-        return file.read()
-   
+    return ifile, ofile
 
-def parse(file):
-        parser = None
-        # find parser
-        try:
-            from lxml.etree import parse, XMLSchema, fromstring
-            print('using lxml.etree parser')
-            # parse XML and validate it
-            tree = fromstring(file)
-            # get XSD
-            schemaDoc = parse('xsd/SRA.sample.xsd')
-            schema = XMLSchema(schemaDoc)
-            if schema.validate(tree):
-                print('XML validated')
-                return tree
-            print(schema.error_log)
-            raise ValueError('XML NOT validated')
-        except ImportError:
-            try:
-                from xml.etree.ElementTree import fromstring
-                print('using xml.etree.ElementTree parser')
-                return fromstring(file)
-            except ImportError:
-                print("Failed to import ElementTree from any known place")
-                raise 
+def create_post_request(object, ofile):
+    """
+
+    """
+    url_schema_experiment = 'https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json'
+    url_schema_sample = 'https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json'
+
+
+    schema_experiment =  OrderedDict(json.loads(requests.get(url_schema_experiment).text))
+    schema_sample = OrderedDict(json.loads(requests.get(url_schema_sample).text))
+
+    input = OrderedDict()
+    input['schema'] = schema_experiment
+    input['object'] = object
+    with open(ofile,mode='w',) as f:
+        f.write(json.dumps(input))
+
+    # print(type(schema_experiment))
+    # print(type(object))
+    # print(type(input))
+
+def get_schema(url):
+    return OrderedDict(json.loads(requests.get(url).text))
 
 
 if __name__ == "__main__":
-    file = main(sys.argv[1:])
-    xml_test = XmlTest(file)
-    xml_test.check_xml_identify_type()
-    xml_test.validate()
+    ifile, ofile = get_options(sys.argv[1:])
+    # main(sys.argv[1:])
+    xml = read_file(ifile)
+    xml_test = XmlTest(xml)
+
+    # xml_test.validate()
     o = xml_test.convert_xml_to_json()
-    print(type(o))
-    print(json.dumps(o,indent=4))
+    create_post_request(o, ofile)
+    # # print(type(o))
+    # # print(json.dumps(o,indent=4))
