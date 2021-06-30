@@ -4,23 +4,24 @@
     "title": "IHEC Data Hub Experiment schema",
     "description": "IHEC Data Hub Experiment schema",
     "type" : "object",
-
+ 
     "properties": {
         "reference_registry_id" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Otherwise leave empty."}},
-		"qc_flags" : {"type": "array", "minItems": 1, "items": {"type": "string", "description": "Any quanlity control observations can be noted here. This field can be omitted if empty"}},
+        "qc_flags" : {"type": "array", "minItems": 1, "items": {"type": "string", "description": "Any quanlity control observations can be noted here. This field can be omitted if empty"}},
         "experiment_type" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) The assay target (e.g. ‘DNA Methylation’, ‘mRNA-Seq’, ‘smRNA-Seq’, 'Histone H3K4me1')."}},
         "experiment_ontology_curie": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^obi:[0-9]{7}$", "description": "(Ontology: OBI). Links to experiment ontology information."}},
         "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) The assay used. These are defined within the SRA metadata specifications with a controlled vocabulary (e.g. ‘Bisulfite-Seq’, ‘RNA-Seq’, ‘ChIP-Seq’). For a complete list, see https://www.ebi.ac.uk/ena/submit/reads-library-strategy."}},
         "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
         "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["total RNA", "polyA RNA", "cytoplasmic RNA", "nuclear RNA", "small RNA", "genomic DNA", "protein", "other"], "description": "(Controlled Vocabulary) The type of molecule that was extracted from the biological material. Include one of the following: total RNA, polyA RNA, cytoplasmic RNA, nuclear RNA, small RNA, genomic DNA, protein, or other."}}
     },
-    "required": ["library_strategy", "molecule", "molecule_ontology_curie"],
-
-        {"anyOf": [
+    "required": 
+        ["library_strategy", "molecule", "molecule_ontology_curie"],
+ 
+        "anyOf": [
             {"required": ["experiment_ontology_curie"]},
             {"required": ["experiment_type"]}
-        ]}
-
+        ],
+ 
     "definitions": {
         "chromatin_accessibility": {
             "type": "object",
@@ -30,12 +31,12 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNase-Hypersensitivity", "ATAC-seq", "NOME-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
                 "dnase_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used for DNAse treatment."}}
             }
         },
-
+ 
         "bisulfite-seq": {
             "type": "object",
             "properties": {
@@ -44,7 +45,7 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Bisulfite-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
                 "extraction_protocol_type_of_sonicator" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
                 "extraction_protocol_sonication_cycles" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
@@ -65,7 +66,7 @@
                 "library_generation_pcr_product_isolation_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for isolating PCR products used for library generation."}}
             }
         },
-
+ 
         "medip-seq": {
             "type": "object",
             "properties": {
@@ -74,7 +75,7 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["MeDIP-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
                 "extraction_protocol_type_of_sonicator" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
                 "extraction_protocol_sonication_cycles" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
@@ -89,7 +90,7 @@
                 "medip_antibody_lot" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The lot identifier of the antibody."}}
             }
         },
-
+ 
         "mre-seq": {
             "type": "object",
             "properties": {
@@ -98,14 +99,14 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["MRE-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "mre_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The MRE protocol."}},
                 "mre_protocol_chromatin_amount" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of chromatin used in the MRE protocol."}},
                 "mre_protocol_restriction_enzyme" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The restriction enzyme(s) used in the MRE protocol."}},
                 "mre_protocol_size_fraction" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The size of the fragments selected in the MRE protocol."}}
             }
         },
-
+ 
         "chip-seq": {
             "type": "object",
             "properties": {
@@ -117,7 +118,7 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["ChIP-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
                 "extraction_protocol_type_of_sonicator" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
                 "extraction_protocol_sonication_cycles" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
@@ -138,7 +139,7 @@
                 {"required": ["experiment_target_histone"]}
             ]
         },
-
+ 
         "rna-seq": {
             "type": "object",
             "properties": {
@@ -147,7 +148,7 @@
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["RNA-Seq", "miRNA-Seq"]}},
                 "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["polyA RNA", "total RNA", "nuclear RNA", "cytoplasmic RNA", "small RNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
                 "extraction_protocol_rna_enrichment" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The mRNA enrichment method used in the extraction protocol."}},
                 "extraction_protocol_fragmentation" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragmentation method used in the extraction protocol."}},
@@ -179,18 +180,18 @@
                 "library_generation_5'_adapter_sequence" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the 5' adapter used for library generation."}}
             }
         },
-
+ 
         "wgs": {
             "type": "object",
             "properties": {
                 "experiment_type" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["WGS"]}},
                 "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["WGS"]}},
                 "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
-
+ 
                 "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}}
             }
         },
-
+ 
         "other": {
             "type": "object",
             "properties": {
