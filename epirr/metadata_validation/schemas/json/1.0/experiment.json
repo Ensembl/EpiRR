@@ -1,0 +1,210 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://epigenomesportal.ca/schemas/experiment.json",
+    "title": "IHEC Data Hub Experiment schema",
+    "description": "IHEC Data Hub Experiment schema",
+    "type" : "object",
+
+    "properties": {
+        "reference_registry_id": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Otherwise leave empty."}},
+
+        "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) The assay target (e.g. ‘DNA Methylation’, ‘mRNA-Seq’, ‘smRNA-Seq’, 'Histone H3K4me1')."}},
+        "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Ontology: OBI) links to experiment ontology information."}},
+        "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) The assay used. These are defined within the SRA metadata specifications with a controlled vocabulary (e.g. ‘Bisulfite-Seq’, ‘RNA-Seq’, ‘ChIP-Seq’). For a complete list, see https://www.ebi.ac.uk/ena/submit/reads-library-strategy."}},
+        "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Ontology: SO) links to molecule ontology information."}},
+        "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["total RNA", "polyA RNA", "cytoplasmic RNA", "nuclear RNA", "small RNA", "genomic DNA", "protein", "other"], "description": "(Controlled Vocabulary) The type of molecule that was extracted from the biological material. Include one of the following: total RNA, polyA RNA, cytoplasmic RNA, nuclear RNA, small RNA, genomic DNA, protein, or other."}}
+    },
+    "required": ["library_strategy"],
+
+    "allOf": [
+        {"anyOf": [
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/chromatin_accessibility" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/bisulfite-seq" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/medip-seq" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/mre-seq" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/chip-seq" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/rna-seq" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/wgs" },
+            { "$ref": "file:../schemas/json/1.0/experiment.json#/definitions/other" }
+        ]},
+        {"anyOf": [
+            {"required": ["experiment_ontology_uri"]},
+            {"required": ["experiment_type"]}
+        ]}
+    ],
+
+    "definitions": {
+        "chromatin_accessibility": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Chromatin Accessibility"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNase-Hypersensitivity", "ATAC-seq", "NOME-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+                "dnase_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used for DNAse treatment."}}
+            }
+        },
+
+        "bisulfite-seq": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNA Methylation"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Bisulfite-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+                "extraction_protocol_type_of_sonicator": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
+                "extraction_protocol_sonication_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
+                "dna_preparation_initial_dna_qnty": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The initial DNA quantity used in preparation."}},
+                "dna_preparation_fragment_size_range": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The DNA fragment size range used in preparation."}},
+                "dna_preparation_adaptor_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the adaptor used in preparation."}},
+                "dna_preparation_adaptor_ligation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used for adaptor ligation."}},
+                "dna_preparation_post-ligation_fragment_size_selection": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragment size selection after adaptor ligation."}},
+                "bisulfite_conversion_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The bisulfite conversion protocol."}},
+                "bisulfite_conversion_percent": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The bisulfite conversion percent and how it was determined."}},
+                "library_generation_pcr_template_conc": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The PCR template concentration for library generation."}},
+                "library_generation_pcr_polymerase_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The PCR polymerase used for library generation"}},
+                "library_generation_pcr_thermocycling_program": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The thermocycling program used for library generation."}},
+                "library_generation_pcr_number_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of PCR cycles used for library generation."}},
+                "library_generation_pcr_f_primer_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the PCR forward primer used for library generation."}},
+                "library_generation_pcr_r_primer_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the PCR reverse primer used for library generation."}},
+                "library_generation_pcr_primer_conc": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The concentration of the PCR primers used for library generation."}},
+                "library_generation_pcr_product_isolation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for isolating PCR products used for library generation."}}
+            }
+        },
+
+        "medip-seq": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNA Methylation"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["MeDIP-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+                "extraction_protocol_type_of_sonicator": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
+                "extraction_protocol_sonication_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
+                "medip_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The MeDIP protocol used."}},
+                "medip_protocol_dna_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of DNA used in the MeDIP protocol."}},
+                "medip_protocol_bead_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of bead used in the MeDIP protocol."}},
+                "medip_protocol_bead_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of beads used in the MeDIP protocol."}},
+                "medip_protocol_antibody_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of antibody used in the MeDIP protocol."}},
+                "medip_antibody": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The specific antibody used in the MeDIP protocol."}},
+                "medip_antibody_provider": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The name of the company, laboratory or person that provided the antibody."}},
+                "medip_antibody_catalog": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The catalog from which the antibody was purchased."}},
+                "medip_antibody_lot": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The lot identifier of the antibody."}}
+            }
+        },
+
+        "mre-seq": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNA Methylation"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["MRE-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "mre_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The MRE protocol."}},
+                "mre_protocol_chromatin_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of chromatin used in the MRE protocol."}},
+                "mre_protocol_restriction_enzyme": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The restriction enzyme(s) used in the MRE protocol."}},
+                "mre_protocol_size_fraction": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The size of the fragments selected in the MRE protocol."}}
+            }
+        },
+
+        "chip-seq": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "pattern": "^(ChIP-Seq Input)|(Histone H\\w+([\\./]\\w+)?)+$|(Transcription Factor)"}},
+                "experiment_target_tf": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled vocabulary) An HGNC gene symbol"}},
+                "experiment_target_tf_modification": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "Post-transcriptional modification of the target protein"}},
+                "experiment_target_histone": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["H2AFZ", "H2AK5ac", "H2AK9ac", "H2BK120ac", "H2BK12ac", "H2BK15ac", "H2BK20ac", "H2BK5ac", "H3F3A", "H3K14ac", "H3K18ac", "H3K23ac", "H3K23me2", "H3K27ac", "H3K27me3", "H3K36me3", "H3K4ac", "H3K4me1", "H3K4me2", "H3K4me3", "H3K56ac", "H3K79me1", "H3K79me2", "H3K9ac", "H3K9me1", "H3K9me2", "H3K9me3", "H3T11ph", "H4K12ac", "H4K20me1", "H4K5ac", "H4K8ac", "H4K91ac"], "description": "Target histone mark"}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["ChIP-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+                "extraction_protocol_type_of_sonicator": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of sonicator used for extraction."}},
+                "extraction_protocol_sonication_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of sonication cycles used for extraction."}},
+                "chip_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The ChIP protocol used."}},
+                "chip_protocol_chromatin_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of chromatin used in the ChIP protocol."}},
+                "chip_protocol_bead_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The type of bead used in the ChIP protocol."}},
+                "chip_protocol_bead_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of beads used in the ChIP protocol."}},
+                "chip_protocol_antibody_amount": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The amount of antibody used in the ChIP protocol."}},
+                "chip_antibody": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The specific antibody used in the ChIP protocol."}},
+                "chip_antibody_provider": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The name of the company, laboratory or person that provided the antibody."}},
+                "chip_antibody_catalog": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The catalog from which the antibody was purchased."}},
+                "chip_antibody_lot": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The lot identifier of the antibody."}},
+                "chip_protocol_crosslink_time": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The timespan in which the chromatin is crosslinked"}},
+                "library_generation_fragment_size_range": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragment size range of the preparation."}}
+            }
+        },
+
+        "rna-seq": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["RNA-Seq", "mRNA-Seq", "smRNA-Seq", "total-RNA-Seq"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["RNA-Seq", "miRNA-Seq"]}},
+                "molecule_ontology_uri" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["polyA RNA", "total RNA", "nuclear RNA", "cytoplasmic RNA", "small RNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+                "extraction_protocol_rna_enrichment": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The mRNA enrichment method used in the extraction protocol."}},
+                "extraction_protocol_fragmentation": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragmentation method used in the extraction protocol."}},
+                "rna_preparation_fragment_size_range": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The mRNA fragment size range of the preparation."}},
+                "rna_preparation_5'_rna_adapter_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the 5’ RNA adapter used in preparation."}},
+                "rna_preparation_3'_rna_adapter_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the 3’ RNA adapter used in preparation."}},
+                "rna_preparation_reverse_transcription_primer_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the primer for reverse transcription used in preparation."}},
+                "rna_preparation_5'_dephosphorylation": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for 5’ dephosphorylation used in preparation."}},
+                "rna_preparation_5'_phosphorylation": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for 5’ phosphorylation used in preparation."}},
+                "rna_preparation_3'_rna_adapter_ligation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for 3’ adapter ligation used in preparation."}},
+                "rna_preparation_5'_rna_adapter_ligation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for 5’ adapter ligation used in preparation."}},
+                "library_generation_pcr_template_conc": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The PCR template concentration for library generation."}},
+                "library_generation_pcr_polymerase_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The PCR polymerase used for library generation"}},
+                "library_generation_pcr_thermocycling_program": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The thermocycling program used for library generation."}},
+                "library_generation_pcr_number_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of PCR cycles used for library generation."}},
+                "library_generation_pcr_f_primer_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the PCR forward primer used for library generation."}},
+                "library_generation_pcr_r_primer_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the PCR reverse primer used for library generation."}},
+                "library_generation_pcr_primer_conc": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The concentration of the PCR primers used for library generation."}},
+                "library_generation_pcr_product_isolation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for isolating PCR products used for library generation."}},
+                "template_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) mRNA or cDNA - The type of template, if applicable."}},
+                "amplified": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "(Controlled Vocabulary) True or False - Is the sample amplified?"}},
+                "preparation_initial_rna_qnty": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The initial RNA quantity used in preparation."}},
+                "preparation_reverse_transcription_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol for reverse transcription used in preparation."}},
+                "preparation_pcr_number_cycles": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The number of PCR cycles used to amplify."}},
+                "library_generation_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to generate the library."}},
+                "library_generation_fragmentation": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragmentation method used in the library protocol."}},
+                "library_generation_fragment_size_range": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The fragment size range of the preparation."}},
+                "library_generation_3'_adapter_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the 3' adapter used for library generation."}},
+                "library_generation_5'_adapter_sequence": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The sequence of the 5' adapter used for library generation."}}
+            }
+        },
+
+        "wgs": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["WGS"]}},
+                "library_strategy": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["WGS"]}},
+                "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+
+                "extraction_protocol": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}}
+            }
+        },
+
+        "other": {
+            "type": "object",
+            "properties": {
+                "experiment_type": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Other"]}},
+                "experiment_ontology_uri": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string"}}
+            }
+        }
+    }
+}

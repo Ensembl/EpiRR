@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://epigenomesportal.ca/schemas/hub.json",
+    "title": "IHEC Data Hub main schema",
+    "description": "IHEC Data Hub main schema",
+    "type" : "object",
+    "version": "1.1",
+
+    "properties": {
+        "hub_description": { "$ref": "#/definitions/hub_description", "description": "General information on the hub content." },
+        "datasets": { "type": "object", "additionalProperties": {"$ref": "file:../schemas/json/1.0/dataset.json"} },
+        "samples": { "type": "object", "additionalProperties": {"$ref": "file:../schemas/json/1.0/sample.json"} }
+    },
+    "required": ["hub_description", "datasets", "samples"],
+
+    "definitions": {
+        "hub_description": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string", "description": "Name of the IHEC Data Hub, as it should appear on a list or directory."},
+                "publishing_group": {"type": "string", "description": "The consortia, project or lab publishing this data hub."},
+                "email": {"type": "string", "format": "email", "description": "Write-to address for enquiries about the data hub."},
+                "date": {"type": "string", "format": "date", "description": "Data hub release date, in ISO 8601 format."},
+                "description": {"type": "string", "description": "A description of the hub content."},
+                "description_url": {"type": "string", "description": "A link to an HTML document describing of the hub content, or its connected project."},
+
+                "taxon_id": {"type": "integer", "description": "Taxonomy ID, as can be found on NCBI resources. (e.g. '9606' for human)"},
+                "assembly": {"type": "string", "description": "Assembly version as it can be found on the UCSC Genome Browser site. (e.g. hg19, hg38, mm10)"}
+            },
+            "required": ["name", "publishing_group", "email", "date", "taxon_id", "assembly"]
+        }
+    }
+}

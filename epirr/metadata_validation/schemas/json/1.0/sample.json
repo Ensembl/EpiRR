@@ -1,0 +1,307 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://epigenomesportal.ca/schemas/sample.json",
+    "title": "IHEC Data Hub Sample schema",
+    "description": "The IHEC Data Hub Sample schema covers all metadata requested by IHEC Metadata Standards, as specified here: https://github.com/IHEC/ihec-metadata/blob/master/specs/Ihec_metadata_specification.md",
+    "type" : "object",
+
+    "properties": {
+        "sample_ontology_uri" : {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri"},
+          "description": "(Ontology: EFO) links to sample ontology information."
+        },
+        "disease_ontology_uri" : {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "string",
+            "format": "uri"},
+          "description": "(Ontology: NCIM) links to sample disease ontology information. This property reflects the disease for this particular sample, not for the donor health condition. The NCImetathesaurus term C0277545 “Disease type AND/OR category unknown” should be used for unknown diseases. Phenotypes associated with the disease should be submitted as DISEASE_ONTOLOGY_URIs (if available) or in the free form DISEASE attribute. For samples without any known disease, use the NCImetathesaurus C0549184 term 'None'. If dealing with a rare disease consider identifiability issues."
+        },
+        "disease" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "Free form field for more specific sample disease information. This property reflects the disease for this particular sample, not for the donor health condition. If dealing with a rare disease consider identifiability issues."
+        },
+        "biomaterial_provider" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "The name of the company, laboratory or person that provided the biological material."
+        },
+        "biomaterial_type" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string",
+            "enum":["Cell Line", "Primary Cell", "Primary Cell Culture", "Primary Tissue"]},
+          "description": "The type of the biosample used (Cell Line, Primary Cell, Primary Cell Culture, Primary Tissue)"
+        },
+        "treatment" : {
+          "type": "array", "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "Any artificial modification (differentiation, activation, genome editing, etc)."
+        },
+        "biological_replicates": {
+          "type": "array",
+          "items": {
+            "type": "string"},
+          "description": "List of biological replicate sample accessions"
+        }
+    },
+
+    "required": ["sample_ontology_uri", "disease_ontology_uri", "disease", "biomaterial_provider", "biomaterial_type"],
+
+    "allOf": [
+    {
+      "if": {
+        "properties": {
+          "biomaterial_type": {"const": ["Cell Line"]}
+        },
+        "required": ["biomaterial_type"]
+      },
+      "then": {
+        "properties": {
+          "line" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The name of the cell line."
+          },
+          "lineage" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The developmental lineage to which the cell line belongs."
+          },
+          "differentiation_stage" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The stage in cell differentiation to which the cell line belongs."
+          },
+          "differentiation_method" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The protocol used to differentiation the cell line."
+          },
+          "passage" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The number of times the cell line has been re-plated and allowed to grow back to confluency or to some maximum density if using suspension cultures."
+          },
+          "medium" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The medium in which the cell line has been grown."
+          },
+          "sex" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string",
+              "enum": ["Male", "Female", "Unknown", "Mixed"]},
+            "description": "'Male', 'Female', 'Unknown', or 'Mixed' for pooled samples."
+          },
+          "batch" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The batch from which the cell line is derived. Primarily applicable to initial H1 cell line batches. NA if not applicable."
+          }
+        },
+        "required": ["line", "lineage", "differentiation_stage", "differentiation_method", "passage", "medium", "sex", "batch"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "biomaterial_type": {"const": ["Primary Cell"]}
+        },
+        "required": ["biomaterial_type"]
+      },
+      "then": {
+        "properties": {
+          "origin_sample_ontology_uri" : {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uri"},
+            "description": "(Ontology: UBERON) links to the tissue from which sample was extracted."
+          },
+          "origin_sample" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "Description of the origin tissue from which sample was extracted."
+          },
+          "cell_type" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "The type of cell."
+          },
+          "markers" : {
+            "type": "array", "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "Markers used to isolate and identify the cell type."
+          },
+          "passage_if_expanded" : {
+            "type": "array",
+            "minItems": 1, "maxItems": 1,
+            "items": {
+              "type": "string"},
+            "description": "If the primary cell has been expanded, the number of times the primary cell has been re-plated and allowed to grow back to confluency or to some maximum density if using suspension cultures. NA if no expansion."
+          }
+        },
+        "required": ["origin_sample_ontology_uri", "origin_sample", "cell_type", "markers", "passage_if_expanded"],
+        "allOf": [{ "$ref": "file:../schemas/json/1.0/sample.json#/definitions/donor" }]
+      }
+    },
+    {"if": {
+             "properties": {
+               "biomaterial_type": {"const": ["Primary Cell Culture"]}
+             },
+             "required": ["biomaterial_type"]
+           },
+    "then": {
+      "properties": {
+        "origin_sample_ontology_uri" : {
+          "type": "array", "minItems": 1, "items": {
+            "type": "string",
+            "format": "uri"},
+          "description": "(Ontology: UBERON) links to the tissue from which sample was extracted."
+        },
+        "origin_sample" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "Description of the origin tissue from which sample was extracted."
+        },
+        "cell_type" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": ""
+        },
+        "markers" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "Markers used to isolate and identify the cell type."
+        },
+        "culture_conditions" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "The conditions under which the primary cell was cultured."
+        },
+        "passage_if_expanded" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "If the primary cell culture has been expanded, the number of times the primary cell culture has been re-plated and allowed to grow back to confluency or to some maximum density if using suspension cultures. NA if no expansion."
+        }
+      },
+      "required": ["origin_sample_ontology_uri", "origin_sample", "cell_type", "markers", "culture_conditions", "passage_if_expanded"],
+      "allOf": [{ "$ref": "file:../schemas/json/1.0/sample.json#/definitions/donor" }]
+    }
+    },
+    {"if": {
+             "properties": {
+               "biomaterial_type": {"const": ["Primary Tissue"]}
+             },
+             "required": ["biomaterial_type"]
+           },
+    "then": {
+      "properties": {
+        "tissue_type" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "The type of tissue."
+        },
+        "tissue_depot" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "Details about the anatomical location from which the primary tissue was collected."
+        },
+        "collection_method" : {
+          "type": "array", "minItems": 1, "maxItems": 1,
+          "items": {
+            "type": "string"},
+          "description": "The protocol for collecting the primary tissue."
+        }
+      },
+      "required": ["tissue_type", "tissue_depot", "collection_method"],
+      "allOf": [{ "$ref": "file:../schemas/json/1.0/sample.json#/definitions/donor" }]
+    }
+    }
+    ],
+      "definitions": {
+        "donor": {
+          "type": "object",
+          "description": "Additional set of properties for samples coming from a donor.",
+          "properties": {
+            "donor_id" : {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "string"},
+              "description": "An identifying designation for the donor that provided the cells/tissues."
+              },
+            "donor_age" : {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "oneOf": [
+                  { "type": "number" },
+                  { "type": "string", "enum": ["90+", "NA"] },
+                  { "type": "string", "pattern": "^\\d+-\\d+$" }
+                ]},
+              "description": "The age of the donor that provided the cells/tissues. NA if not available. If over 90 years enter as 90+. If entering a range of ages use the format “{age}-{age}”."
+            },
+            "donor_age_unit" : {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "string",
+                "enum": ["year", "month", "week", "day", "gestational weeks"]},
+              "description": "The unit of measurement used to describe the age of the sample (year, month, week, day, gestational weeks)"
+            },
+            "donor_life_stage": {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "string",
+                "enum": ["embryonic", "fetal", "postnatal", "newborn", "child", "adult", "unknown"]},
+              "description": "The stage or phase of the donor when the sample was taken (embryonic, fetal, postnatal, newborn, child, adult, unknown)"
+            },
+            "donor_health_status" : {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "string"},
+              "description": "The health status of the donor that provided the primary cell. NA if not available."
+            },
+            "donor_health_status_ontology_uri" : {
+              "type": "array", "minItems": 1,
+              "items": {
+                "type": "string",
+                "format": "uri"},
+              "description": "(Ontology: NCIM) Links to the health status of the donor that provided the primary cell. The NCImetathesaurus term C0277545 'Disease type AND/OR category unknown' should be used for unknown diseases. For samples without any known disease, use the NCImetathesaurus term C0549184 'None'. Phenotypes associated with the disease should be submitted as DISEASE_ONTOLOGY_URIEs (if available) or in the free form DISEASE attribute. If dealing with a rare disease, please consider identifiability issues."
+          },
+            "donor_sex" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Male", "Female", "Unknown", "Mixed"], "description": "'Male', 'Female', 'Unknown', or 'Mixed' for pooled samples."}},
+            "donor_ethnicity" : {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "string"},
+              "description": "The ethnicity of the donor that provided the primary cell. NA if not available. If dealing with small/vulnerable populations consider identifiability issues."
+          }
+          },
+          "required": ["donor_id", "donor_age", "donor_age_unit", "donor_life_stage", "donor_health_status_ontology_uri", "donor_health_status", "donor_sex", "donor_ethnicity"]
+        }
+      }
+}
