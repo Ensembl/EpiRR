@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     ifile, ofile = get_options(sys.argv[1:])
     xml = read_file(ifile)
-    x = Experiment(xml, 'experiment')
+    x = Experiment(xml)
     print(x.library_strategy)
     print(x.experiment_type)
     print(x.sample_accession)
