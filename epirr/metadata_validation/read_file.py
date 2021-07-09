@@ -1,9 +1,7 @@
 import sys, getopt, xmltodict, json, requests
-from XmlTest import XmlTest
 from collections import OrderedDict
+from pprint import pprint
 
- 
-   
 def read_file(ifile):
     with open(ifile, 'r') as file:
         return file.read()
@@ -29,39 +27,49 @@ def get_options(argv):
             sys.exit()
     return ifile, ofile
 
-def create_post_request(object, ofile):
-    """
+# def create_post_request(object, ofile):
+#     """
 
-    """
-    url_schema_experiment = 'https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json'
-    url_schema_sample = 'https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json'
+#     """
+#     url_schema_experiment = 'https://raw.githubusercontent.com/Ensembl/EpiRR/epirr_2.0/epirr/metadata_validation/files/experiment_schema_new.json'
+#     # url_schema_sample = 'https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/sample.json'
 
 
-    schema_experiment =  OrderedDict(json.loads(requests.get(url_schema_experiment).text))
-    schema_sample = OrderedDict(json.loads(requests.get(url_schema_sample).text))
+#     schema_experiment =  OrderedDict(json.loads(requests.get(url_schema_experiment).text))
+#     # schema_sample = OrderedDict(json.loads(requests.get(url_schema_sample).text))
 
-    input = OrderedDict()
-    input['schema'] = schema_experiment
-    input['object'] = object
-    with open(ofile,mode='w',) as f:
-        f.write(json.dumps(input))
+#     input = OrderedDict()
+#     input['schema'] = schema_experiment
+#     input['object'] = object
+#     with open(ofile,mode='w',) as f:
+#         f.write(json.dumps(input,indent=4))
 
-    # print(type(schema_experiment))
-    # print(type(object))
-    # print(type(input))
+#     # print(type(schema_experiment))
+#     # print(type(object))
+#     # print(type(input))
 
-def get_schema(url):
-    return OrderedDict(json.loads(requests.get(url).text))
+# def get_schema(url):
+#     return OrderedDict(json.loads(requests.get(url).text))
 
 
 if __name__ == "__main__":
-    ifile, ofile = get_options(sys.argv[1:])
-    # main(sys.argv[1:])
-    xml = read_file(ifile)
-    xml_test = XmlTest(xml)
+    from Xml import Xml
+    from Experiment import Experiment
 
-    # xml_test.validate()
-    o = xml_test.convert_xml_to_json()
-    create_post_request(o, ofile)
-    # # print(type(o))
-    # # print(json.dumps(o,indent=4))
+    ifile, ofile = get_options(sys.argv[1:])
+    xml = read_file(ifile)
+    x = Experiment(xml, 'experiment')
+    print(x.library_strategy)
+    print(x.experiment_type)
+    print(x.sample_accession)
+    pprint(x.experiment_attributes)
+    print(type(x.json))
+    # xml_test = XmlTest(xml)
+
+    # # xml_test.validate()
+    # o = xml_test.json
+    # print(type(o))
+    # print(o)
+    # create_post_request(o, ofile)
+    # # # print(type(o))
+    # # # print(json.dumps(o,indent=4))
