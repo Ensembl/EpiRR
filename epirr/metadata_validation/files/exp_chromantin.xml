@@ -13,7 +13,7 @@
       </STUDY_REF>
       <DESIGN>
          <DESIGN_DESCRIPTION>See http://epigenomesportal.ca/edcc/doc/</DESIGN_DESCRIPTION>
-         <SAMPLE_DESCRIPTOR ccession="ERS668794">
+         <SAMPLE_DESCRIPTOR accession="ERS668794">
             <IDENTIFIERS>
                <PRIMARY_ID>ERS668794</PRIMARY_ID>
             </IDENTIFIERS>

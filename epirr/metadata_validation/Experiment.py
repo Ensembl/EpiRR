@@ -5,13 +5,12 @@ import json
 import re
 
 class Experiment(Xml):
-    def __init__(self, xml) -> None:
-        super().__init__(xml, 'experiment')
+    def __init__(self, xml: str, path_to_sra_xsd: str) -> None:
+        super().__init__(xml, 'experiment', path_to_sra_xsd)
         self._library_strategy = None
         self._experiment_type = None
         self._experiment_attributes = {}
         self._sample_accession = None
-        self._sra_passed = False
         self._ihec_version = []
         self._json = {}
         self._libary_strategy_to_experiment_type = {}
@@ -44,7 +43,7 @@ class Experiment(Xml):
 
     @property
     def json(self) -> json:
-        return {f'"library_strategy": {self._set_library_strategy},{self.experiment_attributes}'}
+        return {f'"library_strategy": {self.library_strategy},{self.experiment_attributes}'}
 
 
     def _set_library_strategy(self):
@@ -79,6 +78,7 @@ class Experiment(Xml):
         attributes = self.etree.xpath(".//EXPERIMENT_ATTRIBUTES/*")
         for a in attributes:
             self._experiment_attributes[a.find("TAG").text.lower()] = a.find("VALUE").text.lower()
+            print(type(self._experiment_attributes))
 
     def _set_libary_strategy_to_experiment_type(self):
         ""

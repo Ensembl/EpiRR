@@ -1,19 +1,37 @@
 import lxml.etree
+import abc
+from typing import List
+import sys
+
 
 class Xml():
-    def __init__(self, xml_doc: str, xml_type: str) -> None:
+    def __init__(self, xml_doc: str, xml_type: str, path_to_sra_xsd: str) -> None:
+        self._path_to_sra_xsd = path_to_sra_xsd
+        self._xml_parser = None
+        self._sra_schema = None
         self._xml = None
         self._etree = None
         self.xml = xml_doc
         self.etree = self.xml
         self.xml_type = xml_type
+        self._sra_passed = False
+        self._ihec_version = []
+        self._json = {}
+
+        self._initiate_xml_parser()
+        self._load_sra_schema()
+        self.validate_sra()
+
+    @property
+    def path_to_sra_xsd(self):
+        return self._path_to_sra_xsd
 
     @property
     def xml(self) -> str:
         return self._xml
 
     @xml.setter
-    def xml(self, xml: str) -> None:
+    def xml(self, xml: str):
         self._xml = xml.strip()
 
     @property
@@ -23,9 +41,53 @@ class Xml():
     @etree.setter
     def etree(self, xml: str) -> None:
         try:
-            self._etree = lxml.etree.fromstring(xml.encode('utf-8'))
+            self._etree = lxml.etree.fromstring(xml.encode('utf-8'), parser=self._xml_parser)
         except lxml.etree.ParseError:
             raise ValueError("Invalid XML")
+
+    @property
+    def sra_passed(self) -> bool:
+        return self._sra_passed
+    
+    @property
+    def ihec_version(self) -> List[float]:
+        return self._ihec_version
+    
+    @ihec_version.setter
+    def ihec_version(self, value: float):
+        self._ihec_version.append(value)
+        self._ihec_version.sort()
+        
+    @property
+    @abc.abstractmethod
+    def json(self):
+        pass
+
+    def _initiate_xml_parser(self):
+        try:
+            self._xml_parser = lxml.etree.XMLParser(ns_clean=True,remove_blank_text=True,remove_comments=True,remove_pis=True)
+        except Exception as e:
+            print(f"Could not initiate XMLParser '{e}'")
+        
+    def _load_sra_schema(self):
+        try:
+            xmlschema_doc = lxml.etree.parse(self.path_to_sra_xsd, parser=self._xml_parser)
+            self._sra_schema = lxml.etree.XMLSchema(xmlschema_doc)
+        except Exception as e:
+            print(f"Could not initiate SRA schema '{e}'")
+
+    def validate_sra(self):
+        try:
+            self.sra_passed = self._sra_schema.assertValid(self.etree)
+        except lxml.etree.DocumentInvalid as e:
+            print(e)
+        except Exception as e:
+            print(f"Error: '{e}'")
+            quit()
+        
+
+            
+
 
     # @property
     # def type(self) -> str:
@@ -52,17 +114,17 @@ class Xml():
     #         return("Invalid URL")
     #     self._schema_url = schema_url
 
-    ls = {}
-    ls["DNase-Hypersensitivity"] = "chromatin_accessibility"
-    ls["ATAC-seq"] = "chromatin_accessibility" 
-    ls["NOME-Seq"] = "chromatin_accessibility"
-    ls["Bisulfite-Seq"] = "bisulfite-seq"
-    ls["MeDIP-Seq"] = "medip-seq"
-    ls["MRE-Seq"] = "mre-seq"
-    ls["ChIP-Seq"] = "chip-seq"
-    ls["RNA-Seq"] = "rna-seq"
-    ls["miRNA-Seq"] = "rna-seq"
-    ls["WGS"] = "wgs"
+    # ls = {}
+    # ls["DNase-Hypersensitivity"] = "chromatin_accessibility"
+    # ls["ATAC-seq"] = "chromatin_accessibility" 
+    # ls["NOME-Seq"] = "chromatin_accessibility"
+    # ls["Bisulfite-Seq"] = "bisulfite-seq"
+    # ls["MeDIP-Seq"] = "medip-seq"
+    # ls["MRE-Seq"] = "mre-seq"
+    # ls["ChIP-Seq"] = "chip-seq"
+    # ls["RNA-Seq"] = "rna-seq"
+    # ls["miRNA-Seq"] = "rna-seq"
+    # ls["WGS"] = "wgs"
 
 
 """ 

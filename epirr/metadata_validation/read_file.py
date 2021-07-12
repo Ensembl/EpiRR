@@ -9,23 +9,26 @@ def read_file(ifile):
 def get_options(argv):
     ifile = ''  
     ofile = f'{sys.argv[0]}.out.json'
+    sra_schema = ''
     try:
-        opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+        opts, args = getopt.getopt(argv,"hi:o:s:",["ifile=","ofile=","sra="])
     except getopt.GetoptError:
-        print ('test.py -i <inputfile> -o <outputfile>')
+        print ('test.py -i <inputfile> -o <outputfile> -s <path_to_sra_xsd>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print ('test.py -i <inputfile> -o <outputfile>')
+            print ('test.py -i <inputfile> -o <outputfile> -s <path_to_sra_xsd>')
             sys.exit()
         elif opt in ("-i", "--ifile"):
             ifile = arg
         elif opt in ("-o", "--ofile"):
             ofile = arg
+        elif opt in ("-s", "--ofile"):
+            sra_schema = arg
         else:
             print ('test.py -i <inputfile> -o <outputfile>')
             sys.exit()
-    return ifile, ofile
+    return ifile, ofile, sra_schema
 
 # def create_post_request(object, ofile):
 #     """
@@ -56,14 +59,20 @@ if __name__ == "__main__":
     from Xml import Xml
     from Experiment import Experiment
 
-    ifile, ofile = get_options(sys.argv[1:])
+    ifile, ofile, sra_schema = get_options(sys.argv[1:])
     xml = read_file(ifile)
-    x = Experiment(xml)
+    try:
+        x = Experiment(xml, sra_schema)
+    except Exception as e:
+        print(f"Eror: '{e}'")
+        sys.exit(1)
     print(x.library_strategy)
     print(x.experiment_type)
     print(x.sample_accession)
     pprint(x.experiment_attributes)
     print(type(x.json))
+    print(x.json)
+    print(json.dumps(x.json,indent=4))
     # xml_test = XmlTest(xml)
 
     # # xml_test.validate()
