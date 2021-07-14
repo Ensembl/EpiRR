@@ -1,0 +1,17 @@
+{
+    "json": {
+        "1.0": {
+            "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/1.0/experiment.json",
+            "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/1.0/sample.json"
+        },
+        "2.0": {
+            "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json",
+            "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/sample.json"
+        }
+    },
+    "sra":{
+        "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.experiment.xsd",
+        "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd"
+    }
+
+}

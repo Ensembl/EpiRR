@@ -1,6 +1,7 @@
 import sys, getopt, xmltodict, json, requests
 from collections import OrderedDict
 from pprint import pprint
+import traceback
 
 def read_file(ifile):
     with open(ifile, 'r') as file:
@@ -58,20 +59,23 @@ def get_options(argv):
 if __name__ == "__main__":
     from Xml import Xml
     from Experiment import Experiment
+    from Sample import Sample
 
     ifile, ofile, sra_schema = get_options(sys.argv[1:])
     xml = read_file(ifile)
     try:
-        x = Experiment(xml, sra_schema)
+        x = Sample(xml, sra_schema)
     except Exception as e:
+        traceback.print_exc()
+
         print(f"Eror: '{e}'")
         sys.exit(1)
-    print(x.library_strategy)
-    print(x.experiment_type)
-    print(x.sample_accession)
-    pprint(x.experiment_attributes)
-    print(type(x.json))
-    print(x.json)
+
+    # try:
+    #     x = Experiment(xml, sra_schema)
+    # except Exception as e:
+    #     print(f"Eror: '{e}'")
+    #     sys.exit(1)
     print(json.dumps(x.json,indent=4))
     # xml_test = XmlTest(xml)
 

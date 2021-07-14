@@ -1,35 +1,37 @@
 from Xml import Xml
 import lxml.etree
 import re
-
+import json
+import copy
 
 from pprint import pprint
 
 class Sample(Xml):
-    def __init__(self, xml) -> None:
-        super().__init__(xml, 'sample')
+    def __init__(self, xml, path_to_sra_xsd) -> None:
+        super().__init__(xml, 'sample', path_to_sra_xsd)
         self._biomaterial_type = None
         self._sample_attributes = {}
-        
-        self.json = {}
+        self._json = {}
 
         self._set_biomaterial_type()
         self._set_sample_attributes()
 
     @property
     def biomaterial_type(self):
-        return self._biomaterial_type
-    
+        return self._
+    @property
+    def sample_attributes(self) -> str:
+        return self._sample_attributes
     @property
     def json(self) -> json:
-        return {self.sample_attributes}
+        return self.sample_attributes
     
-    def _set_biomaterial_type(self, etree: lxml.etree) -> str:
+    def _set_biomaterial_type(self) -> str:
         """Test and set biomaterial_type"""
         allowed = "^(cell line)$|^(primary cell)$|^(primary cell culture)$|^(primary tissue)$"
         xpath = ".//SAMPLE_ATTRIBUTE[TAG='BIOMATERIAL_TYPE']/VALUE"
         try:
-            biomaterial_type = etree.xpath(xpath)[0].text.lower()
+            biomaterial_type = self.etree.xpath(xpath)[0].text.lower()
         except:
             raise ValueError("BIOMATERIAL_TYPE missing")
         if not re.search(allowed, biomaterial_type):
@@ -38,6 +40,15 @@ class Sample(Xml):
     
     def _set_sample_attributes(self):
         """sample attributes"""
-        attributes = self.etree.xpath(".//sample_ATTRIBUTES/*")
+        # print(lxml.etree.tostring(self.etree, pretty_print = True).decode())
+
+        attributes = self.etree.xpath(".//SAMPLE_ATTRIBUTES/*")
+        print(attributes)
         for a in attributes:
-            self._sample_attributes[a.find("TAG").text.lower()] = a.find("VALUE").text.lower()
+            tag   = a.find("TAG").text.lower()
+            value = a.find("VALUE").text.lower()
+            print(f"{tag}\t{value}")
+
+            self._sample_attributes[tag] = value
+            # print(self.sample_attributes)
+        quit()

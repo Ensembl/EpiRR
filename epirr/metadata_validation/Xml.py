@@ -2,6 +2,7 @@ import lxml.etree
 import abc
 from typing import List
 import sys
+import traceback
 
 
 class Xml():
@@ -65,7 +66,7 @@ class Xml():
 
     def _initiate_xml_parser(self):
         try:
-            self._xml_parser = lxml.etree.XMLParser(ns_clean=True,remove_blank_text=True,remove_comments=True,remove_pis=True)
+            self._xml_parser = lxml.etree.XMLParser(ns_clean=True,remove_comments=True,remove_pis=True)
         except Exception as e:
             print(f"Could not initiate XMLParser '{e}'")
         
@@ -78,11 +79,12 @@ class Xml():
 
     def validate_sra(self):
         try:
-            self.sra_passed = self._sra_schema.assertValid(self.etree)
+            self._sra_passed = self._sra_schema.assertValid(self.etree)
         except lxml.etree.DocumentInvalid as e:
             print(e)
         except Exception as e:
-            print(f"Error: '{e}'")
+            # print(f"Error: '{e}'")
+            traceback.print_exc()
             quit()
         
 

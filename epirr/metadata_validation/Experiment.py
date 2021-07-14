@@ -3,6 +3,7 @@ from pprint import pprint
 import lxml.etree
 import json
 import re
+import copy
 
 class Experiment(Xml):
     def __init__(self, xml: str, path_to_sra_xsd: str) -> None:
@@ -43,8 +44,9 @@ class Experiment(Xml):
 
     @property
     def json(self) -> json:
-        return {f'"library_strategy": {self.library_strategy},{self.experiment_attributes}'}
-
+        y = copy.deepcopy(self.experiment_attributes)
+        y['library_strategy'] = self.library_strategy
+        return y
 
     def _set_library_strategy(self):
         if self.etree.xpath(".//LIBRARY_STRATEGY"):
@@ -78,7 +80,6 @@ class Experiment(Xml):
         attributes = self.etree.xpath(".//EXPERIMENT_ATTRIBUTES/*")
         for a in attributes:
             self._experiment_attributes[a.find("TAG").text.lower()] = a.find("VALUE").text.lower()
-            print(type(self._experiment_attributes))
 
     def _set_libary_strategy_to_experiment_type(self):
         ""
