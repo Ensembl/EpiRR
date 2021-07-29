@@ -1,0 +1,37 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: osx-64
+brotlipy=0.7.0=py38h9ed2024_1003
+ca-certificates=2021.5.25=hecd8cb5_1
+certifi=2021.5.30=py38hecd8cb5_0
+cffi=1.14.5=py38h2125817_0
+chardet=4.0.0=py38hecd8cb5_1003
+cryptography=3.4.7=py38h2fd3fbb_0
+decorator=5.0.9=pyhd3eb1b0_0
+icu=58.2=h0a44026_3
+idna=2.10=pyhd3eb1b0_0
+libcxx=10.0.0=1
+libffi=3.3=hb1e8313_2
+libiconv=1.16=h1de35cc_0
+libxml2=2.9.10=h7cdb67c_3
+libxslt=1.1.34=h83b36ba_0
+lxml=4.6.3=py38h26b266a_0
+ncurses=6.2=h0a44026_1
+openssl=1.1.1k=h9ed2024_0
+pip=21.1.2=py38hecd8cb5_0
+pycparser=2.20=py_2
+pyopenssl=20.0.1=pyhd3eb1b0_1
+pysocks=1.7.1=py38_1
+python=3.8.10=h88f2d9e_7
+readline=8.1=h9ed2024_0
+requests=2.25.1=pyhd3eb1b0_0
+setuptools=52.0.0=py38hecd8cb5_0
+six=1.16.0=pyhd3eb1b0_0
+sqlite=3.35.4=hce871da_0
+tk=8.6.10=hb0a8c7a_0
+urllib3=1.26.4=pyhd3eb1b0_0
+validators=0.18.2=pyhd3eb1b0_0
+wheel=0.36.2=pyhd3eb1b0_0
+xmltodict=0.12.0=py_0
+xz=5.2.5=h1de35cc_0
+zlib=1.2.11=h1de35cc_3
