@@ -8,45 +8,48 @@ from Xml import Xml
 from Experiment import Experiment
 from Sample import Sample
 
-def read_file(ifile):
-    with open(ifile, 'r') as file:
-        return file.read()
-
-
-
 def get_options():
-    my_parser = argparse.ArgumentParser(prog='read_file',
-                                    usage='(prog) -i <inputfile> -t <experiment or sample> [-o <outputfile>]',
-                                    description='Example for validator')
-    my_parser.add_argument('--inputfile',
-                        '-i',
-                        metavar='path',
-                        type=str,
-                        required=True,
-                        help='Path to XML inputfile')
-
-    my_parser.add_argument('--type',\
-                        '-t',
-                        type=str,
-                        choices=['experiment', 'sample'],
-                        required=True,
-                        help='Type of XML')
-
-    my_parser.add_argument('--outputfile',
-                        '-o',
-                        metavar='path',
-                        type=str,
-                        help='Output file')
-    my_parser.add_argument('--config',
-                        '-c',
-                        metavar='path',
-                        type=str,
-                        default='config.json',
-                        help='Config file')
+    my_parser = argparse.ArgumentParser(
+        prog='read_file',
+        usage='(prog) -i <inputfile> -t <experiment or sample> [-o <outputfile>]',
+        description='Example for validator')
     
+    my_parser.add_argument(
+        '--inputfile',
+        '-i',
+        metavar='path',
+        type=str,
+        required=True,
+        help='Path to XML inputfile')
+
+    my_parser.add_argument(
+        '--type',\
+        '-t',
+        type=str,
+        choices=['experiment', 'sample'],
+        required=True,
+        help='Type of XML')
+
+    my_parser.add_argument(
+        '--outputfile',
+        '-o',
+        metavar='path',
+        type=str,
+        help='Output file')
+    
+    my_parser.add_argument(
+        '--config',
+        '-c',
+        metavar='path',
+        type=str,
+        default='config.json',
+        help='Config file')
+
     return my_parser.parse_args()
 
-
+def read_file(file):
+    with open(file, 'r') as f:
+        return f.read()
 
 def read_json_file(file: str) ->dict:
     try:
@@ -54,8 +57,6 @@ def read_json_file(file: str) ->dict:
             return json.load(json_file)
     except Exception as e:
         raise ValueError(f"Issues with JSON file:'{file}': {e}")
-
-
 
 if __name__ == "__main__":
 
@@ -71,33 +72,27 @@ if __name__ == "__main__":
             object = Experiment(xml, xsd)
         except Exception as e:
             raise (f"Error creating Experiment object: '{e}'")
+    elif args.type == "sample":
+        try:
+            object = Sample(xml, xsd)
+        except Exception as e:
+            raise (f"Error creating Sample object: '{e}'")
+    else:
+        raise ValueError(f"Type must be experiment or sample")
 
     for version in config['json'][args.type] :
         validator_input['schema'] = read_json_file(config['json'][args.type][version][object.library_strategy])
         validator_input['object'] = object.json
-        print(f"£££££££££££££££ Version: {version} ££££££££££££££££££")
+        print(f">>>>>>>>>>> Version: {version} <<<<<<<<<<<<<<<")
         print(json.dumps(validator_input,indent=4))
 
 
 
 ############ Graveyard    
 
-    # # from Sample import Sample
-    # # from IhecValidator import IhecValidator
-    # import lxml.etree
-    # from urllib.request import urlopen
 
     # xsd = urlopen("https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd").read()
     # schema = lxml.etree.XMLSchema(lxml.etree.fromstring(xsd))
-
-
-    # test()
-    # v = IhecValidator('sample')
-    # print(v.config_url)
-
-
-
-    # print(json.dumps(v.config,indent=4))
 
     # xml = read_file(ifile)
     # try:
@@ -136,7 +131,3 @@ if __name__ == "__main__":
 # def get_schema(url):
 #     return OrderedDict(json.loads(requests.get(url).text))
 
-
-# def test():
-#     xsd = urlopen("https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd").read()
-#     schema = lxml.etree.XMLSchema(lxml.etree.fromstring(xsd))
