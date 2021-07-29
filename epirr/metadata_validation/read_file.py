@@ -1,35 +1,116 @@
-import sys, getopt, xmltodict, json, requests
-from collections import OrderedDict
+import sys, json
 from pprint import pprint
-import traceback
+import lxml.etree
+from urllib.request import urlopen
+import argparse
+
+from Xml import Xml
+from Experiment import Experiment
+from Sample import Sample
 
 def read_file(ifile):
     with open(ifile, 'r') as file:
         return file.read()
 
-def get_options(argv):
-    ifile = ''  
-    ofile = f'{sys.argv[0]}.out.json'
-    sra_schema = ''
+
+
+def get_options():
+    my_parser = argparse.ArgumentParser(prog='read_file',
+                                    usage='(prog) -i <inputfile> -t <experiment or sample> [-o <outputfile>]',
+                                    description='Example for validator')
+    my_parser.add_argument('--inputfile',
+                        '-i',
+                        metavar='path',
+                        type=str,
+                        required=True,
+                        help='Path to XML inputfile')
+
+    my_parser.add_argument('--type',\
+                        '-t',
+                        type=str,
+                        choices=['experiment', 'sample'],
+                        required=True,
+                        help='Type of XML')
+
+    my_parser.add_argument('--outputfile',
+                        '-o',
+                        metavar='path',
+                        type=str,
+                        help='Output file')
+    my_parser.add_argument('--config',
+                        '-c',
+                        metavar='path',
+                        type=str,
+                        default='config.json',
+                        help='Config file')
+    
+    return my_parser.parse_args()
+
+
+
+def read_json_file(file: str) ->dict:
     try:
-        opts, args = getopt.getopt(argv,"hi:o:s:",["ifile=","ofile=","sra="])
-    except getopt.GetoptError:
-        print ('test.py -i <inputfile> -o <outputfile> -s <path_to_sra_xsd>')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print ('test.py -i <inputfile> -o <outputfile> -s <path_to_sra_xsd>')
-            sys.exit()
-        elif opt in ("-i", "--ifile"):
-            ifile = arg
-        elif opt in ("-o", "--ofile"):
-            ofile = arg
-        elif opt in ("-s", "--ofile"):
-            sra_schema = arg
-        else:
-            print ('test.py -i <inputfile> -o <outputfile>')
-            sys.exit()
-    return ifile, ofile, sra_schema
+        with open(file) as json_file:
+            return json.load(json_file)
+    except Exception as e:
+        raise ValueError(f"Issues with JSON file:'{file}': {e}")
+
+
+
+if __name__ == "__main__":
+
+    args = get_options()
+    config = read_json_file(args.config)
+    xsd =  config['sra'][args.type]
+    xml = read_file(args.inputfile)
+    object = None
+    validator_input = {}
+    
+    if args.type == "experiment":
+        try:
+            object = Experiment(xml, xsd)
+        except Exception as e:
+            raise (f"Error creating Experiment object: '{e}'")
+
+    for version in config['json'][args.type] :
+        validator_input['schema'] = read_json_file(config['json'][args.type][version][object.library_strategy])
+        validator_input['object'] = object.json
+        print(f"£££££££££££££££ Version: {version} ££££££££££££££££££")
+        print(json.dumps(validator_input,indent=4))
+
+
+
+############ Graveyard    
+
+    # # from Sample import Sample
+    # # from IhecValidator import IhecValidator
+    # import lxml.etree
+    # from urllib.request import urlopen
+
+    # xsd = urlopen("https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd").read()
+    # schema = lxml.etree.XMLSchema(lxml.etree.fromstring(xsd))
+
+
+    # test()
+    # v = IhecValidator('sample')
+    # print(v.config_url)
+
+
+
+    # print(json.dumps(v.config,indent=4))
+
+    # xml = read_file(ifile)
+    # try:
+    #     x = Sample(xml, sra_schema)
+    # except Exception as e:
+    #     traceback.print_exc()
+
+    #     print(f"Eror: '{e}'")
+    #     sys.exit(1)
+
+
+    # print(json.dumps(x.json,indent=4))
+    # xml_test = XmlTest(xml)
 
 # def create_post_request(object, ofile):
 #     """
@@ -56,33 +137,6 @@ def get_options(argv):
 #     return OrderedDict(json.loads(requests.get(url).text))
 
 
-if __name__ == "__main__":
-    from Xml import Xml
-    from Experiment import Experiment
-    from Sample import Sample
-
-    ifile, ofile, sra_schema = get_options(sys.argv[1:])
-    xml = read_file(ifile)
-    try:
-        x = Sample(xml, sra_schema)
-    except Exception as e:
-        traceback.print_exc()
-
-        print(f"Eror: '{e}'")
-        sys.exit(1)
-
-    # try:
-    #     x = Experiment(xml, sra_schema)
-    # except Exception as e:
-    #     print(f"Eror: '{e}'")
-    #     sys.exit(1)
-    print(json.dumps(x.json,indent=4))
-    # xml_test = XmlTest(xml)
-
-    # # xml_test.validate()
-    # o = xml_test.json
-    # print(type(o))
-    # print(o)
-    # create_post_request(o, ofile)
-    # # # print(type(o))
-    # # # print(json.dumps(o,indent=4))
+# def test():
+#     xsd = urlopen("https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd").read()
+#     schema = lxml.etree.XMLSchema(lxml.etree.fromstring(xsd))

@@ -1,6 +1,4 @@
 from Xml import Xml
-from pprint import pprint
-import lxml.etree
 import json
 import re
 import copy
@@ -44,9 +42,9 @@ class Experiment(Xml):
 
     @property
     def json(self) -> json:
-        y = copy.deepcopy(self.experiment_attributes)
-        y['library_strategy'] = self.library_strategy
-        return y
+        object = copy.deepcopy(self.experiment_attributes)
+        object['library_strategy'] = self.library_strategy
+        return object
 
     def _set_library_strategy(self):
         if self.etree.xpath(".//LIBRARY_STRATEGY"):
@@ -86,12 +84,16 @@ class Experiment(Xml):
         self._libary_strategy_to_experiment_type["dnase-hypersensitivity"] = "^chromatin accessibility$"
         self._libary_strategy_to_experiment_type["atac-seq"] = "^chromatin accessibility$" 
         self._libary_strategy_to_experiment_type["nome-seq"] = "^chromatin accessibility$"
+        
         self._libary_strategy_to_experiment_type["bisulfite-seq"] = "^dna methylation$"
         self._libary_strategy_to_experiment_type["medip-seq"] = "^dna methylation$"
         self._libary_strategy_to_experiment_type["mre-seq"] = "^dna methylation$"
-        self._libary_strategy_to_experiment_type["chip-seq"] = "^(chip-seq input)$|^(histone h\\w+([\\./]\\w+)?)+$|^(transcription factor)$"
+        
         self._libary_strategy_to_experiment_type["rna-seq"] = "^(rna-seq)$|^(mrna-seq)$|^(smrna-seq)$|^(total-rna-seq)$"
         self._libary_strategy_to_experiment_type["mirna-seq"] = "^(rna-seq)$|^(mrna-seq)$|^(smrna-seq)$|^(total-rna-seq)$"
+
+        self._libary_strategy_to_experiment_type["chip-seq"] = "^(chip-seq input)$|^(histone h\\w+([\\./]\\w+)?)+$|^(transcription factor)$"
+
         self._libary_strategy_to_experiment_type["wgs"] = "^wgs$"
     
 

@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://epigenomesportal.ca/schemas/sample-primary-cell.json",
+    "title": "IHEC Data Hub Sample Primary Cell schema",
+    "description": "IHEC Data Hub Sample Primary Cell schema",
+    "type" : "object",
+    "properties": {
+        "biomaterial_type" :     { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "const":"Primary Cell"}, "description": "Primary Cell" },
+        
+        "sample_ontology_uri" :  { "type": "array", "minItems": 1,                "items": { "type": "string"}, "description": "(Ontologies: efo, cl, uberon) links to sample ontology information. Example: uberon:0005317" },
+        "disease_ontology_uri" : { "type": "array", "minItems": 1,                "items": { "type": "string"}, "description": "(Ontology: NCIM) links to sample disease ontology information. This property reflects the disease for this particular sample, not for the donor health condition. The NCImetathesaurus term C0277545 “Disease type AND/OR category unknown” should be used for unknown diseases. Phenotypes associated with the disease should be submitted as DISEASE_ONTOLOGY_uris (if available) or in the free form DISEASE attribute. For samples without any known disease, use the NCImetathesaurus C0549184 term 'None'. If dealing with a rare disease consider identifiability issues. Example: ncim:C0277545" },
+        "disease" :              { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "Free form field for more specific sample disease information. This property reflects the disease for this particular sample, not for the donor health condition. If dealing with a rare disease consider identifiability issues." },
+        "biomaterial_provider" : { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "The name of the company, laboratory or person that provided the biological material." },
+        "treatment" :            { "type": "array",                "maxItems": 1, "items": { "type": "string"}, "description": "Any artificial modification (differentiation, activation, genome editing, etc)." },
+        "biological_replicates": { "type": "array",                               "items": { "type": "string"}, "description": "List of biological replicate sample accessions" },
+        
+        "origin_sample_ontology_uri" :  { "type": "array", "minItems": 1,                "items": { "type": "string"}, "description": "(Ontologies: uberon) links to the tissue from which sample was extracted. Example: uberon:0005317" },
+        "origin_sample" :               { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "Description of the origin tissue from which sample was extracted." },
+        "cell_type" :                   { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "The type of cell." },
+        "markers" :                     { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "Markers used to isolate and identify the cell type." },
+        "passage_if_expanded" :         { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "If the primary cell has been expanded, the number of times the primary cell has been re-plated and allowed to grow back to confluency or to some maximum density if using suspension cultures. NA if no expansion." },
+        
+        "donor_id" :                         { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "An identifying designation for the donor that provided the cells/tissues." },
+        "donor_health_status" :              { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "The health status of the donor that provided the primary cell. NA if not available." },
+        "donor_ethnicity" :                  { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string"}, "description": "The ethnicity of the donor that provided the primary cell. NA if not available. If dealing with small/vulnerable populations consider identifiability issues." },
+        "donor_age_unit" :                   { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "enum": ["year", "month", "week", "day", "gestational weeks"]},                       "description": "The unit of measurement used to describe the age of the sample (year, month, week, day, gestational weeks)" },
+        "donor_life_stage":                  { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "enum": ["embryonic", "fetal", "postnatal", "newborn", "child", "adult", "unknown"]}, "description": "The stage or phase of the donor when the sample was taken (embryonic, fetal, postnatal, newborn, child, adult, unknown)" },
+        "donor_sex" :                        { "type": "array", "minItems": 1, "maxItems": 1, "items": { "type": "string", "enum": ["Male", "Female", "Unknown", "Mixed"],                                       "description": "'Male', 'Female', 'Unknown', or 'Mixed' for pooled samples."} },
+        "donor_health_status_ontology_uri" : { "type": "array", "minItems": 1,                "items": { "type": "string", "format": "uri"}, "description": "(Ontology: NCIM) Links to the health status of the donor that provided the primary cell. The NCImetathesaurus term C0277545 'Disease type AND/OR category unknown' should be used for unknown diseases. For samples without any known disease, use the NCImetathesaurus term C0549184 'None'. Phenotypes associated with the disease should be submitted as DISEASE_ONTOLOGY_URIEs (if available) or in the free form DISEASE attribute. If dealing with a rare disease, please consider identifiability issues." },
+        "donor_age" :                        { "type": "array", "minItems": 1, "maxItems": 1, "items": { "oneOf": [ { "type": "number" }, { "type": "string", "enum": ["90+", "NA"] }, { "type": "string", "pattern": "^\\d+-\\d+$" } ]}, "description": "The age of the donor that provided the cells/tissues. NA if not available. If over 90 years enter as 90+. If entering a range of ages use the format “{age}-{age}”." }
+    },
+    "required": ["sample_ontology_uri", "disease_ontology_uri", "disease", "biomaterial_provider", "biomaterial_type", "biological_replicates", "origin_sample_ontology_uri", "origin_sample", "cell_type", "markers", "passage_if_expanded", "donor_id", "donor_age", "donor_age_unit", "donor_life_stage", "donor_health_status", "donor_health_status_ontology_uri", "donor_sex", "donor_ethnicity"]
+}

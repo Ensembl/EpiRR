@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://epigenomesportal.ca/schemas/experiment_chromatin_accessibility.json",
+    "title": "IHEC Data Hub Experiment Chromatin Accessiblity schema",
+    "description": "IHEC Data Hub Experiment Chromatin Accessiblity schema",
+    "type" : "object",
+    "properties": {
+        "reference_registry_id" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Otherwise leave empty."}},
+		"qc_flags" : {"type": "array", "minItems": 1, "items": {"type": "string", "description": "Any quanlity control observations can be noted here. This field can be omitted if empty"}},
+        "experiment_type" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Chromatin Accessibility"]}},
+        "experiment_ontology_curie": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^obi:[0-9]{7}$", "description": "(Ontology: OBI). Links to experiment ontology information."}},
+        "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNase-Hypersensitivity", "ATAC-seq", "NOME-Seq"]}},
+        "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
+        "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+        
+        "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
+        "dnase_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used for DNAse treatment."}}},
+    "required": ["library_strategy", "molecule", "molecule_ontology_curie"],
+    "anyOf":    [{"required": ["experiment_ontology_curie"]}, {"required": ["experiment_type"]}]
+}

@@ -1,17 +1,37 @@
 {
     "json": {
-        "1.0": {
-            "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/1.0/experiment.json",
-            "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/1.0/sample.json"
-        },
-        "2.0": {
-            "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/experiment.json",
-            "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/json/2.0/sample.json"
+        "experiment": {
+            "2.0":{
+                "dnase-hypersensitivity":"schemas/json/2.0/experiment/chromatin-accessibility.json",
+                "atac-seq":"schemas/json/2.0/experiment/chromatin-accessibility.json",
+                "nome-seq":"schemas/json/2.0/experiment/chromatin-accessibility.json",
+                "bisulfite-seq":"schemas/json/2.0/experiment/bisulfite-seq.json",
+                "medip-seq":"schemas/json/2.0/experiment/medip-seq.json",
+                "mre-seq":"schemas/json/2.0/experiment/mre-seq.json",
+                "chip-seq":"schemas/json/2.0/experiment/chip-seq.json",
+                "rna-seq":"schemas/json/2.0/experiment/rna-seq.json",
+                "mirna-seq":"schemas/json/2.0/experiment/rna-seq.json",
+                "wgs":"schemas/json/2.0/experiment/wgs.json",
+                "other":"schemas/json/2.0/experiment/other.json"
+            },
+            "1.0":{
+                "dnase-hypersensitivity":"schemas/json/1.0/experiment/chromatin-accessibility.json",
+                "atac-seq":"schemas/json/1.0/experiment/chromatin-accessibility.json",
+                "nome-seq":"schemas/json/1.0/experiment/chromatin-accessibility.json",
+                "bisulfite-seq":"schemas/json/1.0/experiment/bisulfite-seq.json",
+                "medip-seq":"schemas/json/1.0/experiment/medip-seq.json",
+                "mre-seq":"schemas/json/1.0/experiment/mre-seq.json",
+                "chip-seq":"schemas/json/1.0/experiment/chip-seq.json",
+                "rna-seq":"schemas/json/1.0/experiment/rna-seq.json",
+                "mirna-seq":"schemas/json/1.0/experiment/rna-seq.json",
+                "wgs":"schemas/json/1.0/experiment/wgs.json",
+                "other":"schemas/json/1.0/experiment/other.json"
+            }
         }
+    
     },
     "sra":{
-        "experiment": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.experiment.xsd",
-        "sample": "https://raw.githubusercontent.com/IHEC/ihec-ecosystems/master/schemas/xml/SRA.sample.xsd"
+        "experiment": "schemas/xml/SRA.experiment.xsd",
+        "sample": "schemas/xml/SRA.sample.xsd"
     }
-
 }
