@@ -71,12 +71,12 @@ if __name__ == "__main__":
         try:
             object = Experiment(xml, xsd)
         except Exception as e:
-            raise (f"Error creating Experiment object: '{e}'")
+            raise Exception(f"Error creating Experiment object: '{e}'")
     elif args.type == "sample":
         try:
             object = Sample(xml, xsd)
         except Exception as e:
-            raise (f"Error creating Sample object: '{e}'")
+            raise Exception(f"Error creating Sample object: '{e}'")
     else:
         raise ValueError(f"Type must be experiment or sample")
 
@@ -85,6 +85,7 @@ if __name__ == "__main__":
         validator_input['object'] = object.json
         print(f">>>>>>>>>>> Version: {version} <<<<<<<<<<<<<<<")
         print(json.dumps(validator_input,indent=4))
+        # print(json.dumps(validator_input))
 
 
 
