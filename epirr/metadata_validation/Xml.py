@@ -18,6 +18,7 @@ class Xml():
         self._sra_passed = False
         self._ihec_version = []
         self._json = {}
+        self._error = []
 
         self._initiate_xml_parser()
         self._load_sra_schema()
@@ -58,7 +59,15 @@ class Xml():
     def ihec_version(self, value: float):
         self._ihec_version.append(value)
         self._ihec_version.sort()
-        
+    
+    @property
+    def error(self):
+        return self._error
+
+    @error.setter
+    def error(self, error):
+        self._error = self._error + [error]
+
     @property
     @abc.abstractmethod
     def json(self):

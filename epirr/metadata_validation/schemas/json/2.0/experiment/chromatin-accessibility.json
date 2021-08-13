@@ -1,20 +1,21 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://epigenomesportal.ca/schemas/experiment_chromatin_accessibility.json",
-    "title": "IHEC Data Hub Experiment Chromatin Accessiblity schema",
+    "title": "IHEC Data Hub Experiment Chromatin Accessiblity schema 2.0",
     "description": "IHEC Data Hub Experiment Chromatin Accessiblity schema",
     "type" : "object",
     "properties": {
-        "reference_registry_id" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Otherwise leave empty."}},
-		"qc_flags" : {"type": "array", "minItems": 1, "items": {"type": "string", "description": "Any quanlity control observations can be noted here. This field can be omitted if empty"}},
-        "experiment_type" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["Chromatin Accessibility"]}},
-        "experiment_ontology_curie": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^obi:[0-9]{7}$", "description": "(Ontology: OBI). Links to experiment ontology information."}},
-        "library_strategy" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["DNase-Hypersensitivity", "ATAC-seq", "NOME-Seq"]}},
-        "molecule_ontology_curie" : {"type":"array", "items":{"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."}},
-        "molecule" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "enum": ["genomic DNA"]}},
+        "reference_registry_id" :   {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Omit if empty."},
+		"qc_flags" :                {"type": "string", "description": "Any quanlity control observations can be noted here. Omit if empty"},
         
-        "extraction_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used to isolate the extract material."}},
-        "dnase_protocol" : {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "string", "description": "The protocol used for DNAse treatment."}}},
+        "experiment_type" :           {"const": "chromatin accessibility",            "description": "Constant: chromatin accessibility"},
+        "experiment_ontology_curie" : {"type": "string", "pattern": "^obi:[0-9]{7}$", "description": "(Ontology: OBI). Links to experiment ontology information."},
+        "library_strategy" :          {"type": "string", "enum": ["dnase-hypersensitivity", "atac-seq", "nome-Seq"], "description": "One of: dnase-hypersensitivity, atac-seq or nome-Seq"},
+        "molecule" :                  {"const": "genomic dna",  "description": "Constant: Genomic DNA"},
+        "molecule_ontology_curie" :   {"type": "string", "pattern": "^so:[0-9]{7}$", "description": "(Ontology: SO). Links to molecule ontology information."},
+        
+        "extraction_protocol" : {"type": "string", "description": "The protocol used to isolate the extract material."},
+        "dnase_protocol" :      {"type": "string", "description": "The protocol used for DNAse treatment."}
+    },
     "required": ["library_strategy", "molecule", "molecule_ontology_curie"],
     "anyOf":    [{"required": ["experiment_ontology_curie"]}, {"required": ["experiment_type"]}]
 }

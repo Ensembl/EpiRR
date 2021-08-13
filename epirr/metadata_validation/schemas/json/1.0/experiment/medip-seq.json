@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "IHEC Data Hub Experiment Methylated DNA immunoprecipitation sequencing (MeDIP-Seq) schema 1.0",
+    "description": "IHEC Data Hub Experiment Methylated DNA immunoprecipitation sequencing (MeDIP-Seq) schema, version 1.0",
+    "type" : "object",
+    "properties": {
+        "reference_registry_id" :   {"type": "string", "description": "The IHEC EpiRR ID for this dataset, only for IHEC Reference Epigenome datasets. Omit if empty."},
+		"qc_flags" :                {"type": "string", "description": "Any quanlity control observations can be noted here. Omit if empty"},
+        
+        "experiment_type" :         {"const": "dna methylation", "description": "Constant: dna methylation"},
+        "experiment_ontology_uri":  {"type": "string", "description": "(Ontology: OBI). Links to experiment ontology information."},
+        "library_strategy" :        {"const": "medip-seq", "description": "Constant: medip-seq"},
+        "molecule" :                {"const": "genomic dna", "description": "Constant: Genomic DNA"},
+        "molecule_ontology_uri" :   {"type": "string", "description": "(Ontology: SO). Links to molecule ontology information."},
+        
+        "extraction_protocol" : {"type": "string", "description": "The protocol used to isolate the extract material."},
+        "extraction_protocol_type_of_sonicator" : {"type": "string", "description": "The type of sonicator used for extraction."},
+        "extraction_protocol_sonication_cycles" : {"type": "string", "description": "The number of sonication cycles used for extraction."},
+        "medip_protocol" : {"type": "string", "description": "The MeDIP protocol used."},
+        "medip_protocol_dna_amount" : {"type": "string", "description": "The amount of DNA used in the MeDIP protocol."},
+        "medip_protocol_bead_type" : {"type": "string", "description": "The type of bead used in the MeDIP protocol."},
+        "medip_protocol_bead_amount" : {"type": "string", "description": "The amount of beads used in the MeDIP protocol."},
+        "medip_protocol_antibody_amount" : {"type": "string", "description": "The amount of antibody used in the MeDIP protocol."},
+        "medip_antibody" : {"type": "string", "description": "The specific antibody used in the MeDIP protocol."},
+        "medip_antibody_provider" : {"type": "string", "description": "The name of the company, laboratory or person that provided the antibody."},
+        "medip_antibody_catalog" : {"type": "string", "description": "The catalog from which the antibody was purchased."},
+        "medip_antibody_lot" : {"type": "string", "description": "The lot identifier of the antibody."}
+            
+    },
+    "required": ["library_strategy", "molecule", "molecule_ontology_uri"],
+    "anyOf":    [{"required": ["experiment_ontology_uri"]}, {"required": ["experiment_type"]}]
+}

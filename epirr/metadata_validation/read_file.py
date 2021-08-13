@@ -80,6 +80,10 @@ if __name__ == "__main__":
     else:
         raise ValueError(f"Type must be experiment or sample")
 
+    if object.error:
+        print("\n".join(object.error))
+        sys.exit(1)
+
     for version in config['json'][args.type] :
         validator_input['schema'] = read_json_file(config['json'][args.type][version][object.library_strategy])
         validator_input['object'] = object.json

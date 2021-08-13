@@ -47,6 +47,10 @@
             <VALUE>http://www.sequenceontology.org/browser/current_release/term/SO:0000991</VALUE>
          </EXPERIMENT_ATTRIBUTE>
          <EXPERIMENT_ATTRIBUTE>
+            <TAG>MOLECULE_ONTOLOGY_CURIE</TAG>
+            <VALUE>SO:0000991</VALUE>
+         </EXPERIMENT_ATTRIBUTE>
+         <EXPERIMENT_ATTRIBUTE>
             <TAG>LIBRARY_STRATEGY</TAG>
             <VALUE>ATAC-seq</VALUE>
          </EXPERIMENT_ATTRIBUTE>
